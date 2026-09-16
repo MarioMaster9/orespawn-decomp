@@ -40,3 +40,8 @@ local.properties
 
 # PDT-specific
 .buildpath
+
+tools/diffs.txt
+tools/filename_diff.txt
+tools/filename_orig.txt
+tools/filename.txt
