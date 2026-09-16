@@ -6,7 +6,7 @@ try:
 except FileNotFoundError:
     pass
 
-jar_folder = "build/libs"
+jar_folder = "../build/libs"
 jar = "modid-1.0.jar"
 
 shutil.copyfile(f'{jar_folder}/{jar}', f'./{jar}')
