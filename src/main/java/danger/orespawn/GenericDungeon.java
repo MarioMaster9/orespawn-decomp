@@ -2893,13 +2893,13 @@ public class GenericDungeon
 		for (i = -3; i < 7; i++) {
 			for (k = -3; k < 7; k++) {
 				j = 9;
-				if (i >= 0 && i <= 3 && k >= 0 && k <= 3) {} else {
-					blk = Blocks.log;
-					if (i == -3 || i == 6 || k == -3 || k == 6) blk = Blocks.leaves;
-					this.FastSetBlock(world, cposx + i, cposy + j, cposz + k, blk);
-				}
+				if (i >= 0 && i <= 3 && k >= 0 && k <= 3) continue;
+				blk = Blocks.log;
+				if (i == -3 || i == 6 || k == -3 || k == 6) blk = Blocks.leaves;
+				this.FastSetBlock(world, cposx + i, cposy + j, cposz + k, blk);
 			}
-		} for (i = -3; i < 7; i++) {
+		}
+		for (i = -3; i < 7; i++) {
 			for (k = -3; k < 7; k++) {
 				for (j = 10; j < 13; j++) {
 					blk = Blocks.air;
@@ -5679,22 +5679,22 @@ public class GenericDungeon
 					bid = Blocks.air;
 					dist = j * j + i * i + k * k;
 					dist = (int)Math.sqrt((double)dist);
-					if (dist > rad) {} else { // why tf is this required for the match
-						if (dist >= rad - 2) {
-							which = world.rand.nextInt(6);
-							if (which == 0) bid = Blocks.leaves;
-							if (which == 1) bid = Blocks.log;
-							if (which == 2) bid = Blocks.planks;
-							if (which == 3) bid = Blocks.dirt;
-							if (which == 4) bid = Blocks.cobblestone;
-							if (which == 5) bid = Blocks.mossy_cobblestone;
-						}
-						OreSpawnMain.setBlockFast(world, cposx + i, cposy - j, cposz + k, (Block)bid, 0, 2);
+					if (dist > rad) continue;
+					if (dist >= rad - 2) {
+						which = world.rand.nextInt(6);
+						if (which == 0) bid = Blocks.leaves;
+						if (which == 1) bid = Blocks.log;
+						if (which == 2) bid = Blocks.planks;
+						if (which == 3) bid = Blocks.dirt;
+						if (which == 4) bid = Blocks.cobblestone;
+						if (which == 5) bid = Blocks.mossy_cobblestone;
 					}
+					OreSpawnMain.setBlockFast(world, cposx + i, cposy - j, cposz + k, (Block)bid, 0, 2);
 				}
 			}
 		}
 
+		
 		for (j = 1; j <= 5; j++) {
 			for (i = -rad; i <= rad; i++) {
 				for (k = -rad; k <= rad; k++) {

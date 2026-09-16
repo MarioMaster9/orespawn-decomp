@@ -218,15 +218,15 @@ public class Trees
 		}
 		for (i = -1; i <= 1; i++) {
 			for (j = -1; j <= 1; j++) {
-				if (j == 0 && i == 0) {} else { // why
-					bid = world.getBlock(x + i, realy + 3, z + j);
-					if (bid != OreSpawnMain.MyAppleLeaves) {
-						OreSpawnMain.setBlockFast(world, x + i, realy + 3, z + j, OreSpawnMain.MyAppleLeaves, 0, 2);
-						return;
-					}
+				if (j == 0 && i == 0) continue;
+				bid = world.getBlock(x + i, realy + 3, z + j);
+				if (bid != OreSpawnMain.MyAppleLeaves) {
+					OreSpawnMain.setBlockFast(world, x + i, realy + 3, z + j, OreSpawnMain.MyAppleLeaves, 0, 2);
+					return;
 				}
 			}
 		}
+		
 		
 		Block bidm = Blocks.air;
 		for (tries = 0; tries < 20 && (bidm == Blocks.air || bidm == OreSpawnMain.MyDT); tries++) {
