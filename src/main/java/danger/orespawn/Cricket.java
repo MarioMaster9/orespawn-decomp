@@ -1,0 +1,147 @@
+package danger.orespawn;
+
+import java.util.List;
+import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIPanic;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.world.World;
+
+public class Cricket extends EntityAnimal {
+	public double moveSpeed = (double)0.15F;
+	private int singing = 0;
+	private int jumpcount = 0;
+
+	public Cricket(World par1World) {
+		super(par1World);
+		this.setSize(0.1F, 0.1F);
+		this.experienceValue = 1;
+		this.getNavigator().setAvoidsWater(true);
+		this.tasks.addTask(0, new EntityAIPanic(this, 1.4));
+		this.tasks.addTask(1, new MyEntityAIWanderALot(this, 8, 1.0D));
+	}
+
+	protected void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(this.moveSpeed);
+		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(0.0D);
+	}
+
+	protected void entityInit() {
+		super.entityInit();
+		this.dataWatcher.addObject(20, (byte)0);
+	}
+
+	protected boolean canDespawn() {
+		return !this.isNoDespawnRequired();
+	}
+
+	public int getSinging() {
+		return this.dataWatcher.getWatchableObjectByte(20);
+	}
+
+	public void setSinging(int par1) {
+		this.dataWatcher.updateObject(20, (byte)par1);
+	}
+
+	private void jumpAround() {
+		this.motionY += (double)(0.55F + Math.abs(this.worldObj.rand.nextFloat() * 0.35F));
+		this.posY += 0.25D;
+		float f = 0.3F + Math.abs(this.worldObj.rand.nextFloat() * 0.25F);
+		float d = (float)((double)this.worldObj.rand.nextFloat() * Math.PI * 2.0D);
+		this.motionX += (double)f * Math.sin((double)d);
+		this.motionZ += (double)f * Math.cos((double)d);
+		this.isAirBorne = true;
+	}
+
+	public void onUpdate() {
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(this.moveSpeed);
+		super.onUpdate();
+		if (!this.worldObj.isRemote) {
+			if (this.singing != 0) {
+				--this.singing;
+				if (this.singing <= 0) {
+					this.setSinging(0);
+				}
+			}
+
+			if (this.jumpcount > 0) {
+				--this.jumpcount;
+			}
+
+			if (this.jumpcount == 0 && this.worldObj.rand.nextInt(50) == 1) {
+				this.jumpAround();
+				this.jumpcount = 50;
+			}
+		}
+
+	}
+
+	public boolean isAIEnabled() {
+		return true;
+	}
+
+	public int mygetMaxHealth() {
+		return 3;
+	}
+
+	protected String getLivingSound() {
+		if (!this.worldObj.isRemote) {
+			if (this.worldObj.rand.nextInt(2) == 0) {
+				return null;
+			}
+
+			this.singing = 40;
+			this.setSinging(this.singing);
+		}
+
+		return "orespawn:cricket";
+	}
+
+	protected String getHurtSound() {
+		return null;
+	}
+
+	protected String getDeathSound() {
+		return null;
+	}
+
+	protected float getSoundVolume() {
+		return 0.7F;
+	}
+
+	protected void playStepSound(int par1, int par2, int par3, int par4) {
+	}
+
+	protected void dropFewItems(boolean par1, int par2) {
+	}
+
+	protected boolean canTriggerWalking() {
+		return true;
+	}
+
+	protected void fall(float par1) {
+	}
+
+	protected void updateFallState(double par1, boolean par3) {
+	}
+
+	public EntityAgeable createChild(EntityAgeable var1) {
+		return null;
+	}
+
+	public boolean getCanSpawnHere() {
+		if (this.posY < (double)30.0F) {
+			return false;
+		} else {
+			return this.findBuddies() <= 5;
+		}
+	}
+
+	private int findBuddies() {
+		List var5 = this.worldObj.getEntitiesWithinAABB(Cricket.class, this.boundingBox.expand(20.0D, 10.0D, 20.0D));
+		return var5.size();
+	}
+}
