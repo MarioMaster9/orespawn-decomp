@@ -84,21 +84,21 @@ public class OreSpawnTeleporter extends Teleporter
 		int posZ = (int)par1Entity.posZ;
 		int posY = 120;
 		int found = 0;
-		
+		Block bid;
 		int inarow = 0;
 		int airfound = 0;
-
+		int i, j, k;
 		
 		
 		
 		
-		for (int i = 0; i < 1000 && found == 0; i++)
+		for (i = 0; i < 1000 && found == 0; i++)
 		{
 			
 			for (posY = 180; posY > 1; --posY)
 			{
 				
-				Block bid = this.world.getBlock(posX, posY + 1, posZ);
+				bid = this.world.getBlock(posX, posY + 1, posZ);
 				
 				if (bid == Blocks.air || bid == null)
 				{
@@ -116,9 +116,9 @@ public class OreSpawnTeleporter extends Teleporter
 							{
 								
 								found = 1;
-								
 								break;
 							}
+							
 							if (bid == Blocks.tallgrass && this.world.getBlock(posX, posY - 2, posZ).getMaterial().isSolid())
 							{
 								
@@ -131,10 +131,10 @@ public class OreSpawnTeleporter extends Teleporter
 					}
 				} else {
 					if (this.isGroundBlock(bid)) ++inarow;
-					if (airfound != 0 && inarow >= 3)
-						break;
+					if (airfound != 0 && inarow >= 3) break;
 				}
-			} if (found == 0)
+			}
+			if (found == 0)
 			{
 				posX = (int)par1Entity.posX + this.world.rand.nextInt(3 + i / 5) - this.world.rand.nextInt(3 + i / 5);
 				if (i > 100) posX = posX + OreSpawnMain.OreSpawnRand.nextInt(2 + i / 5) - OreSpawnMain.OreSpawnRand.nextInt(2 + i / 5);
@@ -228,11 +228,11 @@ public class OreSpawnTeleporter extends Teleporter
 						this.sendToThisDimension(var3, newX, newY, newZ, (int)ep.rotationYaw);
 					}
 				}
+				
+				
+				
 			}
 		}
-
-		
-		
 		
 		
 		worldserver.resetUpdateEntityTick();
@@ -242,9 +242,9 @@ public class OreSpawnTeleporter extends Teleporter
 
 	public void sendToThisDimension(Entity e, double newX, double newY, double newZ, int ro)
 	{
-		if (this.oldWorld.isRemote) {
-			return;
-		}
+		if (this.oldWorld.isRemote) return;
+		
+		
 		e.worldObj.removeEntity(e);
 		e.isDead = false;
 		e.setLocationAndAngles(newX, newY, newZ, (float)ro, 0.0F);
@@ -263,5 +263,7 @@ public class OreSpawnTeleporter extends Teleporter
 		e.isDead = true;
 	}
 
-	public void removeStalePortalLocations(long par1) {}
+	public void removeStalePortalLocations(long par1) {
+		
+	}
 }
