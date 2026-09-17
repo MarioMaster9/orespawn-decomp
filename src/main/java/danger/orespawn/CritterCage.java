@@ -334,11 +334,11 @@ public class CritterCage extends Item {
 			case OreSpawnConstants.SpiderDriverCageIndex:
 				name = "Spider Driver"; break;
 			case OreSpawnConstants.CrabCageIndex:
-				name = "Crab";
+				name = "Crab"; break;
+			default:
 				break;
 		}
 
-		
 		
 		
 		if (entityID != 0 || name != null) {
@@ -367,9 +367,9 @@ public class CritterCage extends Item {
 					((EntityLiving)ent).setCustomNameTag(par1ItemStack.getDisplayName());
 				}
 			}
-		}
-		else
-		{
+		
+
+		} else {
 			return false;
 		}
 		
