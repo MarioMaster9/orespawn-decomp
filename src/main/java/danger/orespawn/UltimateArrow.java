@@ -161,10 +161,10 @@ public class UltimateArrow extends EntityArrow
 			Entity var5 = null;
 			List var6 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 			double var7 = 0.0D;
-
+			int var9;
+			float var11;
 			
-			
-			for (int var9 = 0; var9 < var6.size(); ++var9)
+			for (var9 = 0; var9 < var6.size(); ++var9)
 			{
 				Entity var10 = (Entity)var6.get(var9);
 				
@@ -182,8 +182,8 @@ public class UltimateArrow extends EntityArrow
 						EntityHorse c = (EntityHorse)var10;
 						if (c.riddenByEntity != null) continue;
 					}
-					float f = 0.3F;
-					AxisAlignedBB var12 = var10.boundingBox.expand((double)f, (double)f, (double)f);
+					var11 = 0.3F;
+					AxisAlignedBB var12 = var10.boundingBox.expand((double)var11, (double)var11, (double)var11);
 					MovingObjectPosition var13 = var12.calculateIntercept(var17, var3);
 					
 					if (var13 != null)
@@ -204,15 +204,15 @@ public class UltimateArrow extends EntityArrow
 				var4 = new MovingObjectPosition(var5);
 			}
 
-			
-			
+			float var20;
+			float var26;
 			
 			if (var4 != null)
 			{
 				if (var4.entityHit != null)
 				{
-					float f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-					float var23 = (float)MathHelper.ceiling_double_int((double)f * (double)OreSpawnMain.UltimateBowDamage);
+					var20 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+					float var23 = (float)MathHelper.ceiling_double_int((double)var20 * (double)OreSpawnMain.UltimateBowDamage);
 					
 					
 					
@@ -277,7 +277,7 @@ public class UltimateArrow extends EntityArrow
 
 							if (this.knockbackStrength > 0)
 							{
-								float var26 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+								var26 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
 								
 								if (var26 > 0.0F)
 								{
@@ -319,7 +319,7 @@ public class UltimateArrow extends EntityArrow
 					this.motionX = (double)((float)(var4.hitVec.xCoord - this.posX));
 					this.motionY = (double)((float)(var4.hitVec.yCoord - this.posY));
 					this.motionZ = (double)((float)(var4.hitVec.zCoord - this.posZ));
-					float var20 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+					var20 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
 					this.posX -= this.motionX / (double)var20 * 0.05;
 					this.posY -= this.motionY / (double)var20 * 0.05;
 					this.posZ -= this.motionZ / (double)var20 * 0.05;
@@ -337,7 +337,7 @@ public class UltimateArrow extends EntityArrow
 
 			if (this.getIsCritical())
 			{
-				for (int var9 = 0; var9 < 4; ++var9)
+				for (var9 = 0; var9 < 4; ++var9)
 				{
 					this.worldObj.spawnParticle("crit", this.posX + this.motionX * (double)var9 / 4.0D, this.posY + this.motionY * (double)var9 / 4.0D, this.posZ + this.motionZ * (double)var9 / 4.0D, -this.motionX, -this.motionY + 0.2, -this.motionZ);
 				}
@@ -346,7 +346,7 @@ public class UltimateArrow extends EntityArrow
 			this.posX += this.motionX;
 			this.posY += this.motionY;
 			this.posZ += this.motionZ;
-			float var20 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+			var20 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
 			this.rotationYaw = (float)(Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
 
 			for (this.rotationPitch = (float)(Math.atan2(this.motionY, (double)var20) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
@@ -372,13 +372,13 @@ public class UltimateArrow extends EntityArrow
 			this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
 			this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
 			float var22 = 0.99F;
-			float var23 = 0.05F;
+			var11 = 0.05F;
 			
 			if (this.isInWater())
 			{
 				for (int var25 = 0; var25 < 4; ++var25)
 				{
-					float var26 = 0.25F;
+					var26 = 0.25F;
 					this.worldObj.spawnParticle("bubble", this.posX - this.motionX * (double)var26, this.posY - this.motionY * (double)var26, this.posZ - this.motionZ * (double)var26, this.motionX, this.motionY, this.motionZ);
 				}
 
@@ -388,7 +388,7 @@ public class UltimateArrow extends EntityArrow
 			this.motionX *= (double)var22;
 			this.motionY *= (double)var22;
 			this.motionZ *= (double)var22;
-			this.motionY -= (double)var23;
+			this.motionY -= (double)var11;
 			this.setPosition(this.posX, this.posY, this.posZ);
 			this.func_145775_I();
 		}

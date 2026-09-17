@@ -118,7 +118,7 @@ public class UltimateFishHook extends EntityFishHook
 		this.setSize(0.25F, 0.25F);
 		this.setLocationAndAngles(par2EntityPlayer.posX, par2EntityPlayer.posY + 1.62 - (double)par2EntityPlayer.yOffset, par2EntityPlayer.posZ, par2EntityPlayer.rotationYaw, par2EntityPlayer.rotationPitch);
 		this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
-		this.posY -= 0.1D;
+		this.posY -= 0.1F;
 		this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
 		this.setPosition(this.posX, this.posY, this.posZ);
 		this.yOffset = 0.0F;
@@ -292,7 +292,7 @@ public class UltimateFishHook extends EntityFishHook
 			Entity entity = null;
 			List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 			double d0 = 0.0D;
-
+			double d2;
 			
 			for (int i = 0; i < list.size(); i++)
 			{
@@ -306,7 +306,7 @@ public class UltimateFishHook extends EntityFishHook
 					
 					if (movingobjectposition1 != null)
 					{
-						double d2 = vec31.distanceTo(movingobjectposition1.hitVec);
+						d2 = vec31.distanceTo(movingobjectposition1.hitVec);
 						
 						if (d2 < d0 || d0 == 0.0D)
 						{
@@ -422,8 +422,8 @@ public class UltimateFishHook extends EntityFishHook
 						float f2;
 						double d5;
 						double d6;
-						float f7;
 						double d11;
+						float f7;
 						
 						if (this.ticks_catchable > 0)
 						{
@@ -450,7 +450,7 @@ public class UltimateFishHook extends EntityFishHook
 								
 								if (this.rand.nextFloat() < 0.15F)
 								{
-									worldserver.func_147487_a("bubble", d11, d5 - 0.1D, d6, 1, (double)f7, 0.1, (double)f2, 0.0D);
+									worldserver.func_147487_a("bubble", d11, d5 - (double)0.1F, d6, 1, (double)f7, 0.1, (double)f2, 0.0D);
 								}
 
 								float f3 = f7 * 0.04F;
@@ -484,7 +484,7 @@ public class UltimateFishHook extends EntityFishHook
 								d11 = this.posX + (double)(MathHelper.sin(f7) * f2 * 0.1F);
 								d5 = (double)((float)MathHelper.floor_double(this.boundingBox.minY) + 1.0F);
 								d6 = this.posZ + (double)(MathHelper.cos(f7) * f2 * 0.1F);
-								worldserver.func_147487_a("splash", d11, d5, d6, 2 + this.rand.nextInt(2), 0.1D, 0.0D, 0.1D, 0.0D);
+								worldserver.func_147487_a("splash", d11, d5, d6, 2 + this.rand.nextInt(2), (double)0.1F, 0.0D, (double)0.1F, 0.0D);
 							}
 
 							if (this.fish_wait_time <= 0)
@@ -506,7 +506,7 @@ public class UltimateFishHook extends EntityFishHook
 					}
 				}
 				
-				double d2 = d10 * 2.0D - 1.0D;
+				d2 = d10 * 2.0D - 1.0D;
 				this.motionY += 0.04F * d2;
 				
 				if (d10 > 0.0D)

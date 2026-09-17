@@ -14,10 +14,14 @@ import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class UltimateAxe extends ItemAxe {
+
+
+public class UltimateAxe extends ItemAxe
+{
 	private int weaponDamage = 15;
 
-	public UltimateAxe(int par1, Item.ToolMaterial par2) {
+	public UltimateAxe(int par1, Item.ToolMaterial par2)
+	{
 		super(par2);
 		this.maxStackSize = 1;
 		this.setMaxDamage(3000);
@@ -29,17 +33,21 @@ public class UltimateAxe extends ItemAxe {
 		par1ItemStack.addEnchantment(Enchantment.efficiency, 5);
 	}
 
+	/**
+	 * Called each tick while using an item.
+	 * @param stack The Item being used
+	 * @param player The Player using the item
+	 * @param count The amount of time in tick the item has been used for continuously
+	 */
 	public void onUsingTick(ItemStack stack, EntityPlayer player, int count)
 	{
 		int lvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency.effectId, stack);
 		if (lvl <= 0) {
 			stack.addEnchantment(Enchantment.efficiency, 5);
 		}
-
 	}
 
-	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5)
-	{
+	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5) {
 		this.onUsingTick(stack, (EntityPlayer)null, 0);
 	}
 
@@ -49,7 +57,6 @@ public class UltimateAxe extends ItemAxe {
 			if (entity instanceof EntityPlayer || entity instanceof Girlfriend || entity instanceof Boyfriend) {
 				return true;
 			}
-
 			if (entity instanceof EntityTameable) {
 				EntityTameable t = (EntityTameable)entity;
 				if (t.isTamed()) {
@@ -57,19 +64,26 @@ public class UltimateAxe extends ItemAxe {
 				}
 			}
 		}
-
 		return false;
 	}
 
-	public int getDamageVsEntity(Entity par1Entity) {
+	
+	
+	
+	public int getDamageVsEntity(Entity par1Entity)
+	{
 		if (par1Entity instanceof Girlfriend) {
 			return 1;
-		} else {
-			return par1Entity instanceof EntityPlayer ? 1 : this.weaponDamage;
 		}
+		if (par1Entity instanceof EntityPlayer) {
+			return 1;
+		}
+		return this.weaponDamage;
 	}
 
-	public String getMaterialName() {
+	
+	public String getMaterialName()
+	{
 		return "Uranium/Titanium";
 	}
 

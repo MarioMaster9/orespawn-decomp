@@ -19,10 +19,15 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class UltimatePickaxe extends ItemPickaxe {
+
+
+
+public class UltimatePickaxe extends ItemPickaxe
+{
 	private int weaponDamage = 15;
 
-	public UltimatePickaxe(int par1, Item.ToolMaterial par2) {
+	public UltimatePickaxe(int par1, Item.ToolMaterial par2)
+	{
 		super(par2);
 		this.maxStackSize = 1;
 		this.setMaxDamage(3000);
@@ -33,8 +38,15 @@ public class UltimatePickaxe extends ItemPickaxe {
 	{
 		par1ItemStack.addEnchantment(Enchantment.efficiency, 5);
 		par1ItemStack.addEnchantment(Enchantment.fortune, 5);
+		
 	}
-
+	
+	/**
+	 * Called each tick while using an item.
+	 * @param stack The Item being used
+	 * @param player The Player using the item
+	 * @param count The amount of time in tick the item has been used for continuously
+	 */
 	public void onUsingTick(ItemStack stack, EntityPlayer player, int count)
 	{
 		int lvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency.effectId, stack);
@@ -42,26 +54,36 @@ public class UltimatePickaxe extends ItemPickaxe {
 			stack.addEnchantment(Enchantment.efficiency, 5);
 			stack.addEnchantment(Enchantment.fortune, 5);
 		}
-
+		
 	}
 
-	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5)
-	{
+	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5) {
 		this.onUsingTick(stack, (EntityPlayer)null, 0);
 	}
 
-	public boolean canHarvestBlock(Block par1Block) {
+	
+	
+	
+	public boolean canHarvestBlock(Block par1Block)
+	{
 		return true;
 	}
 
-	public int getDamageVsEntity(Entity par1Entity) {
+	
+	
+	
+	public int getDamageVsEntity(Entity par1Entity)
+	{
 		if (par1Entity instanceof Girlfriend) {
 			return 1;
-		} else if (par1Entity instanceof Boyfriend) {
-			return 1;
-		} else {
-			return par1Entity instanceof EntityPlayer ? 1 : this.weaponDamage;
 		}
+		if (par1Entity instanceof Boyfriend) {
+			return 1;
+		}
+		if (par1Entity instanceof EntityPlayer) {
+			return 1;
+		}
+		return this.weaponDamage;
 	}
 
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
@@ -70,7 +92,6 @@ public class UltimatePickaxe extends ItemPickaxe {
 			if (entity instanceof EntityPlayer || entity instanceof Girlfriend || entity instanceof Boyfriend) {
 				return true;
 			}
-
 			if (entity instanceof EntityTameable) {
 				EntityTameable t = (EntityTameable)entity;
 				if (t.isTamed()) {
@@ -78,59 +99,53 @@ public class UltimatePickaxe extends ItemPickaxe {
 				}
 			}
 		}
-
 		return false;
 	}
 
-	private ItemStack dropItemAnItem(World world, int x, int y, int z, Item index, int par1) {
+	private ItemStack dropItemAnItem(World world, int x, int y, int z, Item index, int par1)
+	{
 		EntityItem var3 = null;
 		ItemStack is = new ItemStack(index, par1, 0);
+		
 		var3 = new EntityItem(world, (double)x, (double)y, (double)z, is);
-		if (var3 != null) {
-			world.spawnEntityInWorld(var3);
-		}
-
+		if (var3 != null) world.spawnEntityInWorld(var3);
 		return is;
 	}
 
-	public boolean onBlockDestroyed(ItemStack par1ItemStack, World par2World, Block par3, int par4, int par5, int par6, EntityLivingBase par7EntityLivingBase) {
-		if ((double)par3.getBlockHardness(par2World, par4, par5, par6) != 0.0D) {
+	public boolean onBlockDestroyed(ItemStack par1ItemStack, World par2World, Block par3, int par4, int par5, int par6, EntityLivingBase par7EntityLivingBase)
+	{
+		if ((double)par3.getBlockHardness(par2World, par4, par5, par6) != 0.0D)
+		{
 			par1ItemStack.damageItem(1, par7EntityLivingBase);
 		}
-
-		if (!par2World.isRemote) {
-			if (par3 == Blocks.iron_ore && par2World.rand.nextInt(2) != 0) {
-				this.dropItemAnItem(par2World, par4, par5, par6, Items.iron_ingot, 1 + par2World.rand.nextInt(2));
+		if (!par2World.isRemote)
+		{
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			if (par3 == Blocks.iron_ore) {
+				if (par2World.rand.nextInt(2) != 0) this.dropItemAnItem(par2World, par4, par5, par6, Items.iron_ingot, 1 + par2World.rand.nextInt(2));
+			}
+			if (par3 == Blocks.gold_ore) {
+				if (par2World.rand.nextInt(2) != 0) this.dropItemAnItem(par2World, par4, par5, par6, Items.gold_ingot, 1 + par2World.rand.nextInt(2));
 			}
 
-			if (par3 == Blocks.gold_ore && par2World.rand.nextInt(2) != 0) {
-				this.dropItemAnItem(par2World, par4, par5, par6, Items.gold_ingot, 1 + par2World.rand.nextInt(2));
-			}
-
-			if (par3 == Blocks.stone && par2World.rand.nextInt(100) == 2) {
-				int i = par2World.rand.nextInt(10);
-				if (i == 0) {
-					this.dropItemAnItem(par2World, par4, par5, par6, Items.diamond, 1);
-				}
-
-				if (i == 1) {
-					this.dropItemAnItem(par2World, par4, par5, par6, Items.emerald, 1);
-				}
-
-				if (i == 2) {
-					this.dropItemAnItem(par2World, par4, par5, par6, OreSpawnMain.MyAmethyst, 1);
-				}
-
-				if (i == 3) {
-					this.dropItemAnItem(par2World, par4, par5, par6, OreSpawnMain.MyRuby, 1);
-				}
-
-				if (i == 4) {
-					this.dropItemAnItem(par2World, par4, par5, par6, OreSpawnMain.UraniumNugget, 1);
-				}
-
-				if (i == 5) {
-					this.dropItemAnItem(par2World, par4, par5, par6, OreSpawnMain.TitaniumNugget, 1);
+			if (par3 == Blocks.stone) {
+				if (par2World.rand.nextInt(100) == 2) {
+					int i = par2World.rand.nextInt(10);
+					if (i == 0) this.dropItemAnItem(par2World, par4, par5, par6, Items.diamond, 1);
+					if (i == 1) this.dropItemAnItem(par2World, par4, par5, par6, Items.emerald, 1);
+					if (i == 2) this.dropItemAnItem(par2World, par4, par5, par6, OreSpawnMain.MyAmethyst, 1);
+					if (i == 3) this.dropItemAnItem(par2World, par4, par5, par6, OreSpawnMain.MyRuby, 1);
+					if (i == 4) this.dropItemAnItem(par2World, par4, par5, par6, OreSpawnMain.UraniumNugget, 1);
+					if (i == 5) this.dropItemAnItem(par2World, par4, par5, par6, OreSpawnMain.TitaniumNugget, 1);
 				}
 			}
 		}
@@ -138,7 +153,9 @@ public class UltimatePickaxe extends ItemPickaxe {
 		return true;
 	}
 
-	public String getMaterialName() {
+	
+	public String getMaterialName()
+	{
 		return "Uranium/Titanium";
 	}
 

@@ -15,59 +15,57 @@ import net.minecraft.world.World;
 
 
 
-public class UltimateFishingRod extends Item {
-	
-	
-	public UltimateFishingRod(int par1) {
+public class UltimateFishingRod extends Item
+{
+	public UltimateFishingRod(int par1)
+	{
 		this.setMaxDamage(3000);
 		this.setMaxStackSize(1);
 		this.setCreativeTab(CreativeTabs.tabTools);
 	}
 
-	
-	
-	
-	
-	public boolean isFull3D() {
+	/**
+	 * Returns True is the item is renderer in full 3D when hold.
+	 */
+	public boolean isFull3D()
+	{
 		return true;
 	}
 
-	
 	public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
 	{
 		par1ItemStack.addEnchantment(Enchantment.unbreaking, 2);
 	}
 
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * Called each tick while using an item.
+	 * @param stack The Item being used
+	 * @param player The Player using the item
+	 * @param count The amount of time in tick the item has been used for continuously
+	 */
 	public void onUsingTick(ItemStack stack, EntityPlayer player, int count)
 	{
 		int lvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
 		if (lvl <= 0) {
 			stack.addEnchantment(Enchantment.unbreaking, 2);
 		}
-
 	}
 
 	
-	
-	
-	
-	
-	public boolean shouldRotateAroundWhenRendering() {
+	/**
+	 * Returns true if this item should be rotated by 180 degrees around the Y axis when being held in an entities
+	 * hands.
+	 */
+	public boolean shouldRotateAroundWhenRendering()
+	{
 		return true;
 	}
 
-	
-	
-	
-	
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
+	/**
+	 * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+	 */
+	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+	{
 		if (par3EntityPlayer.fishEntity != null)
 		{
 			int var4 = par3EntityPlayer.fishEntity.func_146034_e();

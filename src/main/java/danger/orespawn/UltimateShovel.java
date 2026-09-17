@@ -14,8 +14,13 @@ import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class UltimateShovel extends ItemSpade {
-	public UltimateShovel(int par1, Item.ToolMaterial par2) {
+
+
+
+public class UltimateShovel extends ItemSpade
+{
+	public UltimateShovel(int par1, Item.ToolMaterial par2)
+	{
 		super(par2);
 		this.maxStackSize = 1;
 		this.setMaxDamage(3000);
@@ -27,17 +32,21 @@ public class UltimateShovel extends ItemSpade {
 		par1ItemStack.addEnchantment(Enchantment.efficiency, 5);
 	}
 
+	/**
+	 * Called each tick while using an item.
+	 * @param stack The Item being used
+	 * @param player The Player using the item
+	 * @param count The amount of time in tick the item has been used for continuously
+	 */
 	public void onUsingTick(ItemStack stack, EntityPlayer player, int count)
 	{
 		int lvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency.effectId, stack);
 		if (lvl <= 0) {
 			stack.addEnchantment(Enchantment.efficiency, 5);
 		}
-
 	}
 
-	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5)
-	{
+	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5) {
 		this.onUsingTick(stack, (EntityPlayer)null, 0);
 	}
 
@@ -47,7 +56,6 @@ public class UltimateShovel extends ItemSpade {
 			if (entity instanceof EntityPlayer || entity instanceof Girlfriend || entity instanceof Boyfriend) {
 				return true;
 			}
-
 			if (entity instanceof EntityTameable) {
 				EntityTameable t = (EntityTameable)entity;
 				if (t.isTamed()) {
@@ -55,24 +63,32 @@ public class UltimateShovel extends ItemSpade {
 				}
 			}
 		}
-
 		return false;
 	}
 
-	public int getDamageVsEntity(Entity par1Entity) {
+	
+	
+	
+	
+	public int getDamageVsEntity(Entity par1Entity)
+	{
 		if (par1Entity instanceof Girlfriend) {
 			return 1;
-		} else {
-			return par1Entity instanceof EntityPlayer ? 1 : 5;
 		}
+		if (par1Entity instanceof EntityPlayer) {
+			return 1;
+		}
+		return 5;
 	}
 
-	public String getMaterialName() {
+	public String getMaterialName()
+	{
 		return "Uranium/Titanium";
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister) {
+	public void registerIcons(IIconRegister iconRegister)
+	{
 		this.itemIcon = iconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5));
 	}
 }
