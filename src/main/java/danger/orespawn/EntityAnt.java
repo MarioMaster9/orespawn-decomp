@@ -13,6 +13,18 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+
+
+
+
+
+
+
+
+
+
+
+
 public class EntityAnt extends EntityAnimal {
 	public double moveSpeed = (double)0.15F;
 	private static final ResourceLocation texture1 = new ResourceLocation("orespawn", "ant.png");
@@ -20,6 +32,7 @@ public class EntityAnt extends EntityAnimal {
 	private static final ResourceLocation texture3 = new ResourceLocation("orespawn", "rainbow_ant.png");
 	private static final ResourceLocation texture4 = new ResourceLocation("orespawn", "unstableant.png");
 	private static final ResourceLocation texture5 = new ResourceLocation("orespawn", "termite.png");
+
 
 	public EntityAnt(World par1World) {
 		super(par1World);
@@ -30,6 +43,7 @@ public class EntityAnt extends EntityAnimal {
 		this.tasks.addTask(1, new MyEntityAIWanderALot(this, 9, 1.0D));
 	}
 
+
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
@@ -39,108 +53,169 @@ public class EntityAnt extends EntityAnimal {
 	}
 
 	public ResourceLocation getTexture(EntityAnt a) {
-		if (a instanceof EntityRedAnt) {
-			return texture2;
-		} else if (a instanceof EntityRainbowAnt) {
-			return texture3;
-		} else if (a instanceof EntityUnstableAnt) {
-			return texture4;
-		} else {
-			return a instanceof Termite ? texture5 : texture1;
-		}
+		if (a instanceof EntityRedAnt) return texture2;
+		if (a instanceof EntityRainbowAnt) return texture3;
+		if (a instanceof EntityUnstableAnt) return texture4;
+		if (a instanceof Termite) return texture5;
+		return texture1;
 	}
 
 	protected boolean canDespawn() {
-		return !this.isNoDespawnRequired();
+		if (this.isNoDespawnRequired()) return false;
+		return true;
 	}
+
+
+
+
 
 	public void onUpdate() {
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(this.moveSpeed);
 		super.onUpdate();
 	}
 
+
+
+
+
+
 	public boolean interact(EntityPlayer par1EntityPlayer) {
-		if (par1EntityPlayer == null) {
-			return false;
-		} else if (!(par1EntityPlayer instanceof EntityPlayerMP)) {
-			return false;
-		} else {
-			ItemStack var2 = par1EntityPlayer.inventory.getCurrentItem();
-			if (var2 != null && var2.stackSize <= 0) {
+		if (par1EntityPlayer == null) return false;
+
+
+
+
+
+		if (!(par1EntityPlayer instanceof EntityPlayerMP)) return false;
+
+
+		ItemStack var2 = par1EntityPlayer.inventory.getCurrentItem();
+		if (var2 != null) {
+			if (var2.stackSize <= 0) {
 				par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
 				var2 = null;
 			}
-
-			if (var2 != null) {
-				return false;
-			} else {
-				if (par1EntityPlayer.dimension != OreSpawnMain.DimensionID) {
-					MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)par1EntityPlayer, OreSpawnMain.DimensionID, new OreSpawnTeleporter(MinecraftServer.getServer().worldServerForDimension(OreSpawnMain.DimensionID), OreSpawnMain.DimensionID, this.worldObj));
-				} else {
-					MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)par1EntityPlayer, 0, new OreSpawnTeleporter(MinecraftServer.getServer().worldServerForDimension(0), 0, this.worldObj));
-				}
-
-				return true;
-			}
 		}
+		if (var2 != null) {
+			return false;
+		}
+
+
+		if (par1EntityPlayer.dimension != OreSpawnMain.DimensionID) {
+			MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)par1EntityPlayer, OreSpawnMain.DimensionID, new OreSpawnTeleporter(MinecraftServer.getServer().worldServerForDimension(OreSpawnMain.DimensionID), OreSpawnMain.DimensionID, this.worldObj));
+		}
+		else {
+			MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)par1EntityPlayer, 0, new OreSpawnTeleporter(MinecraftServer.getServer().worldServerForDimension(0), 0, this.worldObj));
+		}
+
+
+		return true;
 	}
+
+
+
+
+
 
 	public boolean isAIEnabled() {
 		return true;
 	}
 
+
+
 	public int mygetMaxHealth() {
 		return 1;
 	}
+
+
+
+
 
 	protected String getLivingSound() {
 		return null;
 	}
 
+
+
+
+
 	protected String getHurtSound() {
 		return null;
 	}
+
+
+
+
 
 	protected String getDeathSound() {
 		return null;
 	}
 
+
+
+
+
+
 	protected float getSoundVolume() {
 		return 0.0F;
 	}
 
+
+
+
+
 	protected void playStepSound(int par1, int par2, int par3, int par4) {
 	}
 
+
+
+
+
+
 	protected void dropFewItems(boolean par1, int par2) {
 	}
+
+
+
+
+
+
+
+
+
+
+
 
 	protected boolean canTriggerWalking() {
 		return true;
 	}
 
+
+
+
 	public EntityAgeable createChild(EntityAgeable var1) {
 		return null;
 	}
 
+
+
+
+
 	public boolean getCanSpawnHere() {
-		if (this.posY < 50.0D) {
-			return false;
-		} else {
-			return this.findBuddies() <= 4;
-		}
+		if (this.posY < 50.0D) return false;
+		if (this.findBuddies() > 4) return false;
+		return true;
 	}
+
 
 	private int findBuddies() {
 		List var5 = this.worldObj.getEntitiesWithinAABB(EntityAnt.class, this.boundingBox.expand(20.0D, 10.0D, 20.0D));
 		return var5.size();
 	}
 
-	public void updateAITick() {
-		if (this.worldObj.rand.nextInt(200) == 1) {
-			this.setRevengeTarget((EntityLivingBase)null);
-		}
 
+	public void updateAITick() {
+		if (this.worldObj.rand.nextInt(200) == 1) this.setRevengeTarget(null);
 		super.updateAITick();
 	}
 }
