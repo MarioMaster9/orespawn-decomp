@@ -416,8 +416,8 @@ public class Girlfriend extends EntityTameable implements IRangedAttackMob
 			if (txture == 38) return DryTexture38;
 			if (txture == 39) return DryTexture39;
 			if (txture == 40) return DryTexture40;
-		}
-		else {
+			
+		} else {
 			int temp = this.getWetTameSkin();
 			
 			if (temp == 0) return WetTexture0;
@@ -889,7 +889,7 @@ public class Girlfriend extends EntityTameable implements IRangedAttackMob
 				this.playTameEffect(true);
 				this.worldObj.setEntityState(this, (byte)7);
 				String healthMessage = new String();
-				healthMessage = String.format("I have %d health. Thank you for asking! xoxo", Integer.valueOf(this.getGirlfriendHealth()));
+				healthMessage = healthMessage.format("I have %d health. Thank you for asking! xoxo", Integer.valueOf(this.getGirlfriendHealth())); // calling a static method as if it's non static
 				
 				
 				par1EntityPlayer.addChatComponentMessage(new ChatComponentText(healthMessage));
@@ -953,17 +953,17 @@ public class Girlfriend extends EntityTameable implements IRangedAttackMob
 					return "orespawn:o_rain";
 				}
 
-				if (!this.worldObj.isDaytime() && 
-					this.worldObj.canBlockSeeTheSky((int)this.posX, (int)this.posY, (int)this.posZ)) {
-					if (this.worldObj.rand.nextInt(3) == 0) return "orespawn:o_dark";
-					return null;
+				if (!this.worldObj.isDaytime()) {
+					if (this.worldObj.canBlockSeeTheSky((int)this.posX, (int)this.posY, (int)this.posZ)) {
+						if (this.worldObj.rand.nextInt(3) == 0) return "orespawn:o_dark";
+						return null;
+					}
 				}
 			}
-
 			
 			if (this.isTamed())
 			{
-				if ((float)this.mygetMaxHealth() > this.getHealth() || (OreSpawnMain.valentines_day == 0 || this.feelingBetter != 0)) {
+				if ((float)this.mygetMaxHealth() > this.getHealth() || (OreSpawnMain.valentines_day != 0 && this.feelingBetter == 0)) {
 					return "orespawn:o_hurt";
 				}
 				return "orespawn:o_happy";
@@ -1070,42 +1070,42 @@ public class Girlfriend extends EntityTameable implements IRangedAttackMob
 			this.dropItem(v9, 1);
 		}
 
-		if (this.isTamed()) {
+		
+		if (this.isTamed())
+		{
 			ItemStack var5 = this.getCurrentEquippedItem();
-			if (var5 != null && 
-				var5.stackSize > 0) {
-				this.dropItem(var5.getItem(), var5.stackSize);
+			if (var5 != null) {
+				if (var5.stackSize > 0) {
+					this.dropItem(var5.getItem(), var5.stackSize);
+				}
 			}
-
 			var5 = this.getEquipmentInSlot(1);
-			if (var5 != null && 
-				var5.stackSize > 0) {
-				this.dropItem(var5.getItem(), var5.stackSize);
+			if (var5 != null) {
+				if (var5.stackSize > 0) {
+					this.dropItem(var5.getItem(), var5.stackSize);
+				}
 			}
-
 			var5 = this.getEquipmentInSlot(2);
-			if (var5 != null && 
-				var5.stackSize > 0) {
-				this.dropItem(var5.getItem(), var5.stackSize);
+			if (var5 != null) {
+				if (var5.stackSize > 0) {
+					this.dropItem(var5.getItem(), var5.stackSize);
+				}
 			}
-
 			var5 = this.getEquipmentInSlot(3);
-			if (var5 != null && 
-				var5.stackSize > 0) {
-				this.dropItem(var5.getItem(), var5.stackSize);
+			if (var5 != null) {
+				if (var5.stackSize > 0) {
+					this.dropItem(var5.getItem(), var5.stackSize);
+				}
 			}
-
 			var5 = this.getEquipmentInSlot(4);
-			if (var5 != null && 
-				var5.stackSize > 0) {
-				this.dropItem(var5.getItem(), var5.stackSize);
+			if (var5 != null) {
+				if (var5.stackSize > 0) {
+					this.dropItem(var5.getItem(), var5.stackSize);
+				}
 			}
 		}
+		
 	}
-
-	
-	
-	
 	
 	
 	public void attackEntityWithRangedAttack(EntityLivingBase par1EntityLiving)
@@ -1140,8 +1140,8 @@ public class Girlfriend extends EntityTameable implements IRangedAttackMob
 			var8.canBePickedUp = 2;
 			
 			this.worldObj.spawnEntityInWorld(var8);
-		} else
-		{
+			
+		} else {
 			Shoes var2 = new Shoes(this.worldObj, this, 2 + this.rand.nextInt(4));
 			double var3 = par1EntityLiving.posX - this.posX;
 			double var5 = par1EntityLiving.posY + (double)par1EntityLiving.getEyeHeight() - 1.1 - var2.posY;
@@ -1227,6 +1227,7 @@ public class Girlfriend extends EntityTameable implements IRangedAttackMob
 				{
 					
 					int var8 = EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, var7);
+					
 					if (var8 > 0 && var6)
 					{
 						par1Entity.setFire(var8 * 4);
@@ -1234,16 +1235,15 @@ public class Girlfriend extends EntityTameable implements IRangedAttackMob
 				}
 			}
 		}
+		
+		
 	}
 
 	
 	
-	
-	
-	
-	
-	
-	
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
 	protected float getSoundPitch()
 	{
 		return (float)(this.voice - 5) * 0.02F + 1.0F;
@@ -1268,13 +1268,13 @@ public class Girlfriend extends EntityTameable implements IRangedAttackMob
 	{
 		boolean ret = false;
 		float p2 = par2;
-		if (par2 > 10.0F) p2 = 10.0F;
+		if (p2 > 10.0F) p2 = 10.0F;
 		if (!par1DamageSource.getDamageType().equals("cactus")) {
-			if (par1DamageSource.getDamageType().equals("inWall") && 
-				OreSpawnMain.valentines_day != 0) {
-				return ret;
+			if (par1DamageSource.getDamageType().equals("inWall")) {
+				if (OreSpawnMain.valentines_day != 0) {
+					return ret;
+				}
 			}
-
 			if (OreSpawnMain.valentines_day != 0 && !this.worldObj.isRemote && this.feelingBetter == 0) {
 				Entity e = par1DamageSource.getEntity();
 				if (e != null && e instanceof EntityPlayer) {
@@ -1285,7 +1285,7 @@ public class Girlfriend extends EntityTameable implements IRangedAttackMob
 						if (it == OreSpawnMain.MyRoseSword) {
 							if (this.worldObj.rand.nextInt(4) == 1) {
 								this.feelingBetter = 1;
-								this.setAttackTarget((EntityLivingBase)null);
+								this.setAttackTarget(null);
 								this.setSize(0.5F, 1.6F);
 								this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 								int morelove = this.worldObj.rand.nextInt(10);
@@ -1324,14 +1324,14 @@ public class Girlfriend extends EntityTameable implements IRangedAttackMob
 						tileentitymobspawner = (TileEntityMobSpawner)this.worldObj.getTileEntity((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 						String s = tileentitymobspawner.func_145881_a().getEntityNameToSpawn();
 						if (s != null) {
-							if (s.equals("Girlfriend")) return true;
+							if (s.equals("Girlfriend")) {
+								return true;
+							}
 						}
 					}
 				}
 			}
 		}
-		
-		
 
 		return super.getCanSpawnHere();
 	}
