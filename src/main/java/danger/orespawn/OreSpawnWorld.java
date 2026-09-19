@@ -970,7 +970,7 @@ public class OreSpawnWorld implements IWorldGenerator
 		
 	}
 
-	// wtf is going on here
+	
 	public void addButterfliesAndMoths(World world, Random random, int chunkX, int chunkZ)
 	{
 		if (random.nextInt(10 + OreSpawnMain.LessLag * 2) != 0) return;
