@@ -11,19 +11,43 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class StepUp extends Item {
-	public StepUp(int i) {
+
+
+
+
+
+
+
+
+
+
+
+public class StepUp extends Item
+{
+	public StepUp(int i)
+	{
 		this.maxStackSize = 16;
 		this.setCreativeTab(CreativeTabs.tabTools);
 	}
-
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer Player, World world, int cposx, int cposy, int cposz, int par7, float par8, float par9, float par10) {
-		int deltax = 0;
-		int deltaz = 0;
+	
+	
+	
+	
+	
+	/**
+	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+	 * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
+	 */
+	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer Player, World world, int cposx, int cposy, int cposz, int par7, float par8, float par9, float par10)
+	{
+		int x, y, z;
+		int deltax = 0, deltaz = 0;
+		int i, j, k;
+		Block bid;
 		int length = 33;
-		int x = cposx;
-		int y = cposy + 1;
-		int z = cposz;
+		
+		x = cposx; y = cposy + 1; z = cposz;
+		
 		float f = Player.rotationYawHead;
 		f += 22.5F;
 		f %= 360.0F;
@@ -60,47 +84,55 @@ public class StepUp extends Item {
 			case 7:
 				deltax = 1;
 				deltaz = 1;
+				break;
+			default:
+				break;
 		}
 
-		if (deltax == 0 && deltaz == 0) {
-			return false;
-		} else {
-			Player.worldObj.playSoundAtEntity(Player, "random.explode", 1.0F, 1.5F);
-			if (world.isRemote) {
-				for (int var3 = 0; var3 < 6; ++var3) {
-					world.spawnParticle("largesmoke", (double)((float)x + world.rand.nextFloat() - world.rand.nextFloat()), (double)((float)y + world.rand.nextFloat() + 1.0F), (double)((float)z + world.rand.nextFloat() - world.rand.nextFloat()), 0.0D, 0.0D, 0.0D);
-					world.spawnParticle("largeexplode", (double)((float)x + world.rand.nextFloat() - world.rand.nextFloat()), (double)((float)y + world.rand.nextFloat() + 1.0F), (double)((float)z + world.rand.nextFloat() - world.rand.nextFloat()), 0.0D, 0.0D, 0.0D);
-					world.spawnParticle("reddust", (double)((float)x + world.rand.nextFloat() - world.rand.nextFloat()), (double)((float)y + world.rand.nextFloat() + 1.0F), (double)((float)z + world.rand.nextFloat() - world.rand.nextFloat()), 0.0D, 0.0D, 0.0D);
-				}
-
-				return true;
-			} else {
-				for (int k = 1; k < length; k++) {
-					Block bid = world.getBlock(x + k * deltax, y + k - 1, z + k * deltaz);
-					if (bid != Blocks.air) {
-						break;
-					}
-
-					world.setBlock(x + k * deltax, y + k - 1, z + k * deltaz, Blocks.cobblestone, 0, 2);
-					if ((k - 1) % 8 == 0) {
-						bid = world.getBlock(x + k * deltax, y + k, z + k * deltaz);
-						if (bid == Blocks.air) {
-							world.setBlock(x + k * deltax, y + k, z + k * deltaz, OreSpawnMain.ExtremeTorch, 0, 2);
-						}
-					}
-				}
-
-				if (!Player.capabilities.isCreativeMode) {
-					--par1ItemStack.stackSize;
-				}
-
-				return true;
+		if (deltax == 0 && deltaz == 0) return false;
+		
+		Player.worldObj.playSoundAtEntity(Player, "random.explode", 1.0F, 1.5F);
+		
+		if (world.isRemote)
+		{
+			for (int var3 = 0; var3 < 6; var3++)
+			{
+				world.spawnParticle("largesmoke", (double)((float)x + world.rand.nextFloat() - world.rand.nextFloat()), (double)((float)y + world.rand.nextFloat() + 1.0F), (double)((float)z + world.rand.nextFloat() - world.rand.nextFloat()), 0.0D, 0.0D, 0.0D);
+				world.spawnParticle("largeexplode", (double)((float)x + world.rand.nextFloat() - world.rand.nextFloat()), (double)((float)y + world.rand.nextFloat() + 1.0F), (double)((float)z + world.rand.nextFloat() - world.rand.nextFloat()), 0.0D, 0.0D, 0.0D);
+				world.spawnParticle("reddust", (double)((float)x + world.rand.nextFloat() - world.rand.nextFloat()), (double)((float)y + world.rand.nextFloat() + 1.0F), (double)((float)z + world.rand.nextFloat() - world.rand.nextFloat()), 0.0D, 0.0D, 0.0D);
 			}
+
+			return true;
 		}
+		
+		for (k = 1; k < length; k++) {
+			bid = world.getBlock(x + k * deltax, y + k - 1, z + k * deltaz);
+			if (bid == Blocks.air) {
+				world.setBlock(x + k * deltax, y + k - 1, z + k * deltaz, Blocks.cobblestone, 0, 2);
+				
+				
+				
+				if ((k - 1) % 8 == 0) {
+					bid = world.getBlock(x + k * deltax, y + k, z + k * deltaz);
+					if (bid == Blocks.air) {
+						world.setBlock(x + k * deltax, y + k, z + k * deltaz, OreSpawnMain.ExtremeTorch, 0, 2);
+					}
+				}
+			} else
+				break;
+		}
+		if (!Player.capabilities.isCreativeMode)
+		{
+			--par1ItemStack.stackSize;
+		}
+
+		return true;
 	}
 
+	
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister) {
+	public void registerIcons(IIconRegister iconRegister)
+	{
 		this.itemIcon = iconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5));
 	}
 }
