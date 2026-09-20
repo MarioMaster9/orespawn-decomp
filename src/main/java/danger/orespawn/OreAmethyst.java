@@ -10,34 +10,60 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
-public class OreAmethyst extends Block {
-	public OreAmethyst(int i) {
+
+
+
+
+
+
+
+
+
+public class OreAmethyst extends Block
+{
+	public OreAmethyst(int i)
+	{
 		super(Material.rock);
 		this.setHardness(10.0F);
 		this.setResistance(4.0F);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
 
-	public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
+	/**
+	 * Drops the block items with a specified chance of dropping the specified items
+	 */
+	public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
+	{
 		super.dropBlockAsItemWithChance(par1World, par2, par3, par4, par5, par6, par7);
 		int j1 = 5 + par1World.rand.nextInt(5) + par1World.rand.nextInt(5);
 		this.dropXpOnBlockBreak(par1World, par2, par3, par4, j1);
 	}
 
-	public Item getItemDropped(int par1, Random par2Random, int par3) {
+	
+	
+	
+	public Item getItemDropped(int par1, Random par2Random, int par3)
+	{
 		return OreSpawnMain.MyAmethyst;
 	}
 
-	public int quantityDroppedWithBonus(int par1, Random par2Random) {
+	
+	public int quantityDroppedWithBonus(int par1, Random par2Random)
+	{
 		return 1 + par2Random.nextInt(2);
 	}
 
-	public int quantityDropped(Random par1Random) {
+	/**
+	 * Returns the quantity of items to drop on block destruction.
+	 */
+	public int quantityDropped(Random par1Random)
+	{
 		return 1;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister) {
+	public void registerBlockIcons(IIconRegister iconRegister)
+	{
 		this.blockIcon = iconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5));
 	}
 }

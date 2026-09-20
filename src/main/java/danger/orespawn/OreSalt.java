@@ -10,26 +10,38 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class OreSalt extends Block {
-	public OreSalt(int par1) {
+
+
+
+public class OreSalt extends Block
+{
+	public OreSalt(int par1)
+	{
 		super(Material.rock);
 		this.setHardness(5.0F);
 		this.setResistance(2.0F);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
 
-	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
+	
+	/**
+	 * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
+	 */
+	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity)
+	{
 		if (par5Entity instanceof EntityAnt) {
 			par5Entity.attackEntityFrom(DamageSource.cactus, 5.0F);
 		}
-
 	}
 
-	public void onEntityWalking(World par1World, int par2, int par3, int par4, Entity par5Entity) {
+	/**
+	 * Called whenever an entity is walking on top of this block. Args: world, x, y, z, entity
+	 */
+	public void onEntityWalking(World par1World, int par2, int par3, int par4, Entity par5Entity)
+	{
 		if (par5Entity instanceof EntityAnt) {
 			par5Entity.attackEntityFrom(DamageSource.cactus, 5.0F);
 		}
-
 	}
 
 	@SideOnly(Side.CLIENT)
