@@ -8,30 +8,56 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.IIcon;
 
-public class CrystalWood extends Block {
-	public CrystalWood(int par1, float f1, float f2) {
+
+
+
+
+
+
+
+public class CrystalWood extends Block
+{
+	public CrystalWood(int par1, float f1, float f2)
+	{
 		super(Material.wood);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		this.setTickRandomly(false);
 		this.setHardness(f1);
 		this.setResistance(f2);
 	}
-
+	
+	
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int par1, int par2) {
+	
+	/**
+	 * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+	 */
+	public IIcon getIcon(int par1, int par2)
+	{
 		return this.blockIcon;
 	}
 
-	public boolean isOpaqueCube() {
+	/**
+	 * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+	 * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+	 */
+	public boolean isOpaqueCube()
+	{
 		return false;
 	}
 
-	public boolean renderAsNormalBlock() {
+	/**
+	 * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+	 */
+	public boolean renderAsNormalBlock()
+	{
 		return false;
 	}
 
+	
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister) {
+	public void registerBlockIcons(IIconRegister iconRegister)
+	{
 		this.blockIcon = iconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5));
 	}
 }

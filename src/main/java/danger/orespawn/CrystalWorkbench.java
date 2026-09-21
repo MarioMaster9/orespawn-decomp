@@ -9,42 +9,77 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-public class CrystalWorkbench extends BlockWorkbench {
+
+
+
+public class CrystalWorkbench extends BlockWorkbench
+{
 	@SideOnly(Side.CLIENT)
 	private IIcon workbenchIconTop;
 	@SideOnly(Side.CLIENT)
 	private IIcon workbenchIconFront;
 
-	protected CrystalWorkbench(int par1, float f1, float f2) {
+	protected CrystalWorkbench(int par1, float f1, float f2)
+	{
 		this.setCreativeTab(CreativeTabs.tabDecorations);
 		this.setHardness(f1);
 		this.setResistance(f2);
 	}
 
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		if (par1World.isRemote) {
+	
+	/**
+	 * Called upon block activation (right click on the block.)
+	 */
+	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
+	{
+		if (par1World.isRemote)
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			par5EntityPlayer.openGui(OreSpawnMain.instance, 1, par1World, par2, par3, par4);
 			return true;
 		}
 	}
 
-	public boolean isOpaqueCube() {
+	/**
+	 * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+	 * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+	 */
+	public boolean isOpaqueCube()
+	{
 		return false;
 	}
 
-	public boolean renderAsNormalBlock() {
+	/**
+	 * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+	 */
+	public boolean renderAsNormalBlock()
+	{
 		return false;
 	}
 
+	
+	
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int par1, int par2) {
+	
+	/**
+	 * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+	 */
+	public IIcon getIcon(int par1, int par2)
+	{
 		return par1 == 1 ? this.workbenchIconTop : (par1 == 0 ? this.blockIcon : (par1 != 2 && par1 != 4 ? this.blockIcon : this.workbenchIconFront));
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IIconRegister) {
+	
+	/**
+	 * When this method is called, your block should register all the icons it needs with the given IconRegister. This
+	 * is the only chance you get to register icons.
+	 */
+	public void registerBlockIcons(IIconRegister par1IIconRegister)
+	{
 		this.blockIcon = par1IIconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5) + "_side");
 		this.workbenchIconTop = par1IIconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5) + "_top");
 		this.workbenchIconFront = par1IIconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5) + "_bottom");
