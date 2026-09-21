@@ -472,7 +472,7 @@ public class TheKing extends EntityMob
 		double var5 = 0.0D;
 		float var7 = 0.0F;
 		float var8 = 0.0F;
-		EntityLiving unused3;
+		EntityLiving newent;
 		EntityPlayer p = null;
 		
 		if (this.isDead) return;
@@ -669,7 +669,7 @@ public class TheKing extends EntityMob
 			f = this.findSomethingToAttack();
 			if (this.head_found == 0)
 			{
-				unused3 = (EntityLiving)spawnCreature(this.worldObj, "KingHead", this.posX, this.posY + 20.0D, this.posZ);
+				newent = (EntityLiving)spawnCreature(this.worldObj, "KingHead", this.posX, this.posY + 20.0D, this.posZ);
 			}
 
 			
