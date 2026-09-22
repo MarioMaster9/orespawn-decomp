@@ -13,12 +13,12 @@ import net.minecraft.util.EnumFacing;
 
 
 
-
-
-
-
 final class DispenserBehaviorOreSpawnEgg extends BehaviorDefaultDispenseItem
 {
+	
+	/**
+	 * Dispense the specified stack, play the dispense sound and spawn particles.
+	 */
 	public ItemStack dispenseStack(IBlockSource par1IBlockSource, ItemStack par2ItemStack) {
 		EnumFacing enumfacing = BlockDispenser.func_149937_b(par1IBlockSource.getBlockMetadata());
 		double d0 = par1IBlockSource.getX() + (double)enumfacing.getFrontOffsetX() * 2.0D;
