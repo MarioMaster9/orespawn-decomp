@@ -17,7 +17,36 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class Cockateil extends EntityAnimal {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class Cockateil extends EntityAnimal
+{
 	private ChunkCoordinates currentFlightTarget = null;
 	public int birdtype;
 	private boolean killedByPlayer = false;
@@ -32,8 +61,10 @@ public class Cockateil extends EntityAnimal {
 	private int lastZ = 0;
 	private int flyup = 0;
 
-	public Cockateil(World par1World) {
+	public Cockateil(World par1World)
+	{
 		super(par1World);
+		
 		this.setSize(0.5F, 0.5F);
 		this.getNavigator().setAvoidsWater(true);
 		this.experienceValue = 2;
@@ -41,7 +72,8 @@ public class Cockateil extends EntityAnimal {
 		this.fireResistance = 2;
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)0.33F);
@@ -64,9 +96,8 @@ public class Cockateil extends EntityAnimal {
 				return texture5;
 			case 5:
 				return texture6;
-			default:
-				return null;
 		}
+		return null;
 	}
 
 	protected void entityInit() {
@@ -76,9 +107,11 @@ public class Cockateil extends EntityAnimal {
 	}
 
 	protected boolean canDespawn() {
-		return !this.isNoDespawnRequired();
+		if (this.isNoDespawnRequired()) return false;
+		return true;
 	}
 
+	
 	public int getBirdType() {
 		return this.dataWatcher.getWatchableObjectInt(22);
 	}
@@ -87,26 +120,49 @@ public class Cockateil extends EntityAnimal {
 		this.dataWatcher.updateObject(22, par1);
 	}
 
+	
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
 	protected float getSoundVolume() {
 		return 0.55F;
 	}
 
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
 	protected float getSoundPitch() {
 		return 1.0F;
 	}
 
+	
+	
+	
 	protected String getLivingSound() {
-		return this.worldObj.isDaytime() && !this.worldObj.isRaining() ? "orespawn:birds" : null;
+		if (this.worldObj.isDaytime() && !this.worldObj.isRaining()) {
+			return "orespawn:birds";
+		} else {
+			return null;
+		}
 	}
 
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
 	protected String getHurtSound() {
 		return "orespawn:duck_hurt";
 	}
 
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
 	protected String getDeathSound() {
 		return "orespawn:duck_hurt";
 	}
 
+	/**
+	 * Returns true if this entity should push and be pushed by other entities when colliding.
+	 */
 	public boolean canBePushed() {
 		return true;
 	}
@@ -115,143 +171,202 @@ public class Cockateil extends EntityAnimal {
 		return 2;
 	}
 
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
 	protected boolean isAIEnabled() {
 		return true;
 	}
 
-	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+	/**
+	 * Called when the entity is attacked.
+	 */
+	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+	{
 		Entity e = par1DamageSource.getEntity();
-		if (e != null && e instanceof EntityPlayer) {
+		if (e != null && e instanceof EntityPlayer)
+		{
 			this.killedByPlayer = true;
 		}
-
 		return super.attackEntityFrom(par1DamageSource, par2);
 	}
 
+	/**
+	 * Called to update the entity's position/logic.
+	 */
 	public void onUpdate() {
 		super.onUpdate();
 		if (this.currentFlightTarget == null) {
 			this.currentFlightTarget = new ChunkCoordinates((int)this.posX, (int)this.posY, (int)this.posZ);
-		} else if (this.posY < (double)this.currentFlightTarget.posY) {
+		}
+		else if (this.posY < (double)this.currentFlightTarget.posY) {
 			this.motionY *= 0.7;
 		} else {
 			this.motionY *= 0.5D;
 		}
-
+		
 	}
-
-	public int getAttackStrength(Entity par1Entity) {
+	
+	public int getAttackStrength(Entity par1Entity)
+	{
 		return 1;
 	}
 
-	public void setFlyUp() {
+	public void setFlyUp()
+	{
 		this.flyup = 2;
 	}
 
-	protected void fall(float par1) {
-	}
+	
+	
+	
+	protected void fall(float par1) {}
 
-	protected void updateFallState(double par1, boolean par3) {
-	}
+	
+	
+	
+	
+	protected void updateFallState(double par1, boolean par3) {}
 
-	public boolean canSeeTarget(double pX, double pY, double pZ) {
+	
+	
+	
+	public boolean canSeeTarget(double pX, double pY, double pZ)
+	{
 		return this.worldObj.rayTraceBlocks(Vec3.createVectorHelper(this.posX, this.posY + 0.75D, this.posZ), Vec3.createVectorHelper(pX, pY, pZ), false) == null;
 	}
 
-	protected void updateAITasks() {
+	
+	protected void updateAITasks()
+	{
 		int xdir = 1;
 		int zdir = 1;
+		int unused1, unused2;
 		int keep_trying = 35;
+		int unused3, unused4, unused5, unused6;
+		Block bid;
 		int stayup = 0;
-		if (!this.isDead) {
-			super.updateAITasks();
-			if (this.worldObj.provider.dimensionId == OreSpawnMain.DimensionID4) {
-				stayup = 2;
-			}
-
-			if (this.lastX == (int)this.posX && this.lastZ == (int)this.posZ) {
-				++this.stuck_count;
-			} else {
-				this.stuck_count = 0;
-				this.lastX = (int)this.posX;
-				this.lastZ = (int)this.posZ;
-			}
-
-			if (this.currentFlightTarget == null) {
-				this.currentFlightTarget = new ChunkCoordinates((int)this.posX, (int)this.posY, (int)this.posZ);
-			}
-
-			if (this.stuck_count > 40 || this.rand.nextInt(250) == 0 || this.currentFlightTarget.getDistanceSquared((int)this.posX, (int)this.posY, (int)this.posZ) < 4.1F) {
-				Block bid = Blocks.stone;
-
-				for (this.stuck_count = 0; bid != Blocks.air && keep_trying != 0; --keep_trying) {
-					zdir = this.rand.nextInt(8) + 5 - this.flyup * 2;
-					xdir = this.rand.nextInt(8) + 5 - this.flyup * 2;
-					if (this.rand.nextInt(2) == 0) {
-						zdir = -zdir;
-					}
-
-					if (this.rand.nextInt(2) == 0) {
-						xdir = -xdir;
-					}
-
-					this.currentFlightTarget.set((int)this.posX + xdir, (int)this.posY + this.rand.nextInt(9 + stayup) - 5 + this.flyup, (int)this.posZ + zdir);
-					bid = this.worldObj.getBlock(this.currentFlightTarget.posX, this.currentFlightTarget.posY, this.currentFlightTarget.posZ);
-					if (bid == Blocks.air && !this.canSeeTarget((double)this.currentFlightTarget.posX, (double)this.currentFlightTarget.posY, (double)this.currentFlightTarget.posZ)) {
+		
+		
+		if (this.isDead) return;
+		super.updateAITasks();
+		
+		if (this.worldObj.provider.dimensionId == OreSpawnMain.DimensionID4) stayup = 2;
+		
+		if (this.lastX == (int)this.posX && this.lastZ == (int)this.posZ) {
+			
+			++this.stuck_count;
+		} else {
+			this.stuck_count = 0;
+			this.lastX = (int)this.posX;
+			this.lastZ = (int)this.posZ;
+		}
+		
+		
+		if (this.currentFlightTarget == null) {
+			this.currentFlightTarget = new ChunkCoordinates((int)this.posX, (int)this.posY, (int)this.posZ);
+		}
+		
+		
+		if (this.stuck_count > 40 || this.rand.nextInt(250) == 0 || this.currentFlightTarget.getDistanceSquared((int)this.posX, (int)this.posY, (int)this.posZ) < 4.1F)
+		{
+			bid = Blocks.stone;
+			this.stuck_count = 0;
+			while (bid != Blocks.air && keep_trying != 0) {
+				zdir = this.rand.nextInt(8) + 5 - this.flyup * 2;
+				xdir = this.rand.nextInt(8) + 5 - this.flyup * 2;
+				if (this.rand.nextInt(2) == 0) zdir = -zdir;
+				if (this.rand.nextInt(2) == 0) xdir = -xdir;
+				this.currentFlightTarget.set((int)this.posX + xdir, (int)this.posY + this.rand.nextInt(9 + stayup) - 5 + this.flyup, (int)this.posZ + zdir);
+				bid = this.worldObj.getBlock(this.currentFlightTarget.posX, this.currentFlightTarget.posY, this.currentFlightTarget.posZ);
+				if (bid == Blocks.air) {
+					if (!this.canSeeTarget((double)this.currentFlightTarget.posX, (double)this.currentFlightTarget.posY, (double)this.currentFlightTarget.posZ)) {
 						bid = Blocks.stone;
 					}
 				}
+				keep_trying--;
 			}
-
-			double var1 = (double)this.currentFlightTarget.posX + 0.3 - this.posX;
-			double var3 = (double)this.currentFlightTarget.posY + 0.1 - this.posY;
-			double var5 = (double)this.currentFlightTarget.posZ + 0.3 - this.posZ;
-			this.motionX += (Math.signum(var1) * 0.3 - this.motionX) * 0.25D;
-			this.motionY += (Math.signum(var3) * 0.699999 - this.motionY) * 0.200000001;
-			this.motionZ += (Math.signum(var5) * 0.3 - this.motionZ) * 0.25D;
-			float var7 = (float)(Math.atan2(this.motionZ, this.motionX) * 180.0D / Math.PI) - 90.0F;
-			float var8 = MathHelper.wrapAngleTo180_float(var7 - this.rotationYaw);
-			this.moveForward = 0.8F;
-			this.rotationYaw += var8 / 3.0F;
 		}
+		
+		
+		double var1 = (double)this.currentFlightTarget.posX + 0.3 - this.posX;
+		double var3 = (double)this.currentFlightTarget.posY + 0.1 - this.posY;
+		double var5 = (double)this.currentFlightTarget.posZ + 0.3 - this.posZ;
+		this.motionX += (Math.signum(var1) * 0.3 - this.motionX) * 0.25D;
+		this.motionY += (Math.signum(var3) * 0.699999 - this.motionY) * 0.200000001;
+		this.motionZ += (Math.signum(var5) * 0.3 - this.motionZ) * 0.25D;
+		float var7 = (float)(Math.atan2(this.motionZ, this.motionX) * 180.0D / Math.PI) - 90.0F;
+		float var8 = MathHelper.wrapAngleTo180_float(var7 - this.rotationYaw);
+		this.moveForward = 0.8F;
+		this.rotationYaw += var8 / 3.0F;
+		
 	}
 
+	/**
+	 * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+	 * prevent them from trampling crops
+	 */
 	protected boolean canTriggerWalking() {
 		return true;
 	}
 
-	public boolean doesEntityNotTriggerPressurePlate() {
+	/**
+	 * Return whether this entity should NOT trigger a pressure plate or a tripwire.
+	 */
+	public boolean doesEntityNotTriggerPressurePlate()
+	{
 		return false;
 	}
 
-	public boolean getCanSpawnHere() {
-		if (!this.worldObj.isDaytime()) {
-			return false;
-		} else if (this.worldObj.provider.dimensionId == OreSpawnMain.DimensionID4) {
-			return true;
-		} else {
-			return !(this.posY < 50.0D);
-		}
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
+		if (!this.worldObj.isDaytime()) return false;
+		if (this.worldObj.provider.dimensionId == OreSpawnMain.DimensionID4) return true;
+		if (this.posY < 50.0D) return false;
+		return true;
 	}
 
-	protected Item getDropItem() {
+	
+	
+	
+	protected Item getDropItem()
+	{
 		this.birdtype = this.getBirdType();
-		return this.birdtype == 5 && this.killedByPlayer && this.worldObj.rand.nextInt(3) == 1 ? OreSpawnMain.MyRuby : Items.feather;
+		if (this.birdtype == 5 && this.killedByPlayer && this.worldObj.rand.nextInt(3) == 1) return OreSpawnMain.MyRuby;
+		return Items.feather;
 	}
 
-	public void initCreature() {
-	}
-
-	public EntityAgeable createChild(EntityAgeable var1) {
+	
+	
+	
+	
+	public void initCreature() {}
+	
+	
+	public EntityAgeable createChild(EntityAgeable var1)
+	{
 		return null;
 	}
 
-	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
+	
+	
+	/**
+	 * (abstract) Protected helper method to write subclass entity data to NBT.
+	 */
+	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
+	{
 		super.writeEntityToNBT(par1NBTTagCompound);
 		par1NBTTagCompound.setInteger("BirdType", this.getBirdType());
 	}
 
-	public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+	/**
+	 * (abstract) Protected helper method to read subclass entity data from NBT.
+	 */
+	public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
+	{
 		super.readEntityFromNBT(par1NBTTagCompound);
 		this.birdtype = par1NBTTagCompound.getInteger("BirdType");
 		this.setBirdType(this.birdtype);

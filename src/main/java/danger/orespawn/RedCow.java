@@ -6,15 +6,26 @@ import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.init.Items;
 import net.minecraft.world.World;
 
-public class RedCow extends EntityCow {
-	public RedCow(World world) {
+
+public class RedCow extends EntityCow
+{
+	
+	
+	public RedCow(World world)
+	{
 		super(world);
 	}
 
+	/**
+	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity has recently been hit by a player. @param
+	 * par2 - Level of Looting used to kill this mob.
+	 */
 	protected void dropFewItems(boolean par1, int par2) {
 		int var3 = this.rand.nextInt(3) + this.rand.nextInt(1 + par2);
-
-		for (int var4 = 0; var4 < var3; ++var4) {
+		int var4;
+		
+		for (var4 = 0; var4 < var3; var4++)
+		{
 			this.dropItem(Items.apple, 1);
 		}
 
@@ -25,15 +36,15 @@ public class RedCow extends EntityCow {
 		return this.spawnBabyAnimal(entityageable);
 	}
 
+	
+	
 	public RedCow spawnBabyAnimal(EntityAgeable par1EntityAgeable) {
 		return new RedCow(this.worldObj);
 	}
 
-	protected void updateAITick() {
-		if (this.worldObj.rand.nextInt(200) == 1) {
-			this.setRevengeTarget((EntityLivingBase)null);
-		}
-
+	protected void updateAITick()
+	{
+		if (this.worldObj.rand.nextInt(200) == 1) this.setRevengeTarget(null);
 		super.updateAITick();
 	}
 
