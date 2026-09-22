@@ -98,7 +98,7 @@ public class MyEntityAIDance extends EntityAIBase
 	public boolean continueExecuting()
 	{
 		if (this.thePet.isSitting()) return false;
-		
+		Block bid;
 		long t = this.theWorld.getWorldTime();
 		t %= 24000L;
 		if (t < 14000L || t > 22000L) return false;
@@ -106,7 +106,7 @@ public class MyEntityAIDance extends EntityAIBase
 		ix = iz = ic = 0;
 		for (i = -3; i < 4; i++) {
 			for (j = -3; j < 4; j++) {
-				Block bid = this.theWorld.getBlock((int)this.thePet.posX + i, (int)this.thePet.posY - 1, (int)this.thePet.posZ + j);
+				bid = this.theWorld.getBlock((int)this.thePet.posX + i, (int)this.thePet.posY - 1, (int)this.thePet.posZ + j);
 				if (this.is_dance_block(bid)) {
 					ic++;
 					ix += i;
@@ -128,25 +128,25 @@ public class MyEntityAIDance extends EntityAIBase
 		this.is_dancing = 1;
 		return true;
 	}
-
-	
-	
-	
 	
 	/**
 	 * Execute a one shot task or start executing a continuous task
 	 */
 	public void startExecuting()
 	{
+		int i, j;
+		int ix, iz, ic;
+		Block bid;
+		
 		this.thePet.setSneaking(false);
 		this.ticker = 0;
 		this.dance_move = 0;
 		this.is_dancing = 1;
 		
-		int ic = 0, iz = ic, ix = iz;
-		for (int i = -3; i < 4; i++) {
-			for (int j = -3; j < 4; j++) {
-				Block bid = this.theWorld.getBlock((int)this.thePet.posX + i, (int)this.thePet.posY - 1, (int)this.thePet.posZ + j);
+		ix = iz = ic = 0;
+		for (i = -3; i < 4; i++) {
+			for (j = -3; j < 4; j++) {
+				bid = this.theWorld.getBlock((int)this.thePet.posX + i, (int)this.thePet.posY - 1, (int)this.thePet.posZ + j);
 				if (this.is_dance_block(bid)) {
 					ic++;
 					ix += i;
@@ -161,8 +161,8 @@ public class MyEntityAIDance extends EntityAIBase
 				this.thePet.getNavigator().tryMoveToXYZ((double)((int)this.thePet.posX + ix), (double)((int)this.thePet.posY), (double)((int)this.thePet.posZ + iz), 1.0D);
 			}
 		}
+		
 	}
-
 	
 	/**
 	 * Resets the task
@@ -189,7 +189,7 @@ public class MyEntityAIDance extends EntityAIBase
 		
 		AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(this.thePet.posX - 4.0D, this.thePet.posY - 3.0D, this.thePet.posZ - 4.0D, this.thePet.posX + 4.0D, this.thePet.posY + 3.0D, this.thePet.posZ + 4.0D);
 		List var5 = this.theWorld.getEntitiesWithinAABB(Girlfriend.class, bb);
-		Iterator<Girlfriend> var2 = var5.iterator();
+		Iterator var2 = var5.iterator();
 		while (var2.hasNext())
 		{
 			Girlfriend var3 = (Girlfriend)var2.next();
@@ -302,10 +302,10 @@ public class MyEntityAIDance extends EntityAIBase
 				break;
 			default:
 				this.dance_move = 0;
+				break;
 		}
-
+		
 	}
-
 	
 	
 	
@@ -339,10 +339,10 @@ public class MyEntityAIDance extends EntityAIBase
 				dirz = 0.0F;
 				dirYaw = 0.0F;
 				dirYawH = 10.0F;
+				break;
+			default:
+				break;
 		}
-
-		
-		
 		t %= cycle;
 		if (t >= cycle / 2) {
 			dirx = -dirx;
@@ -362,5 +362,6 @@ public class MyEntityAIDance extends EntityAIBase
 		et.motionZ += (double)dirz;
 		et.rotationYaw += dirYaw;
 		et.rotationYawHead += dirYawH;
+		
 	}
 }

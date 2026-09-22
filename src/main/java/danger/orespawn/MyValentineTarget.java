@@ -1,75 +1,97 @@
 package danger.orespawn;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
-public class MyValentineTarget extends MyEntityAITarget {
+
+
+
+
+public class MyValentineTarget extends MyEntityAITarget
+{
 	EntityLivingBase targetEntity;
 	EntityLivingBase Me;
 	Class targetClass;
 	int targetChance;
-	private final IEntitySelector targetEntitySelector;
+	private final IEntitySelector field_82643_g;
 	private MyValentineTargetSorter theNearestAttackableTargetSorter;
 
-	public MyValentineTarget(EntityLiving par1EntityLiving, Class par2Class, float par3, int par4, boolean par5) {
+	public MyValentineTarget(EntityLiving par1EntityLiving, Class par2Class, float par3, int par4, boolean par5)
+	{
 		this(par1EntityLiving, par2Class, par3, par4, par5, false);
 		this.Me = par1EntityLiving;
 	}
 
-	public MyValentineTarget(EntityLiving par1EntityLiving, Class par2Class, float par3, int par4, boolean par5, boolean par6) {
+	public MyValentineTarget(EntityLiving par1EntityLiving, Class par2Class, float par3, int par4, boolean par5, boolean par6)
+	{
 		this(par1EntityLiving, par2Class, par3, par4, par5, par6, (IEntitySelector)null);
 		this.Me = par1EntityLiving;
 	}
 
-	public MyValentineTarget(EntityLiving par1, Class par2, float par3, int par4, boolean par5, boolean par6, IEntitySelector par7IEntitySelector) {
+	public MyValentineTarget(EntityLiving par1, Class par2, float par3, int par4, boolean par5, boolean par6, IEntitySelector par7IEntitySelector)
+	{
 		super(par1, par3, par5, par6);
 		this.targetClass = par2;
 		this.targetDistance = par3;
 		this.targetChance = par4;
 		this.theNearestAttackableTargetSorter = new MyValentineTargetSorter(this, par1);
-		this.targetEntitySelector = par7IEntitySelector;
+		this.field_82643_g = par7IEntitySelector;
 		this.setMutexBits(1);
 		this.Me = par1;
 	}
 
-	public boolean shouldExecute() {
-		if (OreSpawnMain.valentines_day == 0) {
+	/**
+	 * Returns whether the EntityAIBase should begin execution.
+	 */
+	public boolean shouldExecute()
+	{
+		if (OreSpawnMain.valentines_day == 0) return false;
+		if (this.Me != null && this.Me instanceof Girlfriend) {
+			Girlfriend gf = (Girlfriend)this.Me;
+			if (gf.feelingBetter != 0) return false;
+		}
+		List var5;
+		Iterator var2;
+		if (this.targetChance > 0 && this.taskOwner.getRNG().nextInt(100) > this.targetChance)
+		{
 			return false;
-		} else {
-			if (this.Me != null && this.Me instanceof Girlfriend) {
-				Girlfriend gf = (Girlfriend)this.Me;
-				if (gf.feelingBetter != 0) {
-					return false;
-				}
-			}
-
-			if (this.targetChance > 0 && this.taskOwner.getRNG().nextInt(100) > this.targetChance) {
-				return false;
-			} else {
-				List<Entity> var5 = this.taskOwner.worldObj.selectEntitiesWithinAABB(this.targetClass, this.taskOwner.boundingBox.expand((double)this.targetDistance, 4.0D, (double)this.targetDistance), this.targetEntitySelector);
-				Collections.sort(var5, this.theNearestAttackableTargetSorter);
-
-				for (Entity var3 : var5) {
-					if (var3 instanceof EntityLivingBase) {
-						EntityLivingBase var4 = (EntityLivingBase)var3;
-						if (this.isSuitableTarget(var4, false)) {
-							this.targetEntity = var4;
-							return true;
-						}
+		}
+		else
+		{
+			var5 = this.taskOwner.worldObj.selectEntitiesWithinAABB(this.targetClass, this.taskOwner.boundingBox.expand((double)this.targetDistance, 4.0D, (double)this.targetDistance), this.field_82643_g);
+			Collections.sort(var5, this.theNearestAttackableTargetSorter);
+			var2 = var5.iterator();
+			
+			while (var2.hasNext())
+			{
+				Entity var3 = (Entity)var2.next();
+				if (var3 instanceof EntityLivingBase) {
+					EntityLivingBase var4 = (EntityLivingBase)var3;
+					
+					if (this.isSuitableTarget(var4, false))
+					{
+						this.targetEntity = var4;
+						return true;
 					}
 				}
-
-				this.targetEntity = null;
-				return false;
 			}
+
+			this.targetEntity = null;
+			return false;
 		}
 	}
 
-	public void startExecuting() {
+	/**
+	 * Execute a one shot task or start executing a continuous task
+	 */
+	public void startExecuting()
+	{
 		this.taskOwner.setAttackTarget(this.targetEntity);
 		super.startExecuting();
 	}

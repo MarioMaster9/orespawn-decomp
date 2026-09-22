@@ -17,7 +17,7 @@ public class MyEntityAINearestAttackableTarget extends MyEntityAITarget
 	EntityLiving targetEntity;
 	Class targetClass;
 	int targetChance;
-	private final IEntitySelector targetEntitySelector;
+	private final IEntitySelector field_82643_g;
 	private MyEntityAINearestAttackableTargetSorter theNearestAttackableTargetSorter;
 
 	public MyEntityAINearestAttackableTarget(EntityLiving par1EntityLiving, Class par2Class, float par3, int par4, boolean par5)
@@ -37,17 +37,17 @@ public class MyEntityAINearestAttackableTarget extends MyEntityAITarget
 		this.targetDistance = par3;
 		this.targetChance = par4;
 		this.theNearestAttackableTargetSorter = new MyEntityAINearestAttackableTargetSorter(this, par1);
-		this.targetEntitySelector = par7IEntitySelector;
+		this.field_82643_g = par7IEntitySelector;
 		this.setMutexBits(1);
 	}
 
-	
-	
 	/**
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	public boolean shouldExecute()
 	{
+		List var5;
+		Iterator var2;
 		if (this.taskOwner instanceof EntityTameable && !((EntityTameable)this.taskOwner).isTamed())
 		{
 			return false;
@@ -70,9 +70,9 @@ public class MyEntityAINearestAttackableTarget extends MyEntityAITarget
 		}
 		else
 		{
-			List var5 = this.taskOwner.worldObj.selectEntitiesWithinAABB(this.targetClass, this.taskOwner.boundingBox.expand((double)this.targetDistance, 4.0D, (double)this.targetDistance), this.targetEntitySelector);
+			var5 = this.taskOwner.worldObj.selectEntitiesWithinAABB(this.targetClass, this.taskOwner.boundingBox.expand((double)this.targetDistance, 4.0D, (double)this.targetDistance), this.field_82643_g);
 			Collections.sort(var5, this.theNearestAttackableTargetSorter);
-			Iterator var2 = var5.iterator();
+			var2 = var5.iterator();
 			
 			while (var2.hasNext())
 			{
