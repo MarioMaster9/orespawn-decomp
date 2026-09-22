@@ -342,7 +342,7 @@ public class OreSpawnWorld implements IWorldGenerator
 		}
 	}
 
-	// NON-MATCHING
+	
 	public void generateRuby(World world, Random random, int chunkX, int chunkZ)
 	{
 		int patchy;
@@ -2749,7 +2749,7 @@ public class OreSpawnWorld implements IWorldGenerator
 		return false;
 	}
 
-	//2752
+	
 	public boolean addD4Mini(World world, Random random, int chunkX, int chunkZ)
 	{
 		if (OreSpawnMain.LessLag != 0) {
