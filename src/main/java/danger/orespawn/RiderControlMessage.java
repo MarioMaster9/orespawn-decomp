@@ -17,15 +17,15 @@ import io.netty.buffer.ByteBuf;
 
 
 
-
-
-
-
-
 public class RiderControlMessage implements IMessage
 {
-	public int keystate = 0;
+	public int keystate;
 	private int previous;
+	
+	public RiderControlMessage()
+	{
+		this.keystate = 0;
+	}
 
 	public void fromBytes(ByteBuf buf)
 	{
