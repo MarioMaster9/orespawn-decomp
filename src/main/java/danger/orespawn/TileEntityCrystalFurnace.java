@@ -26,23 +26,23 @@ public class TileEntityCrystalFurnace extends TileEntity implements ISidedInvent
 	private static final int[] slots_top = new int[]{0};
 	private static final int[] slots_bottom = new int[]{2, 1};
 	private static final int[] slots_sides = new int[]{1};
-	
-	
-	
-	
+
+	/**
+	 * The ItemStacks that hold the items currently being used in the furnace
+	 */
 	private ItemStack[] furnaceItemStacks = new ItemStack[3];
-	
-	
-	
+
+	/** The number of ticks that the furnace will keep burning */
 	public int furnaceBurnTime;
-	
-	
-	
+
+	/**
+	 * The number of ticks that a fresh copy of the currently-burning item would keep the furnace burning for
+	 */
 	public int currentItemBurnTime;
+	
 	/** The number of ticks that the current item has been cooking for */
 	public int furnaceCookTime;
 	private String field_94130_e;
-
 	
 	/**
 	 * Returns the number of slots in the inventory.
@@ -150,9 +150,9 @@ public class TileEntityCrystalFurnace extends TileEntity implements ISidedInvent
 		this.field_94130_e = par1Str;
 	}
 
-	
-	
-	
+	/**
+	 * Reads a tile entity from NBT.
+	 */
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
 	{
 		super.readFromNBT(par1NBTTagCompound);
@@ -180,9 +180,9 @@ public class TileEntityCrystalFurnace extends TileEntity implements ISidedInvent
 		}
 	}
 
-	
-	
-	
+	/**
+	 * Writes a tile entity to NBT.
+	 */
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
 	{
 		super.writeToNBT(par1NBTTagCompound);
@@ -218,23 +218,23 @@ public class TileEntityCrystalFurnace extends TileEntity implements ISidedInvent
 		return 64;
 	}
 
+	@SideOnly(Side.CLIENT)
 	
 	/**
 	 * Returns an integer between 0 and the passed value representing how close the current item is to being completely
 	 * cooked
 	 */
-	@SideOnly(Side.CLIENT)
 	public int getCookProgressScaled(int par1)
 	{
 		return this.furnaceCookTime * par1 / 150;
 	}
 
+	@SideOnly(Side.CLIENT)
 	
 	/**
 	 * Returns an integer between 0 and the passed value representing how much burn time is left on the current fuel
 	 * item, where 0 means that the item is exhausted and the passed value means that the item is fresh
 	 */
-	@SideOnly(Side.CLIENT)
 	public int getBurnTimeRemainingScaled(int par1)
 	{
 		if (this.currentItemBurnTime == 0)
@@ -246,17 +246,17 @@ public class TileEntityCrystalFurnace extends TileEntity implements ISidedInvent
 	}
 
 	/**
-	 * Furnace isBurning
+	 * Returns true if the furnace is currently burning
 	 */
 	public boolean isBurning()
 	{
 		return this.furnaceBurnTime > 0;
 	}
 
-	
-	
-	
-	
+	/**
+	 * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
+	 * ticks and creates a new spawn inside its implementation.
+	 */
 	public void updateEntity()
 	{
 		boolean flag = this.furnaceBurnTime > 0;
@@ -377,7 +377,7 @@ public class TileEntityCrystalFurnace extends TileEntity implements ISidedInvent
 		}
 		else
 		{
-			
+			//int i = par0ItemStack.getItem().itemID;
 			Item item = par0ItemStack.getItem();
 			
 			if (item instanceof ItemBlock && Block.getBlockFromItem(item) != Blocks.air)
@@ -415,9 +415,9 @@ public class TileEntityCrystalFurnace extends TileEntity implements ISidedInvent
 		}
 	}
 
-	
-	
-	
+	/**
+	 * Return true if item is a fuel source (getItemBurnTime() > 0).
+	 */
 	public static boolean isItemFuel(ItemStack par0ItemStack)
 	{
 		return getItemBurnTime(par0ItemStack) > 0;
