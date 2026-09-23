@@ -1,7 +1,9 @@
 package danger.orespawn;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -17,12 +19,44 @@ import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class Robot1 extends EntityMob {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class Robot1 extends EntityMob
+{
 	private GenericTargetSorter TargetSorter = null;
 	private RenderInfo renderdata = new RenderInfo();
 	private float moveSpeed = 0.2F;
 
-	public Robot1(World par1World) {
+	public Robot1(World par1World)
+	{
 		super(par1World);
 		this.setSize(0.5F, 0.5F);
 		this.getNavigator().setAvoidsWater(true);
@@ -39,20 +73,21 @@ public class Robot1 extends EntityMob {
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
-		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue((double)4.0F);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(4.0D);
 	}
 
-	protected void entityInit() {
+	protected void entityInit()
+	{
 		super.entityInit();
 		this.dataWatcher.addObject(20, (byte)0);
 		if (this.renderdata == null) {
 			this.renderdata = new RenderInfo();
 		}
-
 		this.renderdata.rf1 = 0.0F;
 		this.renderdata.rf2 = 0.0F;
 		this.renderdata.rf3 = 0.0F;
@@ -64,23 +99,33 @@ public class Robot1 extends EntityMob {
 	}
 
 	protected boolean canDespawn() {
-		return !this.isNoDespawnRequired();
+		if (this.isNoDespawnRequired()) return false;
+		return true;
 	}
 
-	public void onUpdate() {
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		super.onUpdate();
 	}
 
-	public int mygetMaxHealth() {
+	public int mygetMaxHealth()
+	{
 		return 5;
 	}
 
-	public RenderInfo getRenderInfo() {
+	
+	
+	public RenderInfo getRenderInfo()
+	{
 		return this.renderdata;
 	}
 
-	public void setRenderInfo(RenderInfo r) {
+	public void setRenderInfo(RenderInfo r)
+	{
 		this.renderdata.rf1 = r.rf1;
 		this.renderdata.rf2 = r.rf2;
 		this.renderdata.rf3 = r.rf3;
@@ -91,142 +136,212 @@ public class Robot1 extends EntityMob {
 		this.renderdata.ri4 = r.ri4;
 	}
 
-	public int getTotalArmorValue() {
+	/**
+	 * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+	 */
+	public int getTotalArmorValue()
+	{
 		return 2;
 	}
 
-	protected boolean isAIEnabled() {
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	protected boolean isAIEnabled()
+	{
 		return true;
 	}
-
-	public void onLivingUpdate() {
+	
+	/**
+	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+	 * use this to react to sunlight and start to burn.
+	 */
+	public void onLivingUpdate()
+	{
+		int i;
 		super.onLivingUpdate();
 		if (this.worldObj.rand.nextInt(8) == 0) {
 			EntityLivingBase e = this.findSomethingToAttack();
 			if (e != null) {
-				if (this.getDistanceSqToEntity(e) < 5.0D && !this.worldObj.isRemote && this.worldObj.rand.nextInt(18) == 1) {
-					this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 2.5F, this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
-					this.setDead();
+				if (this.getDistanceSqToEntity(e) < 5.0D && !this.worldObj.isRemote) {
+					if (this.worldObj.rand.nextInt(18) == 1) {
+						this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 2.5F, this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
+						this.setDead();
+					}
 				}
-
-				for (int i = 0; i < 2; i++) {
+				for (i = 0; i < 2; i++) {
 					this.worldObj.spawnParticle("smoke", this.posX, this.posY + 1.0D, this.posZ, 0.0D, 0.0D, 0.0D);
 					this.worldObj.spawnParticle("lava", this.posX, this.posY + 1.0D, this.posZ, 0.0D, 0.0D, 0.0D);
 				}
-
 				this.getNavigator().tryMoveToEntityLiving(e, 1.2);
 			}
 		}
-
 	}
 
-	protected String getLivingSound() {
+	
+	
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
 		return "orespawn:kyuubi_living";
 	}
 
-	protected String getHurtSound() {
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return "orespawn:scorpion_hit";
 	}
 
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return "orespawn:robot1_death";
 	}
 
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
 	protected float getSoundVolume() {
 		return 1.0F;
 	}
 
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
 	protected float getSoundPitch() {
 		return 1.0F;
 	}
 
-	protected Item getDropItem() {
+	
+	
+	
+	protected Item getDropItem()
+	{
 		return Items.gunpowder;
 	}
 
-	public boolean interact(EntityPlayer par1EntityPlayer) {
+	/**
+	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+	 */
+	public boolean interact(EntityPlayer par1EntityPlayer)
+	{
 		return false;
 	}
 
+	
+	
+	
 	public boolean attackEntityAsMob(Entity par1Entity) {
 		return super.attackEntityAsMob(par1Entity);
 	}
 
-	protected void updateAITasks() {
-		if (!this.isDead) {
-			super.updateAITasks();
-		}
+	protected void updateAITasks()
+	{
+		if (this.isDead) return;
+		super.updateAITasks();
 	}
 
-	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+	/**
+	 * Called when the entity is attacked.
+	 */
+	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+	{
 		boolean ret = false;
 		if (!par1DamageSource.getDamageType().equals("cactus")) {
 			ret = super.attackEntityFrom(par1DamageSource, par2);
 		}
-
 		return ret;
 	}
 
-	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2) {
-		if (par1EntityLiving == null) {
+	
+	
+	
+	
+	
+	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2)
+	{
+		if (par1EntityLiving == null)
+		{
 			return false;
-		} else if (par1EntityLiving == this) {
+		}
+		if (par1EntityLiving == this)
+		{
 			return false;
-		} else if (!par1EntityLiving.isEntityAlive()) {
+		}
+		if (!par1EntityLiving.isEntityAlive())
+		{
 			return false;
-		} else {
-			if (OreSpawnMain.OreSpawnUtils.isIgnoreable(par1EntityLiving)) {
+		}
+		
+		if (OreSpawnMain.OreSpawnUtils.isIgnoreable(par1EntityLiving)) return false;
+		
+		if (!this.getEntitySenses().canSee(par1EntityLiving))
+		{
+			
+			return false;
+		}
+		
+		if (par1EntityLiving instanceof EntityMob)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof EntityPlayer)
+		{
+			EntityPlayer p = (EntityPlayer)par1EntityLiving;
+			if (p.capabilities.isCreativeMode == true) {
 				return false;
-			} else if (!this.getEntitySenses().canSee(par1EntityLiving)) {
-				return false;
-			} else if (par1EntityLiving instanceof EntityMob) {
-				return false;
-			} else {
-				if (par1EntityLiving instanceof EntityPlayer) {
-					EntityPlayer p = (EntityPlayer)par1EntityLiving;
-					if (p.capabilities.isCreativeMode) {
-						return false;
-					}
-				}
-
-				return true;
 			}
 		}
+
+		return true;
 	}
 
-	private EntityLivingBase findSomethingToAttack() {
-		if (OreSpawnMain.PlayNicely != 0) {
-			return null;
-		} else {
-			List<EntityLivingBase> var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand((double)8.0F, 3.0D, 8.0D));
-			Collections.sort(var5, this.TargetSorter);
-
-			for (Entity var3 : var5) {
-				EntityLivingBase var4 = (EntityLivingBase)var3;
-				if (this.isSuitableTarget(var4, false)) {
-					return var4;
-				}
+	private EntityLivingBase findSomethingToAttack()
+	{
+		if (OreSpawnMain.PlayNicely != 0) return null;
+		List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(8.0D, 3.0D, 8.0D));
+		Collections.sort(var5, this.TargetSorter);
+		Iterator var2 = var5.iterator();
+		
+		while (var2.hasNext())
+		{
+			Entity var3 = (Entity)var2.next();
+			EntityLivingBase var4 = (EntityLivingBase)var3;
+			
+			if (this.isSuitableTarget(var4, false))
+			{
+				return var4;
 			}
-
-			return null;
 		}
+		return null;
 	}
 
-	public final int getAttacking() {
+	
+	public final int getAttacking()
+	{
 		return this.dataWatcher.getWatchableObjectByte(20);
 	}
 
-	public final void setAttacking(int par1) {
+	public final void setAttacking(int par1)
+	{
 		this.dataWatcher.updateObject(20, (byte)par1);
 	}
 
-	public boolean getCanSpawnHere() {
-		if (this.posY < 50.0D) {
-			return false;
-		} else if (!this.isValidLightLevel()) {
-			return false;
-		} else {
-			return !this.worldObj.isDaytime();
-		}
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
+		if (this.posY < 50.0D) return false;
+		if (!this.isValidLightLevel()) return false;
+		if (this.worldObj.isDaytime() == true) return false;
+		
+		return true;
 	}
 }
