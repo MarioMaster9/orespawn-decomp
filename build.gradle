@@ -22,9 +22,6 @@ apply plugin: 'forge'
 apply plugin: 'java'
 
 tasks.withType(JavaCompile) {
-    options.fork = true
-    options.forkOptions.executable = System.getenv("JAVA_HOME") + '/../jdk1.6.0_45/bin/javac'
-    
     sourceCompatibility = 1.6
     targetCompatibility = 1.6
 }
