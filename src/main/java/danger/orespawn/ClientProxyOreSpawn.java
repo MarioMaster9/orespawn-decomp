@@ -30,14 +30,14 @@ import net.minecraftforge.common.MinecraftForge;
 
 
 
-
-
-
-
-
 public class ClientProxyOreSpawn extends CommonProxyOreSpawn
 {
-	public void registerRenderThings() {
+	
+	
+	
+	
+	public void registerRenderThings()
+	{
 		MinecraftForge.EVENT_BUS.register(new GirlfriendOverlayGui(Minecraft.getMinecraft()));
 		
 		
@@ -120,9 +120,9 @@ public class ClientProxyOreSpawn extends CommonProxyOreSpawn
 		RenderingRegistry.registerEntityRenderingHandler(PitchBlack.class, new RenderPitchBlack(new ModelPitchBlack(0.65F), 1.25F, 1.0F));
 		RenderingRegistry.registerEntityRenderingHandler(LurkingTerror.class, new RenderLurkingTerror(new ModelLurkingTerror(), 0.45F, 0.85F));
 		RenderingRegistry.registerEntityRenderingHandler(Godzilla.class, new RenderGodzilla(new ModelGodzilla(0.2F), 1.0F, 2.0F));
-		RenderingRegistry.registerEntityRenderingHandler(GodzillaHead.class, new RenderGodzillaHead((ModelGodzilla)null, 0.0F, 0.0F));
-		RenderingRegistry.registerEntityRenderingHandler(KingHead.class, new RenderKingHead((ModelTheKing)null, 0.0F, 0.0F));
-		RenderingRegistry.registerEntityRenderingHandler(QueenHead.class, new RenderQueenHead((ModelTheQueen)null, 0.0F, 0.0F));
+		RenderingRegistry.registerEntityRenderingHandler(GodzillaHead.class, new RenderGodzillaHead(null, 0.0F, 0.0F));
+		RenderingRegistry.registerEntityRenderingHandler(KingHead.class, new RenderKingHead(null, 0.0F, 0.0F));
+		RenderingRegistry.registerEntityRenderingHandler(QueenHead.class, new RenderQueenHead(null, 0.0F, 0.0F));
 		
 		RenderingRegistry.registerEntityRenderingHandler(WormSmall.class, new RenderWormSmall(new ModelWormSmall(), 0.1F, 1.0F));
 		RenderingRegistry.registerEntityRenderingHandler(WormMedium.class, new RenderWormMedium(new ModelWormMedium(), 0.25F, 1.0F));
@@ -195,39 +195,39 @@ public class ClientProxyOreSpawn extends CommonProxyOreSpawn
 		MinecraftForgeClient.registerItemRenderer(OreSpawnMain.MyBattleAxe, new RenderBattleAxe());
 		MinecraftForgeClient.registerItemRenderer(OreSpawnMain.MyChainsaw, new RenderChainsaw());
 		MinecraftForgeClient.registerItemRenderer(OreSpawnMain.MyQueenBattleAxe, new RenderQueenBattleAxe());
+		
+		
+		
+		
+		
+		
+		
 	}
-
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	public void registerSoundThings() {
+	public void registerSoundThings()
+	{
 		MinecraftForge.EVENT_BUS.register(new OreSpawnSounds());
 	}
 
-	
-	public void registerKeyboardInput() {
+	public void registerKeyboardInput()
+	{
 		KeyHandler k = new KeyHandler();
 		FMLCommonHandler.instance().bus().register(k);
 		OreSpawnMain.MyKeyhandler = k;
 	}
 
-	
-	public void registerNetworkStuff() {
+	public void registerNetworkStuff()
+	{
 		super.registerNetworkStuff();
 		FMLCommonHandler.instance().bus().register(new RiderControl(this.getNetwork()));
 	}
 
 	
 	
-	
-	public int setArmorPrefix(String string) {
+	public int setArmorPrefix(String string)
+	{
 		return RenderingRegistry.addNewArmourRendererPrefix(string);
 	}
 }
