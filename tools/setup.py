@@ -5,7 +5,7 @@ import os
 def write_options(output_file, javac):
 	try:
 		with open(output_file, "w", encoding="utf-8") as file:
-			file.write(f"java_compiler={javac}\n")
+			file.write(f"java_compiler={javac.as_posix()}\n")
 	except:
 		print(f"Unexpected exception when writing to {output_file}")
 
