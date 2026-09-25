@@ -10,11 +10,21 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
-public class RubySword extends ItemSword {
+
+
+
+
+
+
+
+
+public class RubySword extends ItemSword
+{
 	private int weaponDamage;
 	private final Item.ToolMaterial toolMaterial;
 
-	public RubySword(int par1, Item.ToolMaterial par2EnumToolMaterial) {
+	public RubySword(int par1, Item.ToolMaterial par2EnumToolMaterial)
+	{
 		super(par2EnumToolMaterial);
 		this.toolMaterial = par2EnumToolMaterial;
 		this.weaponDamage = 18;
@@ -23,25 +33,38 @@ public class RubySword extends ItemSword {
 		this.setCreativeTab(CreativeTabs.tabCombat);
 	}
 
-	public int getDamageVsEntity(Entity par1Entity) {
+	
+	
+	
+	
+	public int getDamageVsEntity(Entity par1Entity)
+	{
 		return this.weaponDamage;
 	}
 
-	public String getMaterialName() {
+	
+	public String getMaterialName()
+	{
 		return "Ruby";
 	}
 
-	public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving) {
+	public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
+	{
 		par1ItemStack.damageItem(1, par3EntityLiving);
 		return true;
 	}
 
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	/**
+	 * How long it takes to use or consume an item
+	 */
+	public int getMaxItemUseDuration(ItemStack par1ItemStack)
+	{
 		return 4000;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister) {
+	public void registerIcons(IIconRegister iconRegister)
+	{
 		this.itemIcon = iconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5));
 	}
 }

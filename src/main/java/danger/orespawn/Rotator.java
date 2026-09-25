@@ -20,7 +20,36 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class Rotator extends EntityMob {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class Rotator extends EntityMob
+{
 	private ChunkCoordinates currentFlightTarget = null;
 	private GenericTargetSorter TargetSorter = null;
 	private RenderInfo renderdata = new RenderInfo();
@@ -37,19 +66,20 @@ public class Rotator extends EntityMob {
 		this.renderdata = new RenderInfo();
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue((double)OreSpawnMain.Rotator_stats.attack);
 	}
 
-	protected void entityInit() {
+	protected void entityInit()
+	{
 		super.entityInit();
 		if (this.renderdata == null) {
 			this.renderdata = new RenderInfo();
 		}
-
 		this.renderdata.rf1 = 0.0F;
 		this.renderdata.rf2 = 0.0F;
 		this.renderdata.rf3 = 0.0F;
@@ -60,11 +90,15 @@ public class Rotator extends EntityMob {
 		this.renderdata.ri4 = 0;
 	}
 
-	public RenderInfo getRenderInfo() {
+	
+	
+	public RenderInfo getRenderInfo()
+	{
 		return this.renderdata;
 	}
 
-	public void setRenderInfo(RenderInfo r) {
+	public void setRenderInfo(RenderInfo r)
+	{
 		this.renderdata.rf1 = r.rf1;
 		this.renderdata.rf2 = r.rf2;
 		this.renderdata.rf3 = r.rf3;
@@ -75,307 +109,430 @@ public class Rotator extends EntityMob {
 		this.renderdata.ri4 = r.ri4;
 	}
 
-	protected boolean canDespawn() {
-		if (this.isNoDespawnRequired()) {
-			return false;
-		} else if (this.busy_fighting != 0) {
-			return false;
-		} else {
-			return this.was_spawnered == 0;
-		}
+	protected boolean canDespawn()
+	{
+		if (this.isNoDespawnRequired()) return false;
+		if (this.busy_fighting != 0) return false;
+		if (this.was_spawnered != 0) return false;
+		return true;
 	}
 
+	/**
+	 * Returns the volume for the sounds this mob makes.
+     */
 	protected float getSoundVolume() {
 		return 0.75F;
 	}
 
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
 	protected float getSoundPitch() {
 		return 1.0F;
 	}
 
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
 	protected String getLivingSound() {
 		return "vortexlive";
 	}
 
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
 	protected String getHurtSound() {
 		return "orespawn:glasshit";
 	}
 
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
 	protected String getDeathSound() {
 		return "orespawn:glassdead";
 	}
 
+	/**
+	 * Returns true if this entity should push and be pushed by other entities when colliding.
+	 */
 	public boolean canBePushed() {
 		return true;
 	}
 
-	protected void collideWithEntity(Entity par1Entity) {
-	}
+	protected void collideWithEntity(Entity par1Entity) {}
 
-	public int mygetMaxHealth() {
+	public int mygetMaxHealth()
+	{
 		return OreSpawnMain.Rotator_stats.health;
 	}
 
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
 	protected boolean isAIEnabled() {
 		return true;
 	}
 
-	public void onUpdate() {
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
 		EntityLivingBase e = null;
 		super.onUpdate();
+		
 		this.motionY *= 0.6;
 		if (this.worldObj.isRemote && this.worldObj.rand.nextInt(10) == 1) {
-			this.worldObj.spawnParticle("fireworksSpark", this.posX, this.posY + (double)1.4F, this.posZ, (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) / 4.0F), (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) / 4.0F), (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) / 4.0F));
+			this.worldObj.spawnParticle("fireworksSpark", this.posX, this.posY + (double)1.4F, this.posZ,
+					(double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) / 4.0F),
+					(double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) / 4.0F),
+					(double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) / 4.0F));
 		}
-
 		this.busy_fighting = 0;
 		e = this.findSomethingToAttack();
-		if (e != null) {
+		if (e != null)
+		{
 			double a = Math.atan2(e.posZ - this.posZ, e.posX - this.posX);
-			this.worldObj.spawnParticle("fireworksSpark", this.posX, this.posY + (double)1.4F, this.posZ, Math.cos(a), (e.posY - this.posY) / 10.0D, Math.sin(a));
+			this.worldObj.spawnParticle("fireworksSpark", this.posX, this.posY + (double)1.4F, this.posZ,
+					Math.cos(a),
+					(e.posY - this.posY) / 10.0D,
+					Math.sin(a));
 			this.busy_fighting = 1;
 		}
 
-		if (!this.isNoDespawnRequired()) {
-			if (this.busy_fighting == 0) {
-				if (this.was_spawnered == 0) {
-					long t = this.worldObj.getWorldTime();
-					t %= 24000L;
-					if (t < 12000L && this.worldObj.rand.nextInt(400) == 1) {
-						this.setDead();
-					}
-
-				}
-			}
-		}
+		
+		if (this.isNoDespawnRequired()) return;
+		if (this.busy_fighting != 0) return;
+		if (this.was_spawnered != 0) return;
+		long t = this.worldObj.getWorldTime();
+		t %= 24000L;
+		if (t < 12000L && this.worldObj.rand.nextInt(400) == 1) this.setDead();
 	}
 
-	public boolean canSeeTarget(double pX, double pY, double pZ) {
+	
+	
+	
+	
+	public boolean canSeeTarget(double pX, double pY, double pZ)
+	{
 		return this.worldObj.rayTraceBlocks(Vec3.createVectorHelper(this.posX, this.posY + 0.75D, this.posZ), Vec3.createVectorHelper(pX, pY, pZ), false) == null;
 	}
 
-	protected void updateAITasks() {
+	
+	protected void updateAITasks()
+	{
 		int xdir = 1;
 		int zdir = 1;
+		int unused1, unused2;
 		int keep_trying = 50;
+		int unused3, unused4, unused5, unused6;
+		Block bid;
 		EntityLivingBase e = null;
-		if (!this.isDead) {
-			super.updateAITasks();
-			if (this.currentFlightTarget == null) {
-				this.currentFlightTarget = new ChunkCoordinates((int)this.posX, (int)this.posY, (int)this.posZ);
-			}
-
-			if (this.rand.nextInt(300) != 0 && !(this.currentFlightTarget.getDistanceSquared((int)this.posX, (int)this.posY, (int)this.posZ) < 2.1F)) {
-				if (this.rand.nextInt(9) == 2) {
-					e = this.findSomethingToAttack();
-					if (e != null) {
-						double a = Math.atan2(e.posZ - this.posZ, e.posX - this.posX);
-						++a;
-						this.currentFlightTarget.set((int)(e.posX + 2.5D * Math.cos(a)), (int)e.posY, (int)(e.posZ + 2.5D * Math.sin(a)));
-						if (this.getDistanceSqToEntity(e) < 9.0D) {
-							this.attackEntityAsMob(e);
-						}
-					}
-				}
-			} else {
-				for (Block bid = Blocks.stone; bid != Blocks.air && keep_trying != 0; --keep_trying) {
-					zdir = this.rand.nextInt(10) + 8;
-					xdir = this.rand.nextInt(10) + 8;
-					if (this.rand.nextInt(2) == 0) {
-						zdir = -zdir;
-					}
-
-					if (this.rand.nextInt(2) == 0) {
-						xdir = -xdir;
-					}
-
-					this.currentFlightTarget.set((int)this.posX + xdir, (int)this.posY + this.rand.nextInt(6) - 3, (int)this.posZ + zdir);
-					bid = this.worldObj.getBlock(this.currentFlightTarget.posX, this.currentFlightTarget.posY, this.currentFlightTarget.posZ);
-					if (bid == Blocks.air && !this.canSeeTarget((double)this.currentFlightTarget.posX, (double)this.currentFlightTarget.posY, (double)this.currentFlightTarget.posZ)) {
+		
+		if (this.isDead) return;
+		super.updateAITasks();
+		
+		if (this.currentFlightTarget == null) {
+			this.currentFlightTarget = new ChunkCoordinates((int)this.posX, (int)this.posY, (int)this.posZ);
+		}
+		
+		if (this.rand.nextInt(300) == 0 || this.currentFlightTarget.getDistanceSquared((int)this.posX, (int)this.posY, (int)this.posZ) < 2.1F)
+		{
+			bid = Blocks.stone;
+			while (bid != Blocks.air && keep_trying != 0) {
+				zdir = this.rand.nextInt(10) + 8;
+				xdir = this.rand.nextInt(10) + 8;
+				if (this.rand.nextInt(2) == 0) zdir = -zdir;
+				if (this.rand.nextInt(2) == 0) xdir = -xdir;
+				this.currentFlightTarget.set((int)this.posX + xdir, (int)this.posY + this.rand.nextInt(6) - 3, (int)this.posZ + zdir);
+				bid = this.worldObj.getBlock(this.currentFlightTarget.posX, this.currentFlightTarget.posY, this.currentFlightTarget.posZ);
+				if (bid == Blocks.air) {
+					if (!this.canSeeTarget((double)this.currentFlightTarget.posX, (double)this.currentFlightTarget.posY, (double)this.currentFlightTarget.posZ)) {
 						bid = Blocks.stone;
 					}
 				}
+				keep_trying--;
 			}
-
-			double var1 = (double)this.currentFlightTarget.posX + 0.5D - this.posX;
-			double var3 = (double)this.currentFlightTarget.posY + 0.1 - this.posY;
-			double var5 = (double)this.currentFlightTarget.posZ + 0.5D - this.posZ;
-			this.motionX += (Math.signum(var1) * 0.4 - this.motionX) * 0.2;
-			this.motionY += (Math.signum(var3) * (double)0.7F - this.motionY) * 0.20000000149011612;
-			this.motionZ += (Math.signum(var5) * 0.4 - this.motionZ) * 0.2;
-			float var7 = (float)(Math.atan2(this.motionZ, this.motionX) * 180.0D / Math.PI) - 90.0F;
-			float var8 = MathHelper.wrapAngleTo180_float(var7 - this.rotationYaw);
-			this.moveForward = 0.75F;
-			this.rotationYaw += var8 / 4.0F;
 		}
+		else if (this.rand.nextInt(9) == 2)
+		{
+			
+			
+			e = this.findSomethingToAttack();
+			if (e != null)
+			{
+				
+				
+				double a = Math.atan2(e.posZ - this.posZ, e.posX - this.posX);
+				a += Math.PI / 2.0D;
+				this.currentFlightTarget.set((int)(e.posX + 2.5D * Math.cos(a)), (int)e.posY, (int)(e.posZ + 2.5D * Math.sin(a)));
+				
+				if (this.getDistanceSqToEntity(e) < 9.0D) {
+					this.attackEntityAsMob(e);
+				}
+			}
+		}
+		
+		
+		
+		double var1 = (double)this.currentFlightTarget.posX + 0.5D - this.posX;
+		double var3 = (double)this.currentFlightTarget.posY + 0.1 - this.posY;
+		double var5 = (double)this.currentFlightTarget.posZ + 0.5D - this.posZ;
+		this.motionX += (Math.signum(var1) * 0.4 - this.motionX) * 0.2;
+		this.motionY += (Math.signum(var3) * (double)0.7F - this.motionY) * 0.20000000149011612;
+		this.motionZ += (Math.signum(var5) * 0.4 - this.motionZ) * 0.2;
+		float var7 = (float)(Math.atan2(this.motionZ, this.motionX) * 180.0D / Math.PI) - 90.0F;
+		float var8 = MathHelper.wrapAngleTo180_float(var7 - this.rotationYaw);
+		this.moveForward = 0.75F;
+		this.rotationYaw += var8 / 4.0F;
+		
 	}
 
+	/**
+	 * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+	 * prevent them from trampling crops
+	 */
 	protected boolean canTriggerWalking() {
 		return true;
 	}
 
-	protected void fall(float par1) {
-	}
+	/**
+	 * Called when the mob is falling. Calculates and applies fall damage.
+	 */
+	protected void fall(float par1) {}
 
-	protected void updateFallState(double par1, boolean par3) {
-	}
+	/**
+	 * Takes in the distance the entity has fallen this tick and whether its on the ground to update the fall distance
+	 * and deal fall damage if landing on the ground.  Args: distanceFallenThisTick, onGround
+	 */
+	protected void updateFallState(double par1, boolean par3) {}
 
-	public boolean doesEntityNotTriggerPressurePlate() {
+	
+	
+	public boolean doesEntityNotTriggerPressurePlate()
+	{
 		return true;
 	}
 
-	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+	/**
+	 * Called when the entity is attacked.
+	 */
+	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+	{
 		boolean ret = false;
 		Entity e = par1DamageSource.getEntity();
-		if (e != null && e instanceof EntityArrow) {
+		if (e != null && e instanceof EntityArrow)
+		{
 			return false;
-		} else {
-			ret = super.attackEntityFrom(par1DamageSource, par2);
-			if (e != null && this.currentFlightTarget != null) {
-				this.currentFlightTarget.set((int)e.posX, (int)e.posY, (int)e.posZ);
-			}
-
-			return ret;
 		}
+		ret = super.attackEntityFrom(par1DamageSource, par2);
+		if (e != null && this.currentFlightTarget != null)
+		{
+			this.currentFlightTarget.set((int)e.posX, (int)e.posY, (int)e.posZ);
+		}
+		return ret;
 	}
 
-	public boolean getCanSpawnHere() {
-		for (int k = -2; k <= 2; k++) {
-			for (int j = -2; j <= 2; j++) {
-				for (int i = 1; i < 4; i++) {
-					Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+	
+	
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
+		Block bid;
+		int i, j, k;
+		
+		for (k = -2; k <= 2; k++)
+		{
+			for (j = -2; j <= 2; j++)
+			{
+				for (i = 1; i < 4; i++)
+				{
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 					if (bid == Blocks.mob_spawner) {
 						TileEntityMobSpawner tileentitymobspawner = null;
 						tileentitymobspawner = (TileEntityMobSpawner)this.worldObj.getTileEntity((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 						String s = tileentitymobspawner.func_145881_a().getEntityNameToSpawn();
-						if (s != null && s.equals("Rotator")) {
-							this.was_spawnered = 1;
-							return true;
+						if (s != null) {
+							if (s.equals("Rotator")) {
+								this.was_spawnered = 1;
+								return true;
+							}
 						}
 					}
 				}
 			}
 		}
-
-		if (!this.isValidLightLevel()) {
-			return false;
-		} else {
-			for (int var10 = -1; var10 <= 1; ++var10) {
-				for (int j = -1; j <= 1; j++) {
-					for (int i = 1; i < 3; i++) {
-						Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + var10);
-						if (bid != Blocks.air) {
-							return false;
-						}
-					}
+		if (!this.isValidLightLevel()) return false;
+		
+		for (k = -1; k <= 1; k++)
+		{
+			for (j = -1; j <= 1; j++)
+			{
+				for (i = 1; i < 3; i++)
+				{
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+					if (bid != Blocks.air) return false;
 				}
 			}
-
-			long t = this.worldObj.getWorldTime();
-			t %= 24000L;
-			if (t < 12000L) {
-				return false;
-			} else {
-				return true;
-			}
 		}
+		long t = this.worldObj.getWorldTime();
+		t %= 24000L;
+		if (t < 12000L) return false;
+		
+		return true;
 	}
 
-	public int getTotalArmorValue() {
+	/**
+	 * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+	 */
+	public int getTotalArmorValue()
+	{
 		return OreSpawnMain.Rotator_stats.defense;
 	}
 
-	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2) {
-		if (par1EntityLiving == null) {
+	
+	
+	
+	
+	
+	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2)
+	{
+		if (par1EntityLiving == null)
+		{
 			return false;
-		} else if (par1EntityLiving == this) {
+		}
+		if (par1EntityLiving == this)
+		{
 			return false;
-		} else if (!par1EntityLiving.isEntityAlive()) {
+		}
+		if (!par1EntityLiving.isEntityAlive())
+		{
+			
 			return false;
-		} else {
-			if (OreSpawnMain.OreSpawnUtils.isIgnoreable(par1EntityLiving)) {
+		}
+		
+		if (OreSpawnMain.OreSpawnUtils.isIgnoreable(par1EntityLiving)) return false;
+		
+		if (!this.getEntitySenses().canSee(par1EntityLiving))
+		{
+			
+			return false;
+		}
+		
+		if (par1EntityLiving instanceof EntityPlayer)
+		{
+			EntityPlayer p = (EntityPlayer)par1EntityLiving;
+			if (p.capabilities.isCreativeMode == true) {
 				return false;
-			} else if (!this.getEntitySenses().canSee(par1EntityLiving)) {
-				return false;
-			} else {
-				if (par1EntityLiving instanceof EntityPlayer) {
-					EntityPlayer p = (EntityPlayer)par1EntityLiving;
-					if (p.capabilities.isCreativeMode) {
-						return false;
-					}
-				}
-
-				if (par1EntityLiving instanceof Termite) {
-					return false;
-				} else if (par1EntityLiving instanceof Vortex) {
-					return false;
-				} else if (par1EntityLiving instanceof Rotator) {
-					return false;
-				} else if (par1EntityLiving instanceof DungeonBeast) {
-					return false;
-				} else if (par1EntityLiving instanceof Peacock) {
-					return false;
-				} else if (par1EntityLiving instanceof CrystalCow) {
-					return false;
-				} else if (par1EntityLiving instanceof Irukandji) {
-					return false;
-				} else if (par1EntityLiving instanceof Skate) {
-					return false;
-				} else if (par1EntityLiving instanceof Whale) {
-					return false;
-				} else if (par1EntityLiving instanceof Flounder) {
-					return false;
-				} else if (par1EntityLiving instanceof Urchin) {
-					return false;
-				} else if (par1EntityLiving instanceof TerribleTerror) {
-					return false;
-				} else if (par1EntityLiving instanceof LurkingTerror) {
-					return false;
-				} else if (par1EntityLiving instanceof CloudShark) {
-					return false;
-				} else if (par1EntityLiving instanceof Mothra) {
-					return false;
-				} else if (par1EntityLiving instanceof Bee) {
-					return false;
-				} else {
-					return !(par1EntityLiving instanceof Mantis);
-				}
 			}
 		}
-	}
-
-	private EntityLivingBase findSomethingToAttack() {
-		if (OreSpawnMain.PlayNicely != 0) {
-			return null;
-		} else {
-			List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(12.0D, 10.0D, 12.0D));
-			Collections.sort(var5, this.TargetSorter);
-			Iterator var2 = var5.iterator();
-			Entity var3 = null;
-			EntityLivingBase var4 = null;
-
-			while (var2.hasNext()) {
-				var3 = (Entity)var2.next();
-				var4 = (EntityLivingBase)var3;
-				if (this.isSuitableTarget(var4, false)) {
-					return var4;
-				}
-			}
-
-			return null;
+		if (par1EntityLiving instanceof Termite)
+		{
+			return false;
 		}
+		if (par1EntityLiving instanceof Vortex)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Rotator)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof DungeonBeast)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Peacock)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof CrystalCow)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Irukandji)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Skate)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Whale)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Flounder)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Urchin)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof TerribleTerror)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof LurkingTerror)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof CloudShark)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Mothra)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Bee)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Mantis)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 
-	protected Item getDropItem() {
+	private EntityLivingBase findSomethingToAttack()
+	{
+		if (OreSpawnMain.PlayNicely != 0) return null;
+		List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(12.0D, 10.0D, 12.0D));
+		Collections.sort(var5, this.TargetSorter);
+		Iterator var2 = var5.iterator();
+		Entity var3 = null;
+		EntityLivingBase var4 = null;
+
+		while (var2.hasNext())
+		{
+			var3 = (Entity)var2.next();
+			var4 = (EntityLivingBase)var3;
+			
+			if (this.isSuitableTarget(var4, false))
+			{
+				return var4;
+			}
+		}
+		return null;
+	}
+
+	
+	
+	
+	
+	protected Item getDropItem()
+	{
 		int i = this.worldObj.rand.nextInt(4);
-		if (i == 0) {
-			return OreSpawnMain.MyCrystalPinkIngot;
-		} else if (i == 1) {
-			return OreSpawnMain.MyTigersEyeIngot;
-		} else if (i == 2) {
-			return Item.getItemFromBlock(OreSpawnMain.CrystalCoal);
-		} else {
-			return i == 3 ? Items.iron_ingot : null;
-		}
+		if (i == 0) return OreSpawnMain.MyCrystalPinkIngot;
+		if (i == 1) return OreSpawnMain.MyTigersEyeIngot;
+		if (i == 2) return Item.getItemFromBlock(OreSpawnMain.CrystalCoal);
+		if (i == 3) return Items.iron_ingot;
+		return null;
 	}
 }

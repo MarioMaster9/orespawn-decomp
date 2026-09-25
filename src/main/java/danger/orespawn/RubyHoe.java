@@ -8,19 +8,34 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemHoe;
 
-public class RubyHoe extends ItemHoe {
-	public RubyHoe(int par1, Item.ToolMaterial par2) {
+
+
+
+
+
+
+
+
+public class RubyHoe extends ItemHoe
+{
+	public RubyHoe(int par1, Item.ToolMaterial par2)
+	{
 		super(par2);
 		this.maxStackSize = 1;
 		this.setMaxDamage(1500);
 		this.setCreativeTab(CreativeTabs.tabTools);
 	}
 
-	public int getDamageVsEntity(Entity par1Entity) {
+	
+	
+	
+	public int getDamageVsEntity(Entity par1Entity)
+	{
 		return 5;
 	}
 
-	public String getMaterialName() {
+	public String getMaterialName()
+	{
 		return "Ruby";
 	}
 

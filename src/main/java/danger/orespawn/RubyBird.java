@@ -2,7 +2,8 @@ package danger.orespawn;
 
 import net.minecraft.world.World;
 
-public class RubyBird extends Cockateil {
+public class RubyBird extends Cockateil
+{
 	public RubyBird(World par1World) {
 		super(par1World);
 	}
@@ -15,10 +16,18 @@ public class RubyBird extends Cockateil {
 	}
 
 	protected String getLivingSound() {
-		return this.worldObj.isDaytime() && !this.worldObj.isRaining() ? "orespawn:rubybird" : null;
+		if (this.worldObj.isDaytime() && !this.worldObj.isRaining()) {
+			return "orespawn:rubybird";
+		}
+		return null;
 	}
 
-	public boolean getCanSpawnHere() {
+	
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
 		return true;
 	}
 }

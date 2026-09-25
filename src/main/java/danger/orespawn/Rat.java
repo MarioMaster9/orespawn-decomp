@@ -24,12 +24,31 @@ import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class Rat extends EntityMob {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class Rat extends EntityMob
+{
 	private GenericTargetSorter TargetSorter = null;
 	private float moveSpeed = 0.25F;
 	private String myowner = null;
 
-	public Rat(World par1World) {
+	
+	public Rat(World par1World)
+	{
 		super(par1World);
 		this.setSize(0.25F, 0.5F);
 		this.getNavigator().setAvoidsWater(true);
@@ -45,305 +64,403 @@ public class Rat extends EntityMob {
 		this.TargetSorter = new GenericTargetSorter(this);
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue((double)OreSpawnMain.Rat_stats.attack);
 	}
 
-	protected void entityInit() {
+	protected void entityInit()
+	{
 		super.entityInit();
 		this.dataWatcher.addObject(20, (byte)0);
 	}
 
 	protected boolean canDespawn() {
-		if (this.isNoDespawnRequired()) {
-			return false;
-		} else {
-			return this.myowner == null;
-		}
-	}
-
-	public final int getAttacking() {
-		return this.dataWatcher.getWatchableObjectByte(20);
-	}
-
-	public final void setAttacking(int par1) {
-		this.dataWatcher.updateObject(20, (byte)par1);
-	}
-
-	public int mygetMaxHealth() {
-		return OreSpawnMain.Rat_stats.health;
-	}
-
-	public int getTotalArmorValue() {
-		return OreSpawnMain.Rat_stats.defense;
-	}
-
-	protected boolean isAIEnabled() {
+		if (this.isNoDespawnRequired()) return false;
+		if (this.myowner != null) return false;
 		return true;
 	}
 
-	public void onLivingUpdate() {
+	public final int getAttacking()
+	{
+		return this.dataWatcher.getWatchableObjectByte(20);
+	}
+
+	public final void setAttacking(int par1)
+	{
+		this.dataWatcher.updateObject(20, (byte)par1);
+	}
+
+	public int mygetMaxHealth()
+	{
+		return OreSpawnMain.Rat_stats.health;
+	}
+
+	/**
+	 * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+	 */
+	public int getTotalArmorValue()
+	{
+		return OreSpawnMain.Rat_stats.defense;
+	}
+
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	protected boolean isAIEnabled()
+	{
+		return true;
+	}
+
+	/**
+	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+	 * use this to react to sunlight and start to burn.
+	 */
+	public void onLivingUpdate()
+	{
 		super.onLivingUpdate();
 	}
 
-	public void onUpdate() {
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		super.onUpdate();
 	}
 
-	protected void jump() {
+	
+	protected void jump()
+	{
 		super.jump();
 		this.motionY += 0.25D;
 		this.posY += 0.25D;
 	}
 
-	protected String getLivingSound() {
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
 		return "orespawn:ratlive";
 	}
 
-	protected String getHurtSound() {
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return "orespawn:rathit";
 	}
 
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return "orespawn:ratdead";
 	}
 
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
 	protected float getSoundVolume() {
 		return 0.45F;
 	}
 
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
 	protected float getSoundPitch() {
 		return 1.0F;
 	}
 
-	protected Item getDropItem() {
+	
+	
+	
+	
+	protected Item getDropItem()
+	{
 		return Items.rotten_flesh;
 	}
 
-	public void initCreature() {
-	}
+	
+	
+	
+	
+	
+	public void initCreature() {}
 
-	public boolean interact(EntityPlayer par1EntityPlayer) {
+	
+	
+	
+	public boolean interact(EntityPlayer par1EntityPlayer)
+	{
 		return false;
 	}
 
-	protected void updateAITasks() {
-		if (!this.isDead) {
-			super.updateAITasks();
-			if (this.worldObj.rand.nextInt(200) == 1) {
-				this.setRevengeTarget((EntityLivingBase)null);
-			}
-
-			if (this.worldObj.rand.nextInt(5) == 1) {
-				EntityLivingBase e = this.findSomethingToAttack();
-				if (e != null) {
-					this.setAttacking(1);
-					this.getNavigator().tryMoveToEntityLiving(e, 1.25D);
-					if (this.getDistanceSqToEntity(e) < 4.0D && (this.rand.nextInt(8) == 0 || this.rand.nextInt(7) == 1)) {
+	protected void updateAITasks()
+	{
+		if (this.isDead) return;
+		super.updateAITasks();
+		if (this.worldObj.rand.nextInt(200) == 1) this.setRevengeTarget(null);
+		if (this.worldObj.rand.nextInt(5) == 1) {
+			EntityLivingBase e = this.findSomethingToAttack();
+			if (e != null) {
+				this.setAttacking(1);
+				this.getNavigator().tryMoveToEntityLiving(e, 1.25D);
+				if (this.getDistanceSqToEntity(e) < 4.0D)
+				{
+					if (this.rand.nextInt(8) == 0 || this.rand.nextInt(7) == 1)
+					{
 						this.attackEntityAsMob(e);
 					}
-				} else {
-					this.setAttacking(0);
-					if (this.myowner != null) {
-						EntityPlayer p = this.worldObj.getPlayerEntityByName(this.myowner);
-						if (p != null) {
-							if (this.getDistanceSqToEntity(p) > (double)64.0F) {
-								this.getNavigator().tryMoveToEntityLiving(p, 1.75D);
-							}
-
-							if (this.getDistanceSqToEntity(p) > 256.0D) {
-								this.setPosition(p.posX + (double)this.worldObj.rand.nextFloat() - (double)this.worldObj.rand.nextFloat(), p.posY, p.posZ + (double)this.worldObj.rand.nextFloat() - (double)this.worldObj.rand.nextFloat());
-							}
-						}
-					}
 				}
-			}
-
-			if (this.worldObj.rand.nextInt(250) == 1) {
-				this.heal(1.0F);
-			}
-
-		}
-	}
-
-	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2) {
-		if (par1EntityLiving == null) {
-			return false;
-		} else if (par1EntityLiving == this) {
-			return false;
-		} else if (!par1EntityLiving.isEntityAlive()) {
-			return false;
-		} else {
-			if (OreSpawnMain.OreSpawnUtils.isIgnoreable(par1EntityLiving)) {
-				return false;
-			} else if (!this.getEntitySenses().canSee(par1EntityLiving)) {
-				return false;
-			} else if (par1EntityLiving instanceof Irukandji) {
-				return false;
-			} else if (par1EntityLiving instanceof Skate) {
-				return false;
-			} else if (par1EntityLiving instanceof Whale) {
-				return false;
-			} else if (par1EntityLiving instanceof Flounder) {
-				return false;
-			} else if (par1EntityLiving instanceof Rat) {
-				return false;
-			} else if (par1EntityLiving instanceof Ghost) {
-				return false;
-			} else if (par1EntityLiving instanceof GhostSkelly) {
-				return false;
-			} else if (par1EntityLiving instanceof DungeonBeast) {
-				return false;
 			} else {
-				if (par1EntityLiving instanceof EntityPlayer) {
-					EntityPlayer p = (EntityPlayer)par1EntityLiving;
-					if (p.capabilities.isCreativeMode) {
-						return false;
-					}
-
-					if (this.myowner != null) {
-						if (this.myowner.equals(p.getUniqueID().toString())) {
-							return false;
+				this.setAttacking(0);
+				if (this.myowner != null) {
+					EntityPlayer p = this.worldObj.getPlayerEntityByName(this.myowner);
+					if (p != null) {
+						if (this.getDistanceSqToEntity(p) > 64.0D) {
+							this.getNavigator().tryMoveToEntityLiving(p, 1.75D);
 						}
-
-						if (OreSpawnMain.RatPlayerFriendly != 0) {
-							return false;
+						if (this.getDistanceSqToEntity(p) > 256.0D) {
+							this.setPosition(p.posX + (double)this.worldObj.rand.nextFloat() - (double)this.worldObj.rand.nextFloat(), p.posY, p.posZ + (double)this.worldObj.rand.nextFloat() - (double)this.worldObj.rand.nextFloat());
 						}
 					}
 				}
-
-				if (this.myowner != null && par1EntityLiving instanceof EntityTameable) {
-					EntityTameable e = (EntityTameable)par1EntityLiving;
-					if (OreSpawnMain.RatPetFriendly != 0 && e.isTamed()) {
-						return false;
-					}
-
-					if (e.func_152113_b() != null && this.myowner.equals(e.func_152113_b())) {
-						return false;
-					}
-				}
-
-				return true;
 			}
 		}
+		
+		if (this.worldObj.rand.nextInt(250) == 1) this.heal(1.0F);
+		
 	}
-
-	private EntityLivingBase findSomethingToAttack() {
-		if (OreSpawnMain.PlayNicely != 0) {
-			return null;
-		} else {
-			List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(9.0D, 2.0D, 9.0D));
-			Collections.sort(var5, this.TargetSorter);
-			Iterator var2 = var5.iterator();
-			Entity var3 = null;
-			EntityLivingBase var4 = null;
-
-			while (var2.hasNext()) {
-				var3 = (Entity)var2.next();
-				var4 = (EntityLivingBase)var3;
-				if (this.isSuitableTarget(var4, false)) {
-					return var4;
-				}
+	
+	
+	
+	
+	
+	
+	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2)
+	{
+		if (par1EntityLiving == null)
+		{
+			return false;
+		}
+		if (par1EntityLiving == this)
+		{
+			return false;
+		}
+		if (!par1EntityLiving.isEntityAlive())
+		{
+			return false;
+		}
+		
+		if (OreSpawnMain.OreSpawnUtils.isIgnoreable(par1EntityLiving)) return false;
+		
+		if (!this.getEntitySenses().canSee(par1EntityLiving))
+		{
+			
+			return false;
+		}
+		
+		
+		if (par1EntityLiving instanceof Irukandji)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Skate)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Whale)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Flounder)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Rat)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof Ghost)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof GhostSkelly)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof DungeonBeast)
+		{
+			return false;
+		}
+		
+		
+		if (par1EntityLiving instanceof EntityPlayer)
+		{
+			EntityPlayer p = (EntityPlayer)par1EntityLiving;
+			if (p.capabilities.isCreativeMode == true) {
+				return false;
 			}
 
-			return null;
+			if (this.myowner != null) {
+				if (this.myowner.equals(p.getUniqueID().toString())) {
+					return false;
+				}
+				if (OreSpawnMain.RatPlayerFriendly != 0) {
+					return false;
+				}
+			}
 		}
+
+		
+		if (this.myowner != null) {
+			if (par1EntityLiving instanceof EntityTameable) {
+				EntityTameable e = (EntityTameable)par1EntityLiving;
+				if (OreSpawnMain.RatPetFriendly != 0 && e.isTamed()) {
+					return false;
+				}
+				if (e.func_152113_b() != null && this.myowner.equals(e.func_152113_b())) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
-	public void setOwner(EntityLivingBase e) {
+	private EntityLivingBase findSomethingToAttack()
+	{
+		if (OreSpawnMain.PlayNicely != 0) return null;
+		List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(9.0D, 2.0D, 9.0D));
+		Collections.sort(var5, this.TargetSorter);
+		Iterator var2 = var5.iterator();
+		Entity var3 = null;
+		EntityLivingBase var4 = null;
+
+		while (var2.hasNext())
+		{
+			var3 = (Entity)var2.next();
+			var4 = (EntityLivingBase)var3;
+			
+			if (this.isSuitableTarget(var4, false))
+			{
+				return var4;
+			}
+		}
+		return null;
+	}
+
+	public void setOwner(EntityLivingBase e)
+	{
 		EntityPlayer p = null;
-		if (e != null && e instanceof EntityPlayer) {
-			p = (EntityPlayer)e;
-			String s = p.getUniqueID().toString();
-			if (s != null) {
-				this.myowner = s;
+		if (e != null) {
+			if (e instanceof EntityPlayer) {
+				p = (EntityPlayer)e;
+				String s = p.getUniqueID().toString();
+				if (s != null) {
+					this.myowner = s;
+				}
 			}
 		}
-
 	}
 
-	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
+	/**
+	 * (abstract) Protected helper method to write subclass entity data to NBT.
+	 */
+	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
+	{
 		super.writeEntityToNBT(par1NBTTagCompound);
-		if (this.myowner == null) {
-			this.myowner = "null";
-		}
-
+		if (this.myowner == null) this.myowner = "null";
 		par1NBTTagCompound.setString("MyOwner", this.myowner);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+	/**
+	 * (abstract) Protected helper method to read subclass entity data from NBT.
+	 */
+	public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
+	{
 		super.readEntityFromNBT(par1NBTTagCompound);
 		this.myowner = par1NBTTagCompound.getString("MyOwner");
-		if (this.myowner != null && this.myowner.equals("null")) {
-			this.myowner = null;
+		if (this.myowner != null) {
+			if (this.myowner.equals("null")) {
+				this.myowner = null;
+			}
 		}
-
 	}
 
+	/**
+	 * Called when the entity is attacked.
+	 */
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
 		boolean ret = false;
 		if (par1DamageSource.getDamageType().equals("inWall")) {
 			return ret;
-		} else {
-			ret = super.attackEntityFrom(par1DamageSource, par2);
-			return ret;
 		}
+		
+		ret = super.attackEntityFrom(par1DamageSource, par2);
+		
+		return ret;
 	}
 
-	public boolean getCanSpawnHere() {
+	
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
+		Block bid;
+		int i, j, k;
 		int sc = 0;
 
-		for (int k = -2; k < 2; k++) {
-			for (int j = -2; j < 2; j++) {
-				for (int i = 0; i < 5; i++) {
-					Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+		for (k = -2; k < 2; k++)
+		{
+			for (j = -2; j < 2; j++)
+			{
+				for (i = 0; i < 5; i++)
+				{
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 					if (bid == Blocks.mob_spawner) {
 						TileEntityMobSpawner tileentitymobspawner = null;
 						tileentitymobspawner = (TileEntityMobSpawner)this.worldObj.getTileEntity((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 						String s = tileentitymobspawner.func_145881_a().getEntityNameToSpawn();
-						if (s != null && s.equals("Rat")) {
-							return true;
+						if (s != null) {
+							if (s.equals("Rat")) return true;
 						}
 					}
 				}
 			}
 		}
 
-		if (!this.isValidLightLevel()) {
-			return false;
-		} else {
-			if (this.worldObj.provider.dimensionId == OreSpawnMain.DimensionID5) {
-				if (this.posY > 50.0D) {
-					return false;
-				}
-
-				for (int var10 = -1; var10 <= 1; ++var10) {
-					for (int j = -1; j <= 1; j++) {
-						Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + 1, (int)this.posZ + var10);
-						if (bid == Blocks.air) {
-							++sc;
-						}
-					}
-				}
-
-				if (sc < 4) {
-					return false;
+		
+		if (!this.isValidLightLevel()) return false;
+		
+		
+		if (this.worldObj.provider.dimensionId == OreSpawnMain.DimensionID5) {
+			if (this.posY > 50.0D) return false;
+			for (k = -1; k <= 1; k++)
+			{
+				for (j = -1; j <= 1; j++)
+				{
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + 1, (int)this.posZ + k);
+					if (bid == Blocks.air) ++sc;
 				}
 			}
-
-			if (this.findBuddies() > 8) {
-				return false;
-			} else {
-				return true;
-			}
+			if (sc < 4) return false;
 		}
+		if (this.findBuddies() > 8) return false;
+		return true;
 	}
 
-	private int findBuddies() {
+	private int findBuddies()
+	{
 		List var5 = this.worldObj.getEntitiesWithinAABB(Rat.class, this.boundingBox.expand(20.0D, 10.0D, 20.0D));
 		return var5.size();
 	}

@@ -19,29 +19,29 @@ import net.minecraft.world.World;
 
 
 
-
-
-public class RTPBlock extends Block {
-	public RTPBlock(int i) {
+public class RTPBlock extends Block
+{
+	public RTPBlock(int i)
+	{
 		super(Material.rock);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
 
 	
-	
-	
-	
-	
-	public void onEntityWalking(World world, int par2, int par3, int par4, Entity par5Entity) {
+	/**
+	 * Called whenever an entity is walking on top of this block. Args: world, x, y, z, entity
+	 */
+	public void onEntityWalking(World world, int par2, int par3, int par4, Entity par5Entity)
+	{
 		if (par5Entity instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer)par5Entity;
 			EntityPlayerMP mp = null;
 			if (par5Entity instanceof EntityPlayerMP) {
 				mp = (EntityPlayerMP)par5Entity;
 			}
-			int x = par2, y = par3, z = par4, found = 0;
+			int x = par2, y = par3, z = par4, tries, found = 0;
 
-			for (int tries = 0; tries < 1000 && found == 0; ++tries) {
+			for (tries = 0; tries < 1000 && found == 0; ++tries) {
 				if (world.rand.nextInt(2) == 0) {
 					x = par2 + 16 + world.rand.nextInt(8) - world.rand.nextInt(8);
 				} else {
@@ -53,13 +53,13 @@ public class RTPBlock extends Block {
 					z = par4 - 16 + world.rand.nextInt(8) - world.rand.nextInt(8);
 				}
 				for (y = par3 - 4; y <= par3 + 4; ++y) {
-					if (world.getBlock(x, y - 1, z).getMaterial().isSolid() && 
-						world.getBlock(x, y, z) == Blocks.air && 
-						world.getBlock(x, y + 1, z) == Blocks.air) {
-						found = 1;
-						
-						
-						break;
+					if (world.getBlock(x, y - 1, z).getMaterial().isSolid()) {
+						if (world.getBlock(x, y, z) == Blocks.air) {
+							if (world.getBlock(x, y + 1, z) == Blocks.air) {
+								found = 1;
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -83,9 +83,9 @@ public class RTPBlock extends Block {
 		}
 	}
 
-	
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister) {
+	public void registerBlockIcons(IIconRegister iconRegister)
+	{
 		this.blockIcon = iconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5));
 	}
 }
