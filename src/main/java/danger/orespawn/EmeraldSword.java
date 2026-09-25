@@ -53,9 +53,9 @@ public class EmeraldSword extends ItemSword
 	
 	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5) {}
 
-	
-	
-	
+	/**
+	 * Returns the damage against a given entity.
+	 */
 	public int getDamageVsEntity(Entity par1Entity)
 	{
 		return this.weaponDamage;

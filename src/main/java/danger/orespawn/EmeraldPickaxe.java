@@ -47,9 +47,9 @@ public class EmeraldPickaxe extends ItemPickaxe
 		this.onUsingTick(stack, (EntityPlayer)null, 0);
 	}
 
-	
-	
-	
+	/**
+	 * Returns the damage against a given entity.
+	 */
 	public int getDamageVsEntity(Entity par1Entity)
 	{
 		return this.weaponDamage;

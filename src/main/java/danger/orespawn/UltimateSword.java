@@ -323,9 +323,9 @@ public class UltimateSword extends ItemSword
 		return true;
 	}
 
-	
-	
-	
+	/**
+	 * Returns if the item (tool) can harvest results from the block type.
+	 */
 	public boolean canHarvestBlock(Block par1Block)
 	{
 		return this.canCrush(par1Block);

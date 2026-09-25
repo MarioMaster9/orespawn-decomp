@@ -16,33 +16,33 @@ import net.minecraft.item.ItemAxe;
 
 public class AmethystAxe extends ItemAxe
 {
-   private int weaponDamage = 12;
+	private int weaponDamage = 12;
 
-   public AmethystAxe(int par1, Item.ToolMaterial par2)
-   {
-      super(par2);
-      this.maxStackSize = 1;
-      this.setMaxDamage(2000);
-      this.setCreativeTab(CreativeTabs.tabTools);
+	public AmethystAxe(int par1, Item.ToolMaterial par2)
+	{
+		super(par2);
+		this.maxStackSize = 1;
+		this.setMaxDamage(2000);
+		this.setCreativeTab(CreativeTabs.tabTools);
    }
+	
+	/**
+	 * Returns the damage against a given entity.
+	 */
+	public int getDamageVsEntity(Entity par1Entity)
+	{
+		return this.weaponDamage;
+	}
 
-   
-   
-   
-   public int getDamageVsEntity(Entity par1Entity)
-   {
-      return this.weaponDamage;
-   }
+	
+	public String getMaterialName()
+	{
+		return "Amethyst";
+	}
 
-   
-   public String getMaterialName()
-   {
-      return "Amethyst";
-   }
-
-   @SideOnly(Side.CLIENT)
-   public void registerIcons(IIconRegister iconRegister)
-   {
-      this.itemIcon = iconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5));
-   }
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister iconRegister)
+	{
+		this.itemIcon = iconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5));
+	}
 }

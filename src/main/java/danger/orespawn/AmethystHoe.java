@@ -25,9 +25,9 @@ public class AmethystHoe extends ItemHoe
 		this.setCreativeTab(CreativeTabs.tabTools);
 	}
 
-	
-	
-	
+	/**
+	 * Returns the damage against a given entity.
+	 */
 	public int getDamageVsEntity(Entity par1Entity)
 	{
 		return 5;

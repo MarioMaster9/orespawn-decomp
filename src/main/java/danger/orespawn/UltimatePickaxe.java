@@ -61,17 +61,17 @@ public class UltimatePickaxe extends ItemPickaxe
 		this.onUsingTick(stack, (EntityPlayer)null, 0);
 	}
 
-	
-	
-	
+	/**
+	 * Returns if the item (tool) can harvest results from the block type.
+	 */
 	public boolean canHarvestBlock(Block par1Block)
 	{
 		return true;
 	}
 
-	
-	
-	
+	/**
+	 * Returns the damage against a given entity.
+	 */
 	public int getDamageVsEntity(Entity par1Entity)
 	{
 		if (par1Entity instanceof Girlfriend) {

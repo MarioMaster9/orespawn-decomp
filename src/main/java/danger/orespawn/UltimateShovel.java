@@ -67,9 +67,9 @@ public class UltimateShovel extends ItemSpade
 	}
 
 	
-	
-	
-	
+	/**
+	 * Returns the damage against a given entity.
+	 */
 	public int getDamageVsEntity(Entity par1Entity)
 	{
 		if (par1Entity instanceof Girlfriend) {

@@ -34,9 +34,9 @@ public class RubySword extends ItemSword
 	}
 
 	
-	
-	
-	
+	/**
+	 * Returns the damage against a given entity.
+	 */
 	public int getDamageVsEntity(Entity par1Entity)
 	{
 		return this.weaponDamage;
