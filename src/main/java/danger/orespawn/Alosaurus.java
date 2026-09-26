@@ -197,15 +197,15 @@ public class Alosaurus extends EntityMob
 		for (var4 = 0; var4 < 6; ++var4) {
 			this.dropItemRand(Items.beef, 1);
 		}
+		
 	}
-
 	
 	
 	
-	
-	
+	/**
+	 * Initialize this creature.
+	 */
 	public void initCreature() {}
-
 	
 	/**
 	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
@@ -259,8 +259,8 @@ public class Alosaurus extends EntityMob
 				this.setAttacking(0);
 			}
 		}
+		
 	}
-
 	
 	
 	
@@ -350,21 +350,21 @@ public class Alosaurus extends EntityMob
 	}
 
 	
-	
-	
-	
-	
-	
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
 	public boolean getCanSpawnHere()
 	{
+		Block bid;
+		int i, j, k;
 		
-		for (int k = -3; k < 3; k++)
+		for (k = -3; k < 3; k++)
 		{
-			for (int j = -3; j < 3; j++)
+			for (j = -3; j < 3; j++)
 			{
-				for (int i = 0; i < 5; i++)
+				for (i = 0; i < 5; i++)
 				{
-					Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 					if (bid == Blocks.mob_spawner) {
 						TileEntityMobSpawner tileentitymobspawner = null;
 						tileentitymobspawner = (TileEntityMobSpawner)this.worldObj.getTileEntity((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
@@ -378,17 +378,17 @@ public class Alosaurus extends EntityMob
 		}
 		if (!this.isValidLightLevel()) return false;
 		if (this.posY < 50.0D) return false;
-		if (this.worldObj.isDaytime()) return false;
+		if (this.worldObj.isDaytime() == true) return false;
 		
 		
 		
-		for (int k = -1; k < 1; k++)
+		for (k = -1; k < 1; k++)
 		{
-			for (int j = -1; j < 1; j++)
+			for (j = -1; j < 1; j++)
 			{
-				for (int i = 1; i < 6; i++)
+				for (i = 1; i < 6; i++)
 				{
-					Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 					if (bid != Blocks.air) return false;
 				}
 			}

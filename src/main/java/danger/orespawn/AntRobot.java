@@ -176,20 +176,20 @@ public class AntRobot extends EntityLiving
 	
 
 
+	
 	protected void updateAITick()
 	{
-		if (this.riddenByEntity == null) {
-			super.updateAITick();
-		}
+		if (this.riddenByEntity != null) return;
+		super.updateAITick();
 	}
 
-	
 	private void initLegData()
 	{
-		if (this.renderdata == null) {
+		int i;
+		if (this.renderdata == null)
 			this.renderdata = new RenderSpiderRobotInfo();
-		}
-		for (int i = 0; i < 6; i++) {
+		
+		for (i = 0; i < 6; i++) {
 			this.renderdata.ycurrentangle[i] = 0.0F;
 			this.renderdata.ywantedangle[i] = 0.0F;
 			this.renderdata.ydisplayangle[i] = 0.0F;
@@ -260,8 +260,8 @@ public class AntRobot extends EntityLiving
 				this.renderdata.yoff[i] = -0.75F;
 			}
 		}
+		
 	}
-
 	
 	
 	private float getNewVelocity(float v, float diff, float curval)
@@ -293,21 +293,21 @@ public class AntRobot extends EntityLiving
 		}
 		return curval;
 	}
-
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	public void updateLegs()
 	{
-		if (!this.worldObj.isRemote)
-			return;
-		for (this.rotationYaw %= 360.0F; this.rotationYaw < 0.0F; this.rotationYaw += 360.0F);
+		int i;
+		int fcount;
+		int it;
+		int unused1;
+		float d1, d2, d3, dd, da;
+		float c1, c2, c3, cc;
+		float diff;
+		
+		if (!this.worldObj.isRemote) return;
+		this.rotationYaw = this.rotationYaw % 360.0F;
+		for (; this.rotationYaw < 0.0F; this.rotationYaw += 360.0F);
 		++this.renderdata.gpcounter;
 		
 		if (this.didonce == 0) {
@@ -316,25 +316,25 @@ public class AntRobot extends EntityLiving
 		}
 		
 		
-		float d1 = (float)(this.prevPosX - this.posX);
-		float d2 = (float)(this.prevPosY - this.posY);
-		float d3 = (float)(this.prevPosZ - this.posZ);
+		d1 = (float)(this.prevPosX - this.posX);
+		d2 = (float)(this.prevPosY - this.posY);
+		d3 = (float)(this.prevPosZ - this.posZ);
 		float realv = (float)Math.sqrt((double)(d1 * d1 + d2 * d2 + d3 * d3));
+		double rhm;
+		double rhdir;
+		double rdv;
 		
-		
-		
-		
-		int i = 0;
+		i = 0;
 		
 		for (i = 0; i < 6; i++) {
-			int fcount = 0;
+			fcount = 0;
 			this.renderdata.footingticker[i]++;
 			
 			this.renderdata.realposx[i] = (float)(this.posX - (double)this.renderdata.legoff[i] * Math.sin(Math.toRadians(MathHelper.wrapAngleTo180_double((double)(this.rotationYaw + 90.0F))) + (double)this.renderdata.ymid[i]));
 			this.renderdata.realposz[i] = (float)(this.posZ + (double)this.renderdata.legoff[i] * Math.cos(Math.toRadians(MathHelper.wrapAngleTo180_double((double)(this.rotationYaw + 90.0F))) + (double)this.renderdata.ymid[i]));
 			this.renderdata.realposy[i] = (float)this.posY + this.renderdata.yoff[i];
 			
-			int it = this.renderdata.footingticker[i] + this.renderdata.footingticker[this.renderdata.pairedwith[i]];
+			it = this.renderdata.footingticker[i] + this.renderdata.footingticker[this.renderdata.pairedwith[i]];
 			if (it > 50 && this.renderdata.footingticker[i] > this.renderdata.footingticker[this.renderdata.pairedwith[i]]) {
 				this.renderdata.footingticker[i] = 0;
 			}
@@ -344,10 +344,10 @@ public class AntRobot extends EntityLiving
 			d1 = this.renderdata.realposx[i] - this.renderdata.foot_xpos[i];
 			d2 = this.renderdata.realposy[i] - this.renderdata.foot_ypos[i];
 			d3 = this.renderdata.realposz[i] - this.renderdata.foot_zpos[i];
-			float dd = (float)Math.sqrt((double)(d1 * d1 + d2 * d2 + d3 * d3));
+			dd = (float)Math.sqrt((double)(d1 * d1 + d2 * d2 + d3 * d3));
 			dd *= 16.0F;
 			
-			float da = (float)(Math.abs((double)this.renderdata.ycurrentangle[i] - (Math.toRadians(MathHelper.wrapAngleTo180_double((double)this.rotationYaw)) + (double)this.renderdata.ymid[i])) % (Math.PI * 2D));
+			da = (float)(Math.abs((double)this.renderdata.ycurrentangle[i] - (Math.toRadians(MathHelper.wrapAngleTo180_double((double)this.rotationYaw)) + (double)this.renderdata.ymid[i])) % (Math.PI * 2D));
 			if ((double)da > Math.PI) da = (float)((double)da - (Math.PI * 2D));
 			if ((double)da < -Math.PI) da = (float)((double)da + (Math.PI * 2D));
 			da = Math.abs(da);
@@ -372,12 +372,12 @@ public class AntRobot extends EntityLiving
 			
 			
 			
-			float c1 = (float)((double)49.0F * Math.cos(this.renderdata.p2xangle[i] - this.renderdata.p1xangle[i]));
-			float c2 = 49.0F;
-			float c3 = (float)((double)49.0F * Math.cos(this.renderdata.p2xangle[i] - this.renderdata.p3xangle[i]));
-			float cc = c1 + c2 + c3;
+			c1 = (float)((double)49.0F * Math.cos(this.renderdata.p2xangle[i] - this.renderdata.p1xangle[i]));
+			c2 = 49.0F;
+			c3 = (float)((double)49.0F * Math.cos(this.renderdata.p2xangle[i] - this.renderdata.p3xangle[i]));
+			cc = c1 + c2 + c3;
 			
-			float diff = cc - dd;
+			diff = cc - dd;
 			this.renderdata.pxvelocity[i] = this.getNewVelocity(realv, (float)((double)diff * Math.PI / 360.0D), this.renderdata.pxvelocity[i]);
 			if (this.renderdata.pxvelocity[i] == 0.0F || Math.abs(diff) < 8.0F) ++fcount;
 			this.renderdata.p1xangle[i] += (double)this.renderdata.pxvelocity[i];
@@ -393,13 +393,13 @@ public class AntRobot extends EntityLiving
 				dd = (float)Math.atan2((double)dd, (double)(this.renderdata.realposy[i] - this.renderdata.foot_ypos[i]) * 16.0D);
 			}
 			this.renderdata.udwantedangle[i] = (float)((double)dd - (Math.PI / 2D));
-			for (; this.renderdata.udwantedangle[i] > Math.PI; this.renderdata.udwantedangle[i] = (float)((double)this.renderdata.udwantedangle[i] - (Math.PI * 2D)));
-			for (; this.renderdata.udwantedangle[i] < Math.PI; this.renderdata.udwantedangle[i] = (float)((double)this.renderdata.udwantedangle[i] + (Math.PI * 2D)));
-			double rhm = (double)this.renderdata.udwantedangle[i];
-			double rhdir = (double)this.renderdata.udcurrentangle[i];
+			for (; this.renderdata.udwantedangle[i] > Math.PI; this.renderdata.udwantedangle[i] -= (Math.PI * 2D));
+			for (; this.renderdata.udwantedangle[i] < -Math.PI; this.renderdata.udwantedangle[i] += (Math.PI * 2D));
+			rhm = (double)this.renderdata.udwantedangle[i];
+			rhdir = (double)this.renderdata.udcurrentangle[i];
 			
 			
-			double rdv = (rhm - rhdir) % (Math.PI * 2D);
+			rdv = (rhm - rhdir) % (Math.PI * 2D);
 			for (; rdv > Math.PI; rdv -= (Math.PI * 2D));
 			for (; rdv < -Math.PI; rdv += (Math.PI * 2D));
 			diff = (float)rdv;
@@ -435,38 +435,38 @@ public class AntRobot extends EntityLiving
 			this.renderdata.yvelocity[i] = this.getNewVelocity(realv, diff, this.renderdata.yvelocity[i]);
 			if (this.renderdata.yvelocity[i] == 0.0F || (double)Math.abs(diff) < 0.03490658503988659) ++fcount;
 			this.renderdata.ycurrentangle[i] += this.renderdata.yvelocity[i];
-			for (; (double)this.renderdata.ycurrentangle[i] > Math.PI; this.renderdata.ycurrentangle[i] = (float)((double)this.renderdata.ycurrentangle[i] - (Math.PI * 2D)));
-			for (; (double)this.renderdata.ycurrentangle[i] < -Math.PI; this.renderdata.ycurrentangle[i] = (float)((double)this.renderdata.ycurrentangle[i] + (Math.PI * 2D)));
+			for (; (double)this.renderdata.ycurrentangle[i] > Math.PI; this.renderdata.ycurrentangle[i] -= (Math.PI * 2D));
+			for (; (double)this.renderdata.ycurrentangle[i] < -Math.PI; this.renderdata.ycurrentangle[i] += (Math.PI * 2D));
 			
 			
 			dd = (float)((double)this.renderdata.ycurrentangle[i] - Math.toRadians(MathHelper.wrapAngleTo180_double((double)this.rotationYaw)) - (Math.PI / 2D));
 			for(; (double)dd > Math.PI; dd = (float)((double)dd - (Math.PI * 2D)));
-			for(; (double)dd < Math.PI; dd = (float)((double)dd + (Math.PI * 2D)));
+			for(; (double)dd < -Math.PI; dd = (float)((double)dd + (Math.PI * 2D)));
 			this.renderdata.ydisplayangle[i] = dd;
 			
 			if (fcount == 3) {
 				this.renderdata.footup[i] = 0;
 			}
 		}
+		
+		
 	}
-
-	
 	
 	private void findNewFooting(int i)
 	{
 		float f = 9.0F;
-		
-		float fx; float fy; float fz;
-		float sfx; float sfy; float sfz;
-		float deffx; float deffy; float deffz;
-		
+		float fx, fy, fz;
+		float sfx, sfy, sfz;
+		float deffx, deffy, deffz;
+		int j, m, n;
+		Block blk;
 		int found = 0;
 		int span;
-		
+		float d1, d2, d3, dd;
 		float range = 0.0F;
-		
+		double rhm;
 		double rhdir = Math.toRadians((double)((this.rotationYaw + 90.0F) % 360.0F));
-		
+		double rdv;
 		double pi = 3.1415926545;
 		
 		
@@ -475,16 +475,16 @@ public class AntRobot extends EntityLiving
 		
 		this.renderdata.footingticker[i] = 0;
 		
-		float d1 = (float)(this.posX - this.prevPosX);
-		float d3 = (float)(this.posZ - this.prevPosZ);
-		double rhm = Math.atan2((double)d3, (double)d1);
+		d1 = (float)(this.posX - this.prevPosX);
+		d3 = (float)(this.posZ - this.prevPosZ);
+		rhm = Math.atan2((double)d3, (double)d1);
 		double velocity = Math.sqrt((double)(d1 * d1 + d3 * d3));
 		
 		
 		
 		
 		
-		double rdv = Math.abs(rhm - rhdir) % (pi * 2.0D);
+		rdv = Math.abs(rhm - rhdir) % (pi * 2.0D);
 		if (rdv > pi) rdv -= pi * 2.0D;
 		rdv = Math.abs(rdv);
 		if (Math.abs(velocity) < 0.01) rdv = 0.0D;
@@ -539,44 +539,44 @@ public class AntRobot extends EntityLiving
 			
 			
 			
-			for (int j = 8; found == 0 && j > -9; --j) {
-				for (int m = -span; found == 0 && m <= span; ++m) {
-					for (int n = -span; found == 0 && n <= span; ++n) {
-						Block blk = this.worldObj.getBlock((int)fx + m, (int)fy + j, (int)fz + n);
-						if (blk != Blocks.air &&
-							this.worldObj.getBlock((int)fx + m, (int)fy + j, (int)fz + n).getMaterial().isSolid()) {
-							d1 = this.renderdata.realposx[i] - (fx + (float)m);
-							float d2 = this.renderdata.realposy[i] - (fy + (float)j + 1.0F);
-							d3 = this.renderdata.realposz[i] - (fz + (float)n);
-							float dd = (float)Math.sqrt((double)(d1 * d1 + d2 * d2 + d3 * d3));
-							dd *= 16.0F;
-							if (dd <= 144.0F)
-							{
-								
+			for (j = 8; found == 0 && j > -9; --j) {
+				for (m = -span; found == 0 && m <= span; ++m) {
+					for (n = -span; found == 0 && n <= span; ++n) {
+						blk = this.worldObj.getBlock((int)fx + m, (int)fy + j, (int)fz + n);
+						if (blk != Blocks.air) {
+							if (this.worldObj.getBlock((int)fx + m, (int)fy + j, (int)fz + n).getMaterial().isSolid()) {
+								d1 = this.renderdata.realposx[i] - (fx + (float)m);
+								d2 = this.renderdata.realposy[i] - (fy + (float)j + 1.0F);
+								d3 = this.renderdata.realposz[i] - (fz + (float)n);
+								dd = (float)Math.sqrt((double)(d1 * d1 + d2 * d2 + d3 * d3));
+								dd *= 16.0F;
+								if (dd > 144.0F) {
+									continue;
+								}
 								
 								fy += (float)(j + 1);
 								fx += (float)m;
 								fz += (float)n;
 								found = 1;
-								
-								
 								break;
 							}
 						}
 					}
 				}
 			}
+			
+			
 
 			--f;
-			if (f < 2.5F &&
-				range != 0.0F) {
-				range = 0.0F;
-				span = 3;
-				f = oldf;
+			if (f < 2.5F) {
+				if (range != 0.0F) {
+					range = 0.0F;
+					span = 3;
+					f = oldf;
+				}
 			}
 		}
 
-		
 		
 		
 		
@@ -598,9 +598,9 @@ public class AntRobot extends EntityLiving
 			this.renderdata.footup[i] = 1;
 			
 			d1 = sfx - fx;
-			float d2 = sfy - fy;
+			d2 = sfy - fy;
 			d3 = sfz - fz;
-			float dd = (float)Math.sqrt((double)(d1 * d1 + d2 * d2 + d3 * d3));
+			dd = (float)Math.sqrt((double)(d1 * d1 + d2 * d2 + d3 * d3));
 			dd *= 16.0F;
 			d1 = (sfy + fy) / 2.0F;
 			if (dd > 3.0F) {
@@ -614,16 +614,16 @@ public class AntRobot extends EntityLiving
 			}
 			this.renderdata.uppoint[i] = d1;
 		}
+		
+		
+		
 	}
-
-	
 	
 	/**
 	 * Used in model rendering to determine if the entity riding this entity should be in the 'sitting' position.
 	 * @return false to prevent an entity that is mounted to this entity from displaying the 'sitting' animation.
 	 */
-	public boolean shouldRiderSit()
-	{
+	public boolean shouldRiderSit() {
 		return true;
 	}
 
@@ -695,10 +695,10 @@ public class AntRobot extends EntityLiving
 			f = (float)((double)f + Math.cos((double)((float)this.rideTicker * 0.33F)) * 0.05);
 			this.riddenByEntity.setPosition(this.posX - (double)f * Math.sin(Math.toRadians((double)this.rotationYaw)), this.posY + this.getMountedYOffset() + this.riddenByEntity.getYOffset(), this.posZ + (double)f * Math.cos(Math.toRadians((double)this.rotationYaw)));
 		}
+		
+		
+		
 	}
-
-	
-	
 	
 	
 	
@@ -727,23 +727,23 @@ public class AntRobot extends EntityLiving
 		}
 		
 		Entity e = par1DamageSource.getEntity();
-		if (e != null && e instanceof EntityLiving) {
+		if (e != null && e instanceof EntityLiving)
+		{
 			this.setAttackTarget((EntityLiving)e);
 			this.faceEntity(e, 20.0F, 20.0F);
 		}
-		
 
+		
 		return super.attackEntityFrom(par1DamageSource, par2);
 	}
 
-	/**
-	 * Called when the mob is falling. Calculates and applies fall damage.
-	 */
 	protected void fall(float par1) {}
 
-	
 	protected void updateFallState(double par1, boolean par3) {}
 
+	
+	
+	
 	public boolean canBeCollidedWith()
 	{
 		return !this.isDead;
@@ -767,14 +767,14 @@ public class AntRobot extends EntityLiving
 			this.boatPosRotationIncrements = par9 + 6;
 		}
 
+		
 		this.boatX = par1;
 		this.boatY = par3;
 		this.boatZ = par5;
 		this.boatYaw = (double)par7;
 		this.boatPitch = (double)par8;
+		
 	}
-
-	
 	
 	
 	/**
@@ -862,8 +862,8 @@ public class AntRobot extends EntityLiving
 		
 		
 		
+		
 	}
-
 	
 	/**
 	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
@@ -873,27 +873,27 @@ public class AntRobot extends EntityLiving
 	{
 		List list = null;
 		double velocity = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-		
-		
+		double d4;
+		double d5;
 		double d6 = (double)(this.rand.nextFloat() * 2.0F - 1.0F);
 		double d7 = (double)(this.rand.nextInt(2) * 2 - 1) * 0.7;
-		
-		
-		
-		
-		
+		double d8; // unused
+		double d9; // unused
+		double d10;
+		double d11;
+		double newvelocity;
 		double obstruction_factor = 0.0D;
-		
+		double unused1;
 		double relative_g = 0.0D;
-		
+		double dx, dz;
 		double max_speed = 0.3;
 		double gh = 1.75D;
-		
-		
+		int i, j, k, unused2, unused3;
+		Block bid;
 		int dist = 2;
 		
-		if (this.isDead)
-			return;
+		if (this.isDead) return;
+		
 		if (this.riddenByEntity == null) {
 			super.onLivingUpdate();
 		}
@@ -925,11 +925,11 @@ public class AntRobot extends EntityLiving
 		
 		if (this.worldObj.isRemote)
 		{
-			double d10;
-			double d11;
+			
+			
 			
 			if (this.riddenByEntity == null) {
-				Block bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh + 1.0F), (int)this.posZ);
+				bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh + 1.0F), (int)this.posZ);
 				if (bid == Blocks.air) bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh), (int)this.posZ);
 				if (bid != Blocks.air && bid != Blocks.water && bid != Blocks.flowing_water && bid != Blocks.lava && bid != Blocks.flowing_lava) {
 					this.motionY += 0.12;
@@ -944,8 +944,8 @@ public class AntRobot extends EntityLiving
 			
 			if (this.boatPosRotationIncrements > 0)
 			{
-				double d4 = this.posX + (this.boatX - this.posX) / (double)this.boatPosRotationIncrements;
-				double d5 = this.posY + (this.boatY - this.posY) / (double)this.boatPosRotationIncrements;
+				d4 = this.posX + (this.boatX - this.posX) / (double)this.boatPosRotationIncrements;
+				d5 = this.posY + (this.boatY - this.posY) / (double)this.boatPosRotationIncrements;
 				d11 = this.posZ + (this.boatZ - this.posZ) / (double)this.boatPosRotationIncrements;
 				this.setPosition(d4, d5, d11);
 				
@@ -964,8 +964,8 @@ public class AntRobot extends EntityLiving
 			{
 				
 				
-				double d4 = this.posX + this.motionX;
-				double d5 = this.posY + this.motionY;
+				d4 = this.posX + this.motionX;
+				d5 = this.posY + this.motionY;
 				d11 = this.posZ + this.motionZ;
 				this.setPosition(d4, d5, d11);
 				
@@ -983,19 +983,19 @@ public class AntRobot extends EntityLiving
 		
 		
 		
-		
-		
 		}
 		else
 		{
+			
+			
+			
+			
+			
+			
 			EntityPlayer pp;
-			
-			
-			
-			
 			if (this.riddenByEntity != null) {
 				gh = 2.25D;
-				Block bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh), (int)this.posZ);
+				bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh), (int)this.posZ);
 				if (bid != Blocks.air && bid != Blocks.water && bid != Blocks.flowing_water && bid != Blocks.lava && bid != Blocks.flowing_lava) {
 					this.motionY += 0.06;
 					this.posY += 0.03;
@@ -1003,7 +1003,7 @@ public class AntRobot extends EntityLiving
 					this.motionY -= 0.02;
 				}
 			} else {
-				Block bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh + 1.0F), (int)this.posZ);
+				bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh + 1.0F), (int)this.posZ);
 				if (bid == Blocks.air) bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh), (int)this.posZ);
 				if (bid != Blocks.air && bid != Blocks.water && bid != Blocks.flowing_water && bid != Blocks.lava && bid != Blocks.flowing_lava) {
 					this.motionY += 0.15;
@@ -1024,12 +1024,12 @@ public class AntRobot extends EntityLiving
 				dist = 3;
 				dist += (int)(velocity * 6.0D);
 				
-				for (int k = 1; k < dist; k++) {
-					for (int i = 1; i < dist * 2; i++) {
-						for (int j = -90; j <= 90; j += 30) {
-							double dx = (double)i * Math.cos(Math.toRadians((double)(this.rotationYaw + 90.0F + (float)j)));
-							double dz = (double)i * Math.sin(Math.toRadians((double)(this.rotationYaw + 90.0F + (float)j)));
-							Block bid = this.worldObj.getBlock((int)(this.posX + dx), (int)this.posY - k, (int)(this.posZ + dz));
+				for (k = 1; k < dist; k++) {
+					for (i = 1; i < dist * 2; i++) {
+						for (j = -90; j <= 90; j += 30) {
+							dx = (double)i * Math.cos(Math.toRadians((double)(this.rotationYaw + 90.0F + (float)j)));
+							dz = (double)i * Math.sin(Math.toRadians((double)(this.rotationYaw + 90.0F + (float)j)));
+							bid = this.worldObj.getBlock((int)(this.posX + dx), (int)this.posY - k, (int)(this.posZ + dz));
 							if (bid != Blocks.air && bid != Blocks.water && bid != Blocks.flowing_water && bid != Blocks.lava && bid != Blocks.flowing_lava) {
 								obstruction_factor += 0.02;
 							}
@@ -1049,10 +1049,10 @@ public class AntRobot extends EntityLiving
 				
 				
 				
-				double d4 = (double)this.riddenByEntity.rotationYaw;
+				d4 = (double)this.riddenByEntity.rotationYaw;
 				d4 %= 360.0D;
 				for (; d4 < 0.0D; d4 += 360.0D);
-				double d5 = (double)this.rotationYaw;
+				d5 = (double)this.rotationYaw;
 				d5 %= 360.0D;
 				for (; d5 < 0.0D; d5 += 360.0D);
 				relative_g = (d4 - d5) % 180.0D;
@@ -1087,7 +1087,7 @@ public class AntRobot extends EntityLiving
 				
 				
 				
-				double newvelocity = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+				newvelocity = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
 				
 				
 				
@@ -1099,7 +1099,7 @@ public class AntRobot extends EntityLiving
 				double rhm = Math.atan2(this.motionZ, this.motionX);
 				double rhdir = Math.toRadians((double)((this.riddenByEntity.rotationYaw + 90.0F) % 360.0F));
 				double rt = 0.0D;
-				
+				double rdv;
 				double pi = 3.1415926545;
 				double deltav = 0.0D;
 				float im = pp.moveForward;
@@ -1107,7 +1107,7 @@ public class AntRobot extends EntityLiving
 				
 				
 				
-				double rdv = Math.abs(rhm - rhdir) % (pi * 2.0D);
+				rdv = Math.abs(rhm - rhdir) % (pi * 2.0D);
 				if (rdv > pi) rdv -= pi * 2.0D;
 				rdv = Math.abs(rdv);
 				if (Math.abs(newvelocity) < 0.01) rdv = 0.0D;
@@ -1147,8 +1147,8 @@ public class AntRobot extends EntityLiving
 					this.motionX = Math.cos(Math.toRadians((double)(this.rotationYaw + 90.0F))) * newvelocity;
 					this.motionZ = Math.sin(Math.toRadians((double)(this.rotationYaw + 90.0F))) * newvelocity;
 				} else {
-					this.motionX = Math.cos(Math.toRadians((double)(this.rotationYaw + 270.0F))) * newvelocity * -1.0D;
-					this.motionZ = Math.sin(Math.toRadians((double)(this.rotationYaw + 270.0F))) * newvelocity * -1.0D;
+					this.motionX = Math.cos(Math.toRadians((double)(this.rotationYaw + 270.0F))) * (newvelocity * -1.0D);
+					this.motionZ = Math.sin(Math.toRadians((double)(this.rotationYaw + 270.0F))) * (newvelocity * -1.0D);
 				}
 				
 				
@@ -1171,9 +1171,9 @@ public class AntRobot extends EntityLiving
 				this.riddenByEntity = null;
 			}
 		}
+		
+		
 	}
-
-	
 	
 	public void goThisWay(double mx, double mz)
 	{
@@ -1255,13 +1255,13 @@ public class AntRobot extends EntityLiving
 			if (!this.worldObj.isRemote && this.riddenByEntity == null && par1EntityPlayer.getDistanceSqToEntity(this) < 16.0D)
 			{
 				par1EntityPlayer.mountEntity(this);
+				
 				this.worldObj.playSoundAtEntity(this, "orespawn:robotspidermount", 0.45F, 1.0F);
 			}
-
+			
 			return true;
 		}
 	}
-
 	
 	private void feetFindSomethingToHit()
 	{
@@ -1370,9 +1370,9 @@ public class AntRobot extends EntityLiving
 	}
 
 	
-	
 	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2)
 	{
+		double unused1, unused2;
 		if (par1EntityLiving == null)
 		{
 			return false;
@@ -1403,10 +1403,10 @@ public class AntRobot extends EntityLiving
 		{
 			double rr = Math.atan2(par1EntityLiving.posZ - this.posZ, par1EntityLiving.posX - this.posX);
 			double rhdir = Math.toRadians((double)((this.rotationYaw + 90.0F) % 360.0F));
-			
+			double rdd;
 			double pi = 3.1415926545;
 			
-			double rdd = Math.abs(rr - rhdir) % (pi * 2.0D);
+			rdd = Math.abs(rr - rhdir) % (pi * 2.0D);
 			if (rdd > pi) rdd -= pi * 2.0D;
 			rdd = Math.abs(rdd);
 			
@@ -1469,18 +1469,18 @@ public class AntRobot extends EntityLiving
 		if (var3 != null) this.worldObj.spawnEntityInWorld(var3);
 		return is;
 	}
+	
 	/**
 	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity has recently been hit by a player. @param
 	 * par2 - Level of Looting used to kill this mob.
 	 */
-	protected void dropFewItems(boolean par1, int par2)
-	{
-		ItemStack is = null;
+	protected void dropFewItems(boolean par1, int par2) {
+		int var4, unused1; ItemStack is = null;
+		int i, var3;
 		
-		
-		int i = 7 + this.worldObj.rand.nextInt(7);
-		for (int var4 = 0; var4 < i; ++var4) {
-			int var3 = this.worldObj.rand.nextInt(12);
+		i = 7 + this.worldObj.rand.nextInt(7);
+		for (var4 = 0; var4 < i; ++var4) {
+			var3 = this.worldObj.rand.nextInt(12);
 			switch (var3) {
 				case 0:
 					is = this.dropItemRand(Items.redstone, 1);
@@ -1515,7 +1515,11 @@ public class AntRobot extends EntityLiving
 				case 10:
 					is = this.dropItemRand(Items.iron_ingot, 1);
 					break;
+				default:
+					
+					break;
 			}
 		}
+		
 	}
 }
