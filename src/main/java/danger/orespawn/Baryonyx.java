@@ -20,15 +20,35 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class Baryonyx extends EntityAnimal {
-	private float moveSpeed = 0.25F;
-	private int closest = 99999;
-	private int tx = 0;
-	private int ty = 0;
-	private int tz = 0;
 
-	public Baryonyx(World par1World) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class Baryonyx extends EntityAnimal
+{
+	private float moveSpeed = 0.25F;
+
+	public Baryonyx(World par1World)
+	{
 		super(par1World);
+		
 		this.setSize(1.5F, 2.8F);
 		this.moveSpeed = 0.25F;
 		this.fireResistance = 100;
@@ -43,7 +63,13 @@ public class Baryonyx extends EntityAnimal {
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 	}
 
-	protected void applyEntityAttributes() {
+	
+	
+	
+	
+	
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
@@ -51,230 +77,270 @@ public class Baryonyx extends EntityAnimal {
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue((double)8.0F);
 	}
 
-	protected void entityInit() {
+	protected void entityInit()
+	{
 		super.entityInit();
 	}
 
-	public boolean getCanSpawnHere() {
-		if (this.posY < 50.0D) {
-			return false;
-		} else if (!this.worldObj.isDaytime()) {
-			return false;
-		} else {
-			return this.findBuddies() <= 8;
-		}
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
+		if (this.posY < 50.0D) return false;
+		if (!this.worldObj.isDaytime()) return false;
+		if (this.findBuddies() > 8) return false;
+		return true;
 	}
 
+	/**
+	 * Called to update the entity's position/logic.
+	 */
 	public void onUpdate() {
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		super.onUpdate();
 	}
 
-	public boolean isAIEnabled() {
+	
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	public boolean isAIEnabled()
+	{
 		return true;
 	}
 
-	public boolean canBreatheUnderwater() {
+	
+	public boolean canBreatheUnderwater()
+	{
 		return false;
 	}
 
-	public int mygetMaxHealth() {
+	public int mygetMaxHealth()
+	{
 		return 40;
 	}
 
-	protected String getLivingSound() {
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
 		return null;
 	}
 
-	protected String getHurtSound() {
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return "orespawn:duck_hurt";
 	}
 
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return "orespawn:duck_hurt";
 	}
 
-	protected float getSoundVolume() {
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
+	protected float getSoundVolume()
+	{
 		return 0.4F;
 	}
 
-	protected Item getDropItem() {
+	
+	
+	
+	protected Item getDropItem()
+	{
 		return Items.beef;
 	}
 
-	protected void dropFewItems(boolean par1, int par2) {
+	
+	
+	
+	protected void dropFewItems(boolean par1, int par2)
+	{
 		int var3 = 0;
 		var3 = this.rand.nextInt(5);
 		var3 += 2;
-
-		for (int var4 = 0; var4 < var3; ++var4) {
+		for (int var4 = 0; var4 < var3; var4++)
+		{
 			this.dropItem(Items.beef, 1);
 		}
-
+		
 	}
+	
+	private int closest = 99999;
+	private int tx = 0, ty = 0, tz = 0;
 
 	private boolean scan_it(int x, int y, int z, int dx, int dy, int dz) {
 		int found = 0;
-
-		for (int i = -dy; i <= dy; i++) {
-			for (int j = -dz; j <= dz; j++) {
-				Block bid = this.worldObj.getBlock(x + dx, y + i, z + j);
-				if (bid == Blocks.grass) {
-					int d = dx * dx + j * j + i * i;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + dx;
-						this.ty = y + i;
-						this.tz = z + j;
-						++found;
+		int i, j, d;
+		Block bid;
+		
+		//Fixed x, scan two sides of 3d rectangle
+		for(i=-dy;i<=dy;i++){
+			for(j=-dz;j<=dz;j++){
+				bid = this.worldObj.getBlock(x+dx, y+i, z+j);
+				if(bid == Blocks.grass){
+					d = (dx*dx) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+dx; ty = y+i; tz = z+j;
+						found++;
 					}
 				}
-
-				bid = this.worldObj.getBlock(x - dx, y + i, z + j);
-				if (bid == Blocks.grass) {
-					int d = dx * dx + j * j + i * i;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x - dx;
-						this.ty = y + i;
-						this.tz = z + j;
-						++found;
+				bid = this.worldObj.getBlock(x-dx, y+i, z+j);
+				if(bid == Blocks.grass){
+					d = (dx*dx) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x-dx; ty = y+i; tz = z+j;
+						found++;
+					}
+				}
+			}
+		}
+		//Fixed y, scan two sides of 3d rectangle
+		for(i=-dx;i<=dx;i++){
+			for(j=-dz;j<=dz;j++){
+				bid = this.worldObj.getBlock(x+i, y+dy, z+j);
+				if(bid == Blocks.grass){
+					d = (dy*dy) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+i; ty = y+dy; tz = z+j;
+						found++;
+					}
+				}
+				bid = this.worldObj.getBlock(x+i, y-dy, z+j);
+				if(bid == Blocks.grass){
+					d = (dy*dy) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+i; ty = y-dy; tz = z+j;
+						found++;
+					}
+				}
+			}
+		}
+		//Fixed z, scan two sides of 3d rectangle
+		for(i=-dx;i<=dx;i++){
+			for(j=-dy;j<=dy;j++){
+				bid = this.worldObj.getBlock(x+i, y+j, z+dz);
+				if(bid == Blocks.grass){
+					d = (dz*dz) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+i; ty = y+j; tz = z+dz;
+						found++;
+					}
+				}
+				bid = this.worldObj.getBlock(x+i, y+j, z-dz);
+				if(bid == Blocks.grass){
+					d = (dz*dz) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x + i; ty = y + j; tz = z - dz;
+						found++;
 					}
 				}
 			}
 		}
 
-		for (int var12 = -dx; var12 <= dx; ++var12) {
-			for (int j = -dz; j <= dz; j++) {
-				Block bid = this.worldObj.getBlock(x + var12, y + dy, z + j);
-				if (bid == Blocks.grass) {
-					int d = dy * dy + j * j + var12 * var12;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var12;
-						this.ty = y + dy;
-						this.tz = z + j;
-						++found;
-					}
-				}
-
-				bid = this.worldObj.getBlock(x + var12, y - dy, z + j);
-				if (bid == Blocks.grass) {
-					int d = dy * dy + j * j + var12 * var12;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var12;
-						this.ty = y - dy;
-						this.tz = z + j;
-						++found;
-					}
-				}
-			}
-		}
-
-		for (int var13 = -dx; var13 <= dx; ++var13) {
-			for (int j = -dy; j <= dy; j++) {
-				Block bid = this.worldObj.getBlock(x + var13, y + j, z + dz);
-				if (bid == Blocks.grass) {
-					int d = dz * dz + j * j + var13 * var13;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var13;
-						this.ty = y + j;
-						this.tz = z + dz;
-						++found;
-					}
-				}
-
-				bid = this.worldObj.getBlock(x + var13, y + j, z - dz);
-				if (bid == Blocks.grass) {
-					int d = dz * dz + j * j + var13 * var13;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var13;
-						this.ty = y + j;
-						this.tz = z - dz;
-						++found;
-					}
-				}
-			}
-		}
-
-		if (found != 0) {
-			return true;
-		} else {
-			return false;
-		}
+		if(found != 0)return true;
+		return false;
 	}
 
-	protected void updateAITick() {
-		if (!this.isDead) {
-			super.updateAITick();
-			if (this.worldObj.rand.nextInt(200) == 1) {
-				this.setRevengeTarget((EntityLivingBase)null);
+	
+	
+	
+	/**
+	 * main AI tick function, replaces updateEntityActionState
+	 */
+	protected void updateAITick()
+	{
+		if (this.isDead) return;
+		super.updateAITick();
+		if (this.worldObj.rand.nextInt(200) == 1) this.setRevengeTarget(null);
+
+		if (this.worldObj.rand.nextInt(60) == 0 && OreSpawnMain.PlayNicely == 0)
+		{
+			int i, j;
+			
+			this.closest = 99999;
+			this.tx = this.ty = this.tz = 0;
+			for (i = 1; i < 11; i++) {
+				j = i;
+				if (j > 2) j = 2;
+				if (this.scan_it((int)this.posX, (int)this.posY + 1, (int)this.posZ, i, j, i) == true) break;
+				if (i >= 6) i++;
 			}
 
-			if (this.worldObj.rand.nextInt(60) == 0 && OreSpawnMain.PlayNicely == 0) {
-				this.closest = 99999;
-				this.tx = this.ty = this.tz = 0;
-
-				for (int i = 1; i < 11; i++) {
-					int j = i;
-					if (i > 2) {
-						j = 2;
-					}
-
-					if (this.scan_it((int)this.posX, (int)this.posY + 1, (int)this.posZ, i, j, i)) {
-						break;
-					}
-
-					if (i >= 6) {
-						++i;
-					}
-				}
-
-				if (this.closest < 99999) {
-					this.getNavigator().tryMoveToXYZ((double)this.tx, (double)this.ty, (double)this.tz, 1.0D);
-					if (this.closest < 12) {
-						if (this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) {
-							this.worldObj.setBlock(this.tx, this.ty, this.tz, Blocks.dirt, 0, 2);
-						}
-
-						this.heal(1.0F);
-						this.playSound("random.burp", 1.0F, this.worldObj.rand.nextFloat() * 0.2F + 0.9F);
-					}
+			if (this.closest < 99999)
+			{
+				this.getNavigator().tryMoveToXYZ((double)this.tx, (double)this.ty, (double)this.tz, 1.0D);
+				if (this.closest < 12)
+				{
+					if (this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock(this.tx, this.ty, this.tz, Blocks.dirt, 0, 2);
+					this.heal(1.0F);
+					this.playSound("random.burp", 1.0F, this.worldObj.rand.nextFloat() * 0.2F + 0.9F);
 				}
 			}
-
 		}
+		
+		
 	}
-
-	protected boolean canDespawn() {
+	
+	/**
+	 * Determines if an entity can be despawned, used on idle far away entities
+	 */
+	protected boolean canDespawn()
+	{
 		if (this.isChild()) {
 			this.func_110163_bv();
 			return false;
-		} else {
-			return !this.isNoDespawnRequired();
 		}
+		if (this.isNoDespawnRequired()) return false;
+		return true;
 	}
 
+	
 	public EntityAgeable createChild(EntityAgeable entityageable) {
 		return this.spawnBabyAnimal(entityageable);
 	}
 
+	
+	
 	public Baryonyx spawnBabyAnimal(EntityAgeable par1EntityAgeable) {
 		return new Baryonyx(this.worldObj);
 	}
 
-	public boolean isWheat(ItemStack par1ItemStack) {
+	
+	
+	
+	public boolean isWheat(ItemStack par1ItemStack)
+	{
 		return par1ItemStack != null && par1ItemStack.getItem() == Items.apple;
 	}
 
-	public boolean isBreedingItem(ItemStack par1ItemStack) {
+	/**
+	 * Checks if the parameter is an item which this animal can be fed to breed it (wheat, carrots or seeds depending on
+	 * the animal type)
+	 */
+	public boolean isBreedingItem(ItemStack par1ItemStack)
+	{
 		return par1ItemStack.getItem() == OreSpawnMain.MyCrystalApple;
 	}
 
-	private int findBuddies() {
+	private int findBuddies()
+	{
 		List var5 = this.worldObj.getEntitiesWithinAABB(Baryonyx.class, this.boundingBox.expand(20.0D, 10.0D, 20.0D));
 		return var5.size();
 	}
