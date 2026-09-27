@@ -18,11 +18,34 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
-public class Cryolophosaurus extends EntityMob {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class Cryolophosaurus extends EntityMob
+{
 	private GenericTargetSorter TargetSorter = null;
 	private float moveSpeed = 0.25F;
 
-	public Cryolophosaurus(World par1World) {
+	
+	
+	public Cryolophosaurus(World par1World)
+	{
 		super(par1World);
 		this.setSize(0.75F, 0.75F);
 		this.getNavigator().setAvoidsWater(true);
@@ -38,170 +61,273 @@ public class Cryolophosaurus extends EntityMob {
 		this.TargetSorter = new GenericTargetSorter(this);
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue((double)OreSpawnMain.Cryolophosaurus_stats.attack);
 	}
 
-	protected void entityInit() {
+	protected void entityInit()
+	{
 		super.entityInit();
 	}
 
 	protected boolean canDespawn() {
-		return !this.isNoDespawnRequired();
-	}
-
-	public int mygetMaxHealth() {
-		return OreSpawnMain.Cryolophosaurus_stats.health;
-	}
-
-	public int getTotalArmorValue() {
-		return OreSpawnMain.Cryolophosaurus_stats.defense;
-	}
-
-	protected boolean isAIEnabled() {
+		if (this.isNoDespawnRequired()) return false;
 		return true;
 	}
 
-	public void onLivingUpdate() {
+	public int mygetMaxHealth()
+	{
+		return OreSpawnMain.Cryolophosaurus_stats.health;
+	}
+
+	/**
+	 * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+	 */
+	public int getTotalArmorValue()
+	{
+		return OreSpawnMain.Cryolophosaurus_stats.defense;
+	}
+
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	protected boolean isAIEnabled()
+	{
+		return true;
+	}
+
+	/**
+	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+	 * use this to react to sunlight and start to burn.
+	 */
+	public void onLivingUpdate()
+	{
 		super.onLivingUpdate();
 	}
 
-	public void onUpdate() {
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		super.onUpdate();
 	}
 
-	protected String getLivingSound() {
-		return this.rand.nextInt(6) == 0 ? "orespawn:cryo_living" : null;
+	
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
+		if (this.rand.nextInt(6) == 0) {
+			return "orespawn:cryo_living";
+		}
+			return null;
 	}
 
-	protected String getHurtSound() {
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return "orespawn:cryo_hurt";
 	}
 
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return "orespawn:cryo_death";
 	}
 
+	/**
+	 * Returns the volume for the sounds this mob makes.
+     */
 	protected float getSoundVolume() {
 		return 0.75F;
 	}
 
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
 	protected float getSoundPitch() {
 		return 1.0F;
 	}
 
-	protected Item getDropItem() {
+	
+	
+	
+	
+	
+	protected Item getDropItem()
+	{
 		int i = this.worldObj.rand.nextInt(10);
-		if (i == 0) {
-			return Items.chicken;
-		} else if (i == 1) {
-			return OreSpawnMain.UraniumNugget;
-		} else {
-			return i == 2 ? OreSpawnMain.TitaniumNugget : null;
-		}
+		if (i == 0) return Items.chicken;
+		if (i == 1) return OreSpawnMain.UraniumNugget;
+		if (i == 2) return OreSpawnMain.TitaniumNugget;
+		return null;
 	}
 
-	public void initCreature() {
-	}
+	
+	
+	/**
+	 * Initialize this creature.
+	 */
+	public void initCreature() {}
 
-	public boolean interact(EntityPlayer par1EntityPlayer) {
+	/**
+	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+	 */
+	public boolean interact(EntityPlayer par1EntityPlayer)
+	{
 		return false;
 	}
 
-	protected void updateAITasks() {
-		if (!this.isDead) {
-			super.updateAITasks();
-			if (this.worldObj.rand.nextInt(200) == 1) {
-				this.setRevengeTarget((EntityLivingBase)null);
-			}
-
-			if (this.worldObj.rand.nextInt(5) == 1) {
-				EntityLivingBase e = this.findSomethingToAttack();
-				if (e != null) {
-					this.getNavigator().tryMoveToEntityLiving(e, 1.25D);
-					if (this.getDistanceSqToEntity(e) < 5.0D && (this.rand.nextInt(12) == 0 || this.rand.nextInt(14) == 1)) {
+	protected void updateAITasks()
+	{
+		if (this.isDead) return;
+		super.updateAITasks();
+		if (this.worldObj.rand.nextInt(200) == 1) this.setRevengeTarget(null);
+		if (this.worldObj.rand.nextInt(5) == 1) {
+			EntityLivingBase e = this.findSomethingToAttack();
+			if (e != null) {
+				this.getNavigator().tryMoveToEntityLiving(e, 1.25D);
+				if (this.getDistanceSqToEntity(e) < 5.0D)
+				{
+					if (this.rand.nextInt(12) == 0 || this.rand.nextInt(14) == 1)
+					{
 						this.attackEntityAsMob(e);
 					}
 				}
 			}
-
 		}
+		
 	}
-
-	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2) {
-		if (par1EntityLiving == null) {
+	
+	
+	
+	
+	
+	
+	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2)
+	{
+		if (par1EntityLiving == null)
+		{
 			return false;
-		} else if (par1EntityLiving == this) {
+		}
+		if (par1EntityLiving == this)
+		{
 			return false;
-		} else if (!par1EntityLiving.isEntityAlive()) {
+		}
+		if (!par1EntityLiving.isEntityAlive())
+		{
 			return false;
-		} else if (!this.getEntitySenses().canSee(par1EntityLiving)) {
+		}
+		if (!this.getEntitySenses().canSee(par1EntityLiving))
+		{
+			
 			return false;
-		} else if (par1EntityLiving instanceof Alosaurus) {
+		}
+		if (par1EntityLiving instanceof Alosaurus)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof TRex) {
+		}
+		if (par1EntityLiving instanceof TRex)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof Cryolophosaurus) {
+		}
+		if (par1EntityLiving instanceof Cryolophosaurus)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof Ghost) {
+		}
+		if (par1EntityLiving instanceof Ghost)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof GhostSkelly) {
+		}
+		if (par1EntityLiving instanceof GhostSkelly)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof CaveFisher) {
+		}
+		if (par1EntityLiving instanceof CaveFisher)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof GammaMetroid) {
+		}
+		if (par1EntityLiving instanceof GammaMetroid)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof EntityButterfly) {
+		}
+		
+		
+		
+		
+		
+		if (par1EntityLiving instanceof EntityButterfly)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof Firefly) {
+		}
+		if (par1EntityLiving instanceof Firefly)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof EntityMosquito) {
+		}
+		if (par1EntityLiving instanceof EntityMosquito)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof RockBase) {
+		}
+		if (par1EntityLiving instanceof RockBase)
+		{
 			return false;
-		} else {
-			if (par1EntityLiving instanceof EntityPlayer) {
-				EntityPlayer p = (EntityPlayer)par1EntityLiving;
-				if (p.capabilities.isCreativeMode) {
-					return false;
-				}
+		}
+		if (par1EntityLiving instanceof EntityPlayer)
+		{
+			EntityPlayer p = (EntityPlayer)par1EntityLiving;
+			if (p.capabilities.isCreativeMode == true) {
+				return false;
 			}
-
-			return true;
 		}
+
+		return true;
 	}
 
-	private EntityLivingBase findSomethingToAttack() {
-		if (OreSpawnMain.PlayNicely != 0) {
-			return null;
-		} else {
-			List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(9.0D, 2.0D, 9.0D));
-			Collections.sort(var5, this.TargetSorter);
-			Iterator var2 = var5.iterator();
-			Entity var3 = null;
-			EntityLivingBase var4 = null;
+	private EntityLivingBase findSomethingToAttack()
+	{
+		if (OreSpawnMain.PlayNicely != 0) return null;
+		List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(9.0D, 2.0D, 9.0D));
+		Collections.sort(var5, this.TargetSorter);
+		Iterator var2 = var5.iterator();
+		Entity var3 = null;
+		EntityLivingBase var4 = null;
 
-			while (var2.hasNext()) {
-				var3 = (Entity)var2.next();
-				var4 = (EntityLivingBase)var3;
-				if (this.isSuitableTarget(var4, false)) {
-					return var4;
-				}
+		while (var2.hasNext())
+		{
+			var3 = (Entity)var2.next();
+			var4 = (EntityLivingBase)var3;
+			
+			if (this.isSuitableTarget(var4, false))
+			{
+				return var4;
 			}
-
-			return null;
 		}
+		return null;
 	}
 
-	public boolean getCanSpawnHere() {
-		if (!this.isValidLightLevel()) {
-			return false;
-		} else {
-			return !this.worldObj.isDaytime() || !(this.posY > 50.0D);
-		}
+	
+	
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
+		if (!this.isValidLightLevel()) return false;
+		if (this.worldObj.isDaytime() == true && this.posY > 50.0D) return false;
+		
+		
+		
+		return true;
 	}
 }

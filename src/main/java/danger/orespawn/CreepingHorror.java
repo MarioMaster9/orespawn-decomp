@@ -18,11 +18,32 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
-public class CreepingHorror extends EntityMob {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class CreepingHorror extends EntityMob
+{
 	private GenericTargetSorter TargetSorter = null;
 	private float moveSpeed = 0.25F;
 
-	public CreepingHorror(World par1World) {
+	
+	public CreepingHorror(World par1World)
+	{
 		super(par1World);
 		this.setSize(0.75F, 0.5F);
 		this.getNavigator().setAvoidsWater(true);
@@ -38,173 +59,253 @@ public class CreepingHorror extends EntityMob {
 		this.TargetSorter = new GenericTargetSorter(this);
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue((double)OreSpawnMain.CreepingHorror_stats.attack);
 	}
 
-	protected void entityInit() {
+	protected void entityInit()
+	{
 		super.entityInit();
 	}
 
-	public int mygetMaxHealth() {
+	public int mygetMaxHealth()
+	{
 		return OreSpawnMain.CreepingHorror_stats.health;
 	}
 
-	public int getTotalArmorValue() {
+	/**
+	 * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+	 */
+	public int getTotalArmorValue()
+	{
 		return OreSpawnMain.CreepingHorror_stats.defense;
 	}
 
-	protected boolean isAIEnabled() {
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	protected boolean isAIEnabled()
+	{
 		return true;
 	}
 
-	public void onUpdate() {
+	
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		super.onUpdate();
-		if (!this.isNoDespawnRequired()) {
-			long t = this.worldObj.getWorldTime();
-			t %= 24000L;
-			if (t <= 11000L) {
-				if (this.worldObj.rand.nextInt(500) == 1) {
-					this.setDead();
-				}
-
-			}
-		}
+		if (this.isNoDespawnRequired()) return;
+		
+		
+		long t = this.worldObj.getWorldTime();
+		t %= 24000L;
+		if (t > 11000L) return;
+		if (this.worldObj.rand.nextInt(500) == 1) this.setDead();
 	}
 
-	protected String getLivingSound() {
+	
+	
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
 		return "orespawn:creepinghorror_living";
 	}
 
-	protected String getHurtSound() {
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return "orespawn:creepinghorror_hit";
 	}
 
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return "orespawn:creepinghorror_dead";
 	}
 
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
 	protected float getSoundVolume() {
 		return 0.65F;
 	}
 
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
 	protected float getSoundPitch() {
 		return 1.0F;
 	}
 
-	protected Item getDropItem() {
+	
+	
+	
+	
+	
+	protected Item getDropItem()
+	{
 		int i = this.worldObj.rand.nextInt(3);
-		if (i == 0) {
-			return Items.rotten_flesh;
-		} else {
-			return i == 1 ? Items.bone : Items.string;
-		}
+		if (i == 0) return Items.rotten_flesh;
+		if (i == 1) return Items.bone;
+		return Items.string;
 	}
 
-	protected void updateAITasks() {
-		if (!this.isDead) {
-			super.updateAITasks();
-			if (this.worldObj.rand.nextInt(200) == 1) {
-				this.setRevengeTarget((EntityLivingBase)null);
-			}
-
-			if (this.worldObj.rand.nextInt(5) == 1) {
-				EntityLivingBase e = this.findSomethingToAttack();
-				if (e != null) {
-					this.getNavigator().tryMoveToEntityLiving(e, 1.25D);
-					if (this.getDistanceSqToEntity(e) < 5.0D && (this.rand.nextInt(12) == 0 || this.rand.nextInt(14) == 1)) {
+	
+	protected void updateAITasks()
+	{
+		if (this.isDead) return;
+		super.updateAITasks();
+		if (this.worldObj.rand.nextInt(200) == 1) this.setRevengeTarget(null);
+		if (this.worldObj.rand.nextInt(5) == 1) {
+			EntityLivingBase e = this.findSomethingToAttack();
+			if (e != null) {
+				this.getNavigator().tryMoveToEntityLiving(e, 1.25D);
+				if (this.getDistanceSqToEntity(e) < 5.0D)
+				{
+					if (this.rand.nextInt(12) == 0 || this.rand.nextInt(14) == 1)
+					{
 						this.attackEntityAsMob(e);
 					}
 				}
 			}
-
 		}
+		
 	}
-
-	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2) {
-		if (par1EntityLiving == null) {
+	
+	
+	
+	
+	
+	
+	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2)
+	{
+		if (par1EntityLiving == null)
+		{
 			return false;
-		} else if (par1EntityLiving == this) {
+		}
+		if (par1EntityLiving == this)
+		{
 			return false;
-		} else if (!par1EntityLiving.isEntityAlive()) {
+		}
+		if (!par1EntityLiving.isEntityAlive())
+		{
 			return false;
-		} else if (!this.getEntitySenses().canSee(par1EntityLiving)) {
+		}
+		if (!this.getEntitySenses().canSee(par1EntityLiving))
+		{
+			
 			return false;
-		} else if (par1EntityLiving instanceof CreepingHorror) {
+		}
+		if (par1EntityLiving instanceof CreepingHorror)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof RockBase) {
+		}
+		if (par1EntityLiving instanceof RockBase)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof EnderReaper) {
+		}
+		if (par1EntityLiving instanceof EnderReaper)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof LeafMonster) {
+		}
+		if (par1EntityLiving instanceof LeafMonster)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof Dragon) {
+		}
+		if (par1EntityLiving instanceof Dragon)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof TerribleTerror) {
+		}
+		if (par1EntityLiving instanceof TerribleTerror)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof LurkingTerror) {
+		}
+		if (par1EntityLiving instanceof LurkingTerror)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof PitchBlack) {
+		}
+		if (par1EntityLiving instanceof PitchBlack)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof Firefly) {
+		}
+		if (par1EntityLiving instanceof Firefly)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof Island) {
+		}
+		if (par1EntityLiving instanceof Island)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof IslandToo) {
+		}
+		if (par1EntityLiving instanceof IslandToo)
+		{
 			return false;
-		} else {
-			if (par1EntityLiving instanceof EntityPlayer) {
-				EntityPlayer p = (EntityPlayer)par1EntityLiving;
-				if (p.capabilities.isCreativeMode) {
-					return false;
-				}
+		}
+		
+		if (par1EntityLiving instanceof EntityPlayer)
+		{
+			EntityPlayer p = (EntityPlayer)par1EntityLiving;
+			if (p.capabilities.isCreativeMode == true) {
+				return false;
 			}
-
-			return true;
 		}
+
+		return true;
 	}
 
-	private EntityLivingBase findSomethingToAttack() {
-		if (OreSpawnMain.PlayNicely != 0) {
-			return null;
-		} else {
-			List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(16.0D, 4.0D, 16.0D));
-			Collections.sort(var5, this.TargetSorter);
-			Iterator var2 = var5.iterator();
-			Entity var3 = null;
-			EntityLivingBase var4 = null;
+	private EntityLivingBase findSomethingToAttack()
+	{
+		if (OreSpawnMain.PlayNicely != 0) return null;
+		List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(16.0D, 4.0D, 16.0D));
+		Collections.sort(var5, this.TargetSorter);
+		Iterator var2 = var5.iterator();
+		Entity var3 = null;
+		EntityLivingBase var4 = null;
 
-			while (var2.hasNext()) {
-				var3 = (Entity)var2.next();
-				var4 = (EntityLivingBase)var3;
-				if (this.isSuitableTarget(var4, false)) {
-					return var4;
-				}
+		while (var2.hasNext())
+		{
+			var3 = (Entity)var2.next();
+			var4 = (EntityLivingBase)var3;
+			
+			if (this.isSuitableTarget(var4, false))
+			{
+				return var4;
 			}
-
-			return null;
 		}
+		return null;
 	}
 
-	public boolean getCanSpawnHere() {
-		if (!this.isValidLightLevel()) {
-			return false;
-		} else if (this.worldObj.isDaytime()) {
-			return false;
-		} else {
-			return this.worldObj.provider.dimensionId == OreSpawnMain.DimensionID6 || !(this.posY > 15.0D);
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
+		if (!this.isValidLightLevel()) return false;
+		if (this.worldObj.isDaytime()) return false;
+		if (this.worldObj.provider.dimensionId != OreSpawnMain.DimensionID6) {
+			if (this.posY > 15.0D) return false;
 		}
+		return true;
 	}
 
+	/**
+	 * Determines if an entity can be despawned, used on idle far away entities
+	 */
 	protected boolean canDespawn() {
-		if (this.isNoDespawnRequired()) {
-			return false;
-		} else {
-			return this.worldObj.isDaytime();
-		}
+		if (this.isNoDespawnRequired()) return false;
+		if (!this.worldObj.isDaytime()) return false;
+		return true;
 	}
 }
