@@ -992,7 +992,7 @@ public class AntRobot extends EntityLiving
 			
 			
 			
-			EntityPlayer pp;
+			
 			if (this.riddenByEntity != null) {
 				gh = 2.25D;
 				bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh), (int)this.posZ);
@@ -1018,7 +1018,7 @@ public class AntRobot extends EntityLiving
 			
 			
 			if (this.riddenByEntity != null) {
-				pp = (EntityPlayer)this.riddenByEntity;
+				EntityPlayer pp = (EntityPlayer)this.riddenByEntity;
 				
 				obstruction_factor = 0.0D;
 				dist = 3;
