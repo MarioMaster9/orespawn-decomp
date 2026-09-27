@@ -104,8 +104,8 @@ public class Elevator extends EntityLiving
 		this.prevPosX = par2;
 		this.prevPosY = par4;
 		this.prevPosZ = par6;
+		
 	}
-
 	
 	
 	public ResourceLocation getTexture()
@@ -171,14 +171,14 @@ public class Elevator extends EntityLiving
 	}
 
 	
-	protected void fall(float par1)
-	{
-	}
+	protected void fall(float par1) {}
 
-	protected void updateFallState(double par1, boolean par3)
-	{
-	}
-
+	protected void updateFallState(double par1, boolean par3) {}
+	
+	/**
+	 * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+	 * prevent them from trampling crops
+     */
 	protected boolean canTriggerWalking()
 	{
 		return false;
@@ -338,10 +338,10 @@ public class Elevator extends EntityLiving
 		if (this.riddenByEntity == null) {
 			super.onLivingUpdate();
 		}
-
 		this.setFire(0);
 	}
 
+	
 	
 	
 	
@@ -349,442 +349,442 @@ public class Elevator extends EntityLiving
 	{
 		List list = null;
 		double velocity = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-		
-		
+		double d4;
+		double d5;
 		double d6 = (double)(this.rand.nextFloat() * 2.0F - 1.0F);
 		double d7 = (double)(this.rand.nextInt(2) * 2 - 1) * 0.7;
-		
-		
-		
-		
-		
+		double d8;
+		double d9;
+		double d10;
+		double d11;
+		double newvelocity;
 		double obstruction_factor = 0.0D;
-		
+		double unused1;
 		double relative_g = 0.0D;
-		
+		double dx, dz;
 		double max_speed = 0.85;
 		double gh = 0.75D;
-		
+		int i, k, l, p;
 		int dist = 2;
+		Block bid;
+		
+		if (this.isDead) return;
+		this.isAirBorne = true;
+		
+		if (this.getTimeSinceHit() > 0)
+		{
+			this.setTimeSinceHit(this.getTimeSinceHit() - 1);
+		}
+		
+		if (this.getDamageTaken() > 0.0F)
+		{
+			this.setDamageTaken(this.getDamageTaken() - 1.0F);
+		}
+		
+		this.prevPosX = this.posX;
+		this.prevPosY = this.posY;
+		this.prevPosZ = this.posZ;
 		
 		
-		if (!this.isDead) {
-			this.isAirBorne = true;
+		
+		
+		
+		
+		if (velocity > 0.15 && this.riddenByEntity != null)
+		{
+			d4 = Math.cos(Math.toRadians((double)(this.rotationYaw + 270.0F)));
+			d5 = Math.sin(Math.toRadians((double)(this.rotationYaw + 270.0F)));
 			
-			if (this.getTimeSinceHit() > 0)
-			{
-				this.setTimeSinceHit(this.getTimeSinceHit() - 1);
+			bid = Blocks.air;
+			for (i = 1; i < 10; i++) {
+				bid = this.worldObj.getBlock((int)this.posX, (int)this.posY - i, (int)this.posZ);
+				if (bid != Blocks.air) break;
 			}
-
-			if (this.getDamageTaken() > 0.0F)
+			
+			for (int j = 0; (double)j < 1.0D + velocity * 10.0D; j++)
 			{
-				this.setDamageTaken(this.getDamageTaken() - 1.0F);
-			}
-
-			this.prevPosX = this.posX;
-			this.prevPosY = this.posY;
-			this.prevPosZ = this.posZ;
-			
-			
-			
-			
-			
-			
-			if (velocity > 0.15 && this.riddenByEntity != null)
-			{
-				double d4 = Math.cos(Math.toRadians((double)(this.rotationYaw + 270.0F)));
-				double d5 = Math.sin(Math.toRadians((double)(this.rotationYaw + 270.0F)));
+				d6 = (double)(this.rand.nextFloat() * 2.0F - 1.0F);
+				d7 = (double)(this.rand.nextInt(2) * 2 - 1) * 0.7;
 				
-				Block bid = Blocks.air;int i;
-				for (i = 1; i < 10; i++) {
-					bid = this.worldObj.getBlock((int)this.posX, (int)this.posY - i, (int)this.posZ);
-					if (bid != Blocks.air)
-						break;
-				}
-				for (int j = 0; (double)j < 1.0D + velocity * 10.0D; j++)
+				if (this.rand.nextBoolean())
 				{
-					d6 = (double)(this.rand.nextFloat() * 2.0F - 1.0F);
-					d7 = (double)(this.rand.nextInt(2) * 2 - 1) * 0.7;
-					
+					d8 = this.posX - d4 * d6 * 0.8 + d5 * d7;
+					d9 = this.posZ - d5 * d6 * 0.8 - d4 * d7;
 					if (this.rand.nextBoolean())
-					{
-						double d8 = this.posX - d4 * d6 * 0.8 + d5 * d7;
-						double d9 = this.posZ - d5 * d6 * 0.8 - d4 * d7;
-						if (this.rand.nextBoolean()) {
-							this.worldObj.spawnParticle("smoke", d8, this.posY - 0.25D, d9, this.motionX, this.motionY, this.motionZ);
-						} else {
-							this.worldObj.spawnParticle("reddust", d8, this.posY - 0.25D, d9, this.motionX, this.motionY, this.motionZ);
-						}
-					} else
-					{
-						double d8 = this.posX + d4 + d5 * d6 * 0.7;
-						double d9 = this.posZ + d5 - d4 * d6 * 0.7;
-						if (this.rand.nextBoolean()) {
-							this.worldObj.spawnParticle("smoke", d8, this.posY - 0.225, d9, this.motionX, this.motionY, this.motionZ);
-						} else {
-							this.worldObj.spawnParticle("reddust", d8, this.posY - 0.225, d9, this.motionX, this.motionY, this.motionZ);
-						}
-					} if (bid == Blocks.water || bid == Blocks.flowing_water)
-					{
-						for (int k = 0; k < 5; k++) {
-							this.worldObj.spawnParticle("splash", this.posX + (double)this.rand.nextFloat(), this.posY - (double)i + 1.25D, this.posZ + (double)this.rand.nextFloat(), this.motionX / 2.0D, this.motionY + velocity, this.motionZ / 2.0D);
-						}
-					}
-				}
-			}
-
-			
-			
-			
-			if (this.playing > 0) --this.playing;
-			if (this.riddenByEntity != null && this.playing == 0 && this.worldObj.rand.nextInt(80) == 1) {
-				this.worldObj.playSoundAtEntity(this.riddenByEntity, "orespawn:hover", 0.45F, 1.0F);
-				this.playing = 55;
-			}
-
-			
-			
-			
-			
-			
-			
-			if (!this.worldObj.isRemote)
-			{
-				if (this.exploding > 0) --this.exploding;
-				if (this.exploding == 0 && velocity > 0.65 && this.worldObj.rand.nextInt(20000) == 1) {
-					this.exploding = 45;
-					this.playing = 50;
-				}
-
-				this.setExploding(this.exploding);
-			} else {
-				this.exploding = this.getExploding();
-			}
-
-			if (this.getExploding() > 0 && this.riddenByEntity != null)
-			{
-				
-				if (this.worldObj.rand.nextInt(10) == 1) {
-					this.worldObj.playSoundAtEntity(this.riddenByEntity, "random.explode", 0.55F, 0.75F + this.worldObj.rand.nextFloat());
-				}
-
-				for (int i = 0; i < 15; i++) {
-					this.worldObj.spawnParticle("explode", 
-						(double)((int)(this.posX + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 4.0F))),
-						(double)((int)(this.posY + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 4.0F))),
-						(double)((int)(this.posZ + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 4.0F))),
-						this.motionX, 0.0D, this.motionZ);
-					this.worldObj.spawnParticle("largeexplode",
-						(double)((int)(this.posX + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 2.0F))),
-						(double)((int)(this.posY + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 2.0F))),
-						(double)((int)(this.posZ + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 2.0F))),
-						this.motionX, 0.0D, this.motionZ);
-					this.worldObj.spawnParticle("smoke",
-						(double)((int)(this.posX + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 5.0F))),
-						(double)((int)(this.posY + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 5.0F))),
-						(double)((int)(this.posZ + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 5.0F))),
-						this.motionX, 0.0D, this.motionZ);
-					this.worldObj.spawnParticle("largesmoke",
-						(double)((int)(this.posX + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 3.0F))),
-						(double)((int)(this.posY + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 3.0F))),
-						(double)((int)(this.posZ + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 3.0F))),
-						this.motionX, 0.0D, this.motionZ);
-				}
-			}
-
-			
-			
-			
-			if (this.worldObj.isRemote)
-			{
-				
-				
-				if (this.riddenByEntity == null) {
-					Block bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh), (int)this.posZ);
-					if (bid != Blocks.air) {
-						this.motionY += 0.06;
-						this.posY += 0.07;
-						this.boatY += 0.07;
-					} else {
-						this.motionY -= 0.003;
-					}
-				}
-				else if (this.riddenByEntity instanceof EntityClientPlayerMP) {
-					EntityClientPlayerMP pp = (EntityClientPlayerMP)this.riddenByEntity;
-					pp.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(pp.rotationYaw, pp.rotationPitch, pp.onGround));
-					pp.sendQueue.addToSendQueue(new C0CPacketInput(pp.moveStrafing, pp.moveForward, pp.movementInput.jump, pp.movementInput.sneak));
-				}
-
-				
-				
-				if (this.boatPosRotationIncrements > 0)
-				{
-					double d4 = this.posX + (this.boatX - this.posX) / (double)this.boatPosRotationIncrements;
-					double d5 = this.posY + (this.boatY - this.posY) / (double)this.boatPosRotationIncrements;
-					double d11 = this.posZ + (this.boatZ - this.posZ) / (double)this.boatPosRotationIncrements;
-					this.setPosition(d4, d5, d11);
-					
-					this.rotationPitch = (float)((double)this.rotationPitch + (this.boatPitch - (double)this.rotationPitch) / (double)this.boatPosRotationIncrements);
-					double d10 = MathHelper.wrapAngleTo180_double(this.boatYaw - (double)this.rotationYaw);
-					if (this.riddenByEntity != null) d10 = MathHelper.wrapAngleTo180_double((double)this.riddenByEntity.rotationYaw - (double)this.rotationYaw);
-					this.rotationYaw = (float)((double)this.rotationYaw + d10 / (double)this.boatPosRotationIncrements);
-					this.setRotation(this.rotationYaw, this.rotationPitch);
-					
-					--this.boatPosRotationIncrements;
-					
-					
+						this.worldObj.spawnParticle("smoke", d8, this.posY - 0.25D, d9, this.motionX, this.motionY, this.motionZ);
+					else
+						this.worldObj.spawnParticle("reddust", d8, this.posY - 0.25D, d9, this.motionX, this.motionY, this.motionZ);
 				}
 				else
 				{
-					
-					
-					double d4 = this.posX + this.motionX;
-					double d5 = this.posY + this.motionY;
-					double d11 = this.posZ + this.motionZ;
-					this.setPosition(d4, d5, d11);
-					
-					
-					
-					this.motionX *= 0.99;
-					this.motionY *= 0.95;
-					this.motionZ *= 0.99;
-				
-				
-				
+					d8 = this.posX + d4 + d5 * d6 * 0.7;
+					d9 = this.posZ + d5 - d4 * d6 * 0.7;
+					if (this.rand.nextBoolean())
+						this.worldObj.spawnParticle("smoke", d8, this.posY - 0.225, d9, this.motionX, this.motionY, this.motionZ);
+					else
+						this.worldObj.spawnParticle("reddust", d8, this.posY - 0.225, d9, this.motionX, this.motionY, this.motionZ);
 				}
+				if (bid == Blocks.water || bid == Blocks.flowing_water)
+				{
+					for (k = 0; k < 5; k++) {
+						this.worldObj.spawnParticle("splash", this.posX + (double)this.rand.nextFloat(), this.posY - (double)i + 1.25D, this.posZ + (double)this.rand.nextFloat(), this.motionX / 2.0D, this.motionY + velocity, this.motionZ / 2.0D);
+					}
+				}
+			}
+		}
+		
+		
+		
+		
+		if (this.playing > 0) this.playing--;
+		if (this.riddenByEntity != null && this.playing == 0 && this.worldObj.rand.nextInt(80) == 1) {
+			this.worldObj.playSoundAtEntity(this.riddenByEntity, "orespawn:hover", 0.45F, 1.0F);
+			this.playing = 55;
+		}
+		
+		
+		
+		
+		
+		
+		
+		if (!this.worldObj.isRemote)
+		{
+			if (this.exploding > 0) this.exploding--;
+			if (this.exploding == 0 && velocity > 0.65 && this.worldObj.rand.nextInt(20000) == 1) {
+				this.exploding = 45;
+				this.playing = 50;
+			}
+			this.setExploding(this.exploding);
+		} else {
+			this.exploding = this.getExploding();
+		}
+		
+		if (this.getExploding() > 0 && this.riddenByEntity != null)
+		{
+			
+			if (this.worldObj.rand.nextInt(10) == 1) {
+				this.worldObj.playSoundAtEntity(this.riddenByEntity, "random.explode", 0.55F, 0.75F + this.worldObj.rand.nextFloat());
+			}
+
+			for (i = 0; i < 15; i++) {
+				this.worldObj.spawnParticle("explode", 
+					(double)((int)(this.posX + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 4.0F))),
+					(double)((int)(this.posY + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 4.0F))),
+					(double)((int)(this.posZ + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 4.0F))),
+					this.motionX, 0.0D, this.motionZ);
+				this.worldObj.spawnParticle("largeexplode",
+					(double)((int)(this.posX + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 2.0F))),
+					(double)((int)(this.posY + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 2.0F))),
+					(double)((int)(this.posZ + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 2.0F))),
+					this.motionX, 0.0D, this.motionZ);
+				this.worldObj.spawnParticle("smoke",
+					(double)((int)(this.posX + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 5.0F))),
+					(double)((int)(this.posY + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 5.0F))),
+					(double)((int)(this.posZ + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 5.0F))),
+					this.motionX, 0.0D, this.motionZ);
+				this.worldObj.spawnParticle("largesmoke",
+					(double)((int)(this.posX + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 3.0F))),
+					(double)((int)(this.posY + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 3.0F))),
+					(double)((int)(this.posZ + (double)((this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 3.0F))),
+					this.motionX, 0.0D, this.motionZ);
+			}
+		}
+		
+		
+		
+		
+		
+		if (this.worldObj.isRemote)
+		{
 			
 			
+			if (this.riddenByEntity == null) {
+				bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh), (int)this.posZ);
+				if (bid != Blocks.air) {
+					this.motionY += 0.06;
+					this.posY += 0.07;
+					this.boatY += 0.07;
+				} else {
+					this.motionY -= 0.003;
+				}
+			}
+			else if (this.riddenByEntity instanceof EntityClientPlayerMP) {
+				EntityClientPlayerMP pp = (EntityClientPlayerMP)this.riddenByEntity;
+				pp.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(pp.rotationYaw, pp.rotationPitch, pp.onGround));
+				pp.sendQueue.addToSendQueue(new C0CPacketInput(pp.moveStrafing, pp.moveForward, pp.movementInput.jump, pp.movementInput.sneak));
+			}
+
 			
 			
+			if (this.boatPosRotationIncrements > 0)
+			{
+				d4 = this.posX + (this.boatX - this.posX) / (double)this.boatPosRotationIncrements;
+				d5 = this.posY + (this.boatY - this.posY) / (double)this.boatPosRotationIncrements;
+				d11 = this.posZ + (this.boatZ - this.posZ) / (double)this.boatPosRotationIncrements;
+				this.setPosition(d4, d5, d11);
+				
+				this.rotationPitch = (float)((double)this.rotationPitch + (this.boatPitch - (double)this.rotationPitch) / (double)this.boatPosRotationIncrements);
+				d10 = MathHelper.wrapAngleTo180_double(this.boatYaw - (double)this.rotationYaw);
+				if (this.riddenByEntity != null) d10 = MathHelper.wrapAngleTo180_double((double)this.riddenByEntity.rotationYaw - (double)this.rotationYaw);
+				this.rotationYaw = (float)((double)this.rotationYaw + d10 / (double)this.boatPosRotationIncrements);
+				this.setRotation(this.rotationYaw, this.rotationPitch);
+				
+				--this.boatPosRotationIncrements;
+				
+				
 			}
 			else
 			{
 				
 				
+				d4 = this.posX + this.motionX;
+				d5 = this.posY + this.motionY;
+				d11 = this.posZ + this.motionZ;
+				this.setPosition(d4, d5, d11);
 				
-				if (this.riddenByEntity != null) {
-					gh = 1.25D;
+				
+				
+				this.motionX *= 0.99;
+				this.motionY *= 0.95;
+				this.motionZ *= 0.99;
+			
+			
+			
+			}
+		
+		
+		
+		
+		}
+		else
+		{
+			
+			
+			
+			if (this.riddenByEntity != null) {
+				gh = 1.25D;
+			}
+			bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh), (int)this.posZ);
+			if (bid != Blocks.air) {
+				this.motionY += 0.06;
+				this.posY += 0.1;
+				
+				if (bid == Blocks.tallgrass && this.riddenByEntity != null && this.worldObj.rand.nextInt(200) == 1) {
+					if (this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock((int)this.posX, (int)(this.posY - gh), (int)this.posZ, Blocks.air);
 				}
-				Block bid = this.worldObj.getBlock((int)this.posX, (int)((float)this.posY - (float)gh), (int)this.posZ);
-				if (bid != Blocks.air) {
-					this.motionY += 0.06;
-					this.posY += 0.1;
-					
-					if (bid == Blocks.tallgrass && this.riddenByEntity != null && this.worldObj.rand.nextInt(200) == 1 && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"))
-						this.worldObj.setBlock((int)this.posX, (int)(this.posY - gh), (int)this.posZ, Blocks.air);
+				if (bid == Blocks.grass && this.riddenByEntity != null && this.worldObj.rand.nextInt(200) == 1) {
+					if (this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock((int)this.posX, (int)(this.posY - gh), (int)this.posZ, Blocks.dirt);
+				}
+			} else {
+				this.motionY -= 0.01;
+			}
 
-					if (bid == Blocks.grass && this.riddenByEntity != null && this.worldObj.rand.nextInt(200) == 1 && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"))
-						this.worldObj.setBlock((int)this.posX, (int)(this.posY - gh), (int)this.posZ, Blocks.dirt);
+			
+			
+			
+			if (this.riddenByEntity != null) {
+				EntityPlayer pp = (EntityPlayer)this.riddenByEntity;
+				
+				obstruction_factor = 0.0D;
+				dist = 3;
+				dist += (int)(velocity * 8.0D);
 
-				} else {
-					this.motionY -= 0.01;
+				for (k = 1; k < dist; k++) {
+					for (i = 1; i < dist * 2; i++) {
+						dx = (double)i * Math.cos(Math.toRadians((double)(this.rotationYaw + 90.0F)));
+						dz = (double)i * Math.sin(Math.toRadians((double)(this.rotationYaw + 90.0F)));
+						bid = this.worldObj.getBlock((int)(this.posX + dx), (int)this.posY - k, (int)(this.posZ + dz));
+						if (bid != Blocks.air) {
+							obstruction_factor += 0.05;
+						}
+					}
 				}
 
 				
 				
+				this.motionY += obstruction_factor * 0.11;
+				this.posY += obstruction_factor * 0.11;
 				
-				if (this.riddenByEntity != null) {
-					EntityPlayer pp = (EntityPlayer)this.riddenByEntity;
-					
-					obstruction_factor = 0.0D;
-					dist = 3;
-					dist += (int)(velocity * 8.0D);
+				
+				
+				
+				
+				
+				
+				
+				
+				d4 = (double)this.riddenByEntity.rotationYaw;
+				d4 %= 360.0D;
+				while(d4 < 0)d4 += 360D;
+				d5 = (double)this.rotationYaw;
+				d5 %= 360.0D;
+				while(d5 < 0)d5 += 360D;
+				relative_g = (d4 - d5) % 180.0D;
+				while(relative_g < 0)relative_g += 180D;
+				if (relative_g > 90.0D) relative_g -= 180.0D;
 
-					for (int k = 1; k < dist; k++) {
-						for (int i = 1; i < dist * 2; i++) {
-							double dx = (double)i * Math.cos(Math.toRadians((double)(this.rotationYaw + 90.0F)));
-							double dz = (double)i * Math.sin(Math.toRadians((double)(this.rotationYaw + 90.0F)));
-							bid = this.worldObj.getBlock((int)(this.posX + dx), (int)this.posY - k, (int)(this.posZ + dz));
-							if (bid != Blocks.air) {
-								obstruction_factor += 0.05;
-							}
-						}
-					}
+				
+				
+				
+				
+				
+				if (velocity > 0.01)
+				{
+					d4 = 1.85 - velocity;
+					d4 = Math.abs(d4);
+					if (d4 < 0.01) d4 = 0.01;
+					if (d4 > 0.9) d4 = 0.9;
+					this.rotationYaw = this.riddenByEntity.rotationYaw + (float)(relative_g * d4);
+				} else
+				{
+					this.rotationYaw = this.riddenByEntity.rotationYaw;
+				}
+				relative_g = Math.abs(relative_g) * velocity;
+				if (relative_g > 50.0D) relative_g = 0.0D;
 
-					
-					
-					this.motionY += obstruction_factor * 0.11;
-					this.posY += obstruction_factor * 0.11;
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					double d4 = (double)this.riddenByEntity.rotationYaw;
-					d4 %= 360.0D;
-					for(; d4 < 0.0D; d4 += 360.0D);
-					double d5 = (double)this.rotationYaw;
-					d5 %= 360.0D;
-					for(; d5 < 0.0D; d5 += 360.0D);
-					relative_g = (d4 - d5) % 180.0D;
-					for(; relative_g < 0.0D; relative_g += 180.0D);
-					if (relative_g > 90.0D) relative_g -= 180.0D;
+				
+				
+				
+				this.rotationPitch = 10.0F * (float)velocity;
+				this.setRotation(this.rotationYaw, this.rotationPitch);
+				
+				
+				
+				
+				
+				newvelocity = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+				if (this.exploding != 0) {
+					newvelocity -= 0.05;
+					if (newvelocity < 0.0D) newvelocity = 0.0D;
+				}
+				
 
-					
-					
-					
-					
-					
-					if (velocity > 0.01)
-					{
-						d4 = 1.85 - velocity;
-						d4 = Math.abs(d4);
-						if (d4 < 0.01) d4 = 0.01;
-						if (d4 > 0.9) d4 = 0.9;
-						this.rotationYaw = this.riddenByEntity.rotationYaw + (float)(relative_g * d4);
-					} else
-					{
-						this.rotationYaw = this.riddenByEntity.rotationYaw;
-					}
-					relative_g = Math.abs(relative_g) * velocity;
-					if (relative_g > 50.0D) relative_g = 0.0D;
+				
+				
+				
+				
+				
+				double rr = Math.atan2(this.riddenByEntity.motionZ, this.riddenByEntity.motionX);
+				double rhm = Math.atan2(this.motionZ, this.motionX);
+				double rhdir = Math.toRadians((double)((this.riddenByEntity.rotationYaw + 90.0F) % 360.0F));
+				double rt = 0.0D;
+				double rdv;
+				double pi = 3.1415926545;
+				double deltav =  0.0D;
+				float im = pp.moveForward;
+				
+				if (OreSpawnMain.flyup_keystate != 0) max_speed++;
 
-					
-					
-					
-					this.rotationPitch = 10.0F * (float)velocity;
-					this.setRotation(this.rotationYaw, this.rotationPitch);
-					
-					
-					
-					
-					
-					double newvelocity = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-					if (this.exploding != 0) {
-						newvelocity -= 0.05;
-						if (newvelocity < 0.0D) newvelocity = 0.0D;
+				
+				rdv = Math.abs(rhm - rhdir) % (pi * 2.0D);
+				if (rdv > pi) rdv -= pi * 2.0D;
+				rdv = Math.abs(rdv);
+				if (Math.abs(newvelocity) < 0.01) rdv = 0.0D;
 
-					}
+				
+				
+				
+				
+				
+				
+				if (rdv > 1.5D) newvelocity = -newvelocity;
 
-					
-					
-					
-					
-					
-					double rr = Math.atan2(this.riddenByEntity.motionZ, this.riddenByEntity.motionX);
-					double rhm = Math.atan2(this.motionZ, this.motionX);
-					double rhdir = Math.toRadians((double)((this.riddenByEntity.rotationYaw + 90.0F) % 360.0F));
-					double rt = 0.0D;
-					
-					double pi = 3.1415926545;
-					double deltav =  0.0D;
-					float im = pp.moveForward;
-					
-					if (OreSpawnMain.flyup_keystate != 0) ++max_speed;
-
-					
-					double rdv = Math.abs(rhm - rhdir) % (pi * 2.0D);
-					if (rdv > pi) rdv -= pi * 2.0D;
-					rdv = Math.abs(rdv);
-					if (Math.abs(newvelocity) < 0.01) rdv = 0.0D;
-
-					
-					
-					
-					
-					
-					
-					if (rdv > 1.5D) newvelocity = -newvelocity;
-
-					if (Math.abs(im) > 0.001F) {
-						if (im > 0.0F) {
-							deltav = 0.025;
-							if (max_speed > 1.0D) deltav += 0.15;
-
-						} else {
-							max_speed = 0.35;
-							
-							deltav = -0.02;
-						}
-
-						newvelocity += deltav;
-						if (newvelocity >= 0.0D) {
-							if (newvelocity > max_speed) newvelocity = max_speed;
-							this.motionX = Math.cos(Math.toRadians((double)(this.rotationYaw + 90.0F))) * newvelocity;
-							this.motionZ = Math.sin(Math.toRadians((double)(this.rotationYaw + 90.0F))) * newvelocity;
-						} else {
-							if (newvelocity < -max_speed) newvelocity = -max_speed;
-							newvelocity = -newvelocity;
-							this.motionX = Math.cos(Math.toRadians((double)(this.rotationYaw + 270.0F))) * newvelocity;
-							this.motionZ = Math.sin(Math.toRadians((double)(this.rotationYaw + 270.0F))) * newvelocity;
-						}
+				if (Math.abs(im) > 0.001F) {
+					if (im > 0.0F) {
+						deltav = 0.025;
+						if (max_speed > 1.0D) deltav += 0.15;
+					} else {
 						
+						max_speed = 0.35;
+						
+						deltav = -0.02;
 					}
-					else if (newvelocity >= 0.0D) {
+
+					newvelocity += deltav;
+					if (newvelocity >= 0.0D) {
+						if (newvelocity > max_speed) newvelocity = max_speed;
 						this.motionX = Math.cos(Math.toRadians((double)(this.rotationYaw + 90.0F))) * newvelocity;
 						this.motionZ = Math.sin(Math.toRadians((double)(this.rotationYaw + 90.0F))) * newvelocity;
 					} else {
-						this.motionX = Math.cos(Math.toRadians((double)(this.rotationYaw + 270.0F))) * newvelocity * -1.0D;
-						this.motionZ = Math.sin(Math.toRadians((double)(this.rotationYaw + 270.0F))) * newvelocity * -1.0D;
+						if (newvelocity < -max_speed) newvelocity = -max_speed;
+						newvelocity = -newvelocity;
+						this.motionX = Math.cos(Math.toRadians((double)(this.rotationYaw + 270.0F))) * newvelocity;
+						this.motionZ = Math.sin(Math.toRadians((double)(this.rotationYaw + 270.0F))) * newvelocity;
 					}
 					
+					
+				} else if (newvelocity >= 0.0D) {
+					this.motionX = Math.cos(Math.toRadians((double)(this.rotationYaw + 90.0F))) * newvelocity;
+					this.motionZ = Math.sin(Math.toRadians((double)(this.rotationYaw + 90.0F))) * newvelocity;
+				} else {
+					this.motionX = Math.cos(Math.toRadians((double)(this.rotationYaw + 270.0F))) * (newvelocity * -1.0D);
+					this.motionZ = Math.sin(Math.toRadians((double)(this.rotationYaw + 270.0F))) * (newvelocity * -1.0D);
 				}
-				else if (this.riddenByEntity == null) {
-					this.motionX = 0.0D;
-					this.motionZ = 0.0D;
-				}
+				
+			}
+			else if (this.riddenByEntity == null) {
+				this.motionX = 0.0D;
+				this.motionZ = 0.0D;
+			}
 
+			
+			
+			
+			this.moveEntity(this.motionX, this.motionY, this.motionZ);
+			
+			
+			
+			
+			
+			
+			if (this.isCollidedHorizontally && velocity > 0.75D)
+			{
 				
 				
-				
-				this.moveEntity(this.motionX, this.motionY, this.motionZ);
-				
-				
-				
-				
-				
-				
-				if (this.isCollidedHorizontally && velocity > 0.75D)
-				{
-					
-					
-					this.setDead();
-					int p = this.worldObj.rand.nextInt(10);
-					for (int k = 0; k < 6 + p; k++) {
-						this.dropItem(Items.stick, 1);
-					}
-					for (int k = 0; k < 2; k++) {
-						this.dropItem(Items.diamond, 1);
-					}
+				this.setDead();
+				p = this.worldObj.rand.nextInt(10);
+				for (k = 0; k < 6 + p; k++) {
+					this.dropItem(Items.stick, 1);
 				}
-				else
-				{
-					this.motionX *= 0.98;
-					this.motionY *= 0.94;
-					this.motionZ *= 0.98;
+				for (k = 0; k < 2; k++) {
+					this.dropItem(Items.diamond, 1);
 				}
+			}
+			else
+			{
+				this.motionX *= 0.98;
+				this.motionY *= 0.94;
+				this.motionZ *= 0.98;
+			}
 
-				
-				
-				
-				
-				
-				list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.25D, 0.0D, 0.25D));
-				
-				if (list != null && !list.isEmpty())
+			
+			
+			
+			
+			
+			list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.25D, 0.0D, 0.25D));
+			
+			if (list != null && !list.isEmpty())
+			{
+				for (l = 0; l < list.size(); l++)
 				{
-					for (int l = 0; l < list.size(); ++l)
+					Entity entity = (Entity)list.get(l);
+					
+					if (entity != this.riddenByEntity && entity.canBePushed() && !(entity instanceof Girlfriend) && !(entity instanceof Boyfriend))
 					{
-						Entity entity = (Entity)list.get(l);
-						
-						if (entity != this.riddenByEntity && entity.canBePushed() && !(entity instanceof Girlfriend) && !(entity instanceof Boyfriend))
-						{
-							entity.applyEntityCollision(this);
-						}
+						entity.applyEntityCollision(this);
 					}
 				}
+			}
 
-				if (this.riddenByEntity != null && this.riddenByEntity.isDead)
-				{
-					this.riddenByEntity = null;
-				}
+			if (this.riddenByEntity != null && this.riddenByEntity.isDead)
+			{
+				this.riddenByEntity = null;
 			}
 		}
 	}
+	
 	public void updateRiderPosition()
 	{
 		if (this.riddenByEntity != null)
@@ -792,10 +792,10 @@ public class Elevator extends EntityLiving
 			
 			this.riddenByEntity.setPosition(this.posX, this.posY + this.getMountedYOffset() + this.riddenByEntity.getYOffset(), this.posZ);
 		}
+		
 	}
 	
-	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
-	{
+	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
 		par1NBTTagCompound.setInteger("HoverColor", this.getColor());
 	}
 
@@ -820,23 +820,24 @@ public class Elevator extends EntityLiving
 	{
 		ItemStack var2 = par1EntityPlayer.inventory.getCurrentItem();
 		
-		if (var2 != null && 
-			var2.stackSize <= 0) {
-			par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
-			var2 = null;
+		if (var2 != null) {
+			if (var2.stackSize <= 0) {
+				par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
+				var2 = null;
+			}
 		}
-
 		
 		if (var2 != null && var2.getItem() == OreSpawnMain.MyUltimateSword && par1EntityPlayer.getDistanceSqToEntity(this) < 16.0D) {
 			if (!this.worldObj.isRemote) {
-				++this.color;
+				this.color++;
 				if (this.color > 10) this.color = 1;
 				this.setColor(this.color);
 			}
 			return true;
 		}
 		
-		if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer && this.riddenByEntity != par1EntityPlayer) {
+		if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer && this.riddenByEntity != par1EntityPlayer)
+		{
 			return true;
 		}
 		else
@@ -849,7 +850,6 @@ public class Elevator extends EntityLiving
 		}
 	}
 
-	
 	
 	
 	

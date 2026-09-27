@@ -41,6 +41,7 @@ public class IceBall extends LaserBall
 		super.setIceBall();
 	}
 
+	
 	public int getIceBallIndex()
 	{
 		return this.my_index;
@@ -53,21 +54,22 @@ public class IceBall extends LaserBall
 
 	protected void onImpact(MovingObjectPosition par1MovingObjectPosition)
 	{
-		if (par1MovingObjectPosition.entityHit != null) {
+		if (par1MovingObjectPosition.entityHit != null)
+		{
 			if (MyUtils.isRoyalty(par1MovingObjectPosition.entityHit)) {
 				this.setDead();
 				return;
 			}
 		}
 		super.onImpact(par1MovingObjectPosition);
-		if (this.icemaker != 0)
-		{
-			for (int i = 0; i < 5; i++) {
-				int x = this.worldObj.rand.nextInt(4);
+		if (this.icemaker != 0) {
+			int i, x, y, z;
+			for (i = 0; i < 5; i++) {
+				x = this.worldObj.rand.nextInt(4);
 				if (this.worldObj.rand.nextInt(2) == 1) x = -x;
-				int y = this.worldObj.rand.nextInt(4);
+				y = this.worldObj.rand.nextInt(4);
 				if (this.worldObj.rand.nextInt(2) == 1) y = -y;
-				int z = this.worldObj.rand.nextInt(4);
+				z = this.worldObj.rand.nextInt(4);
 				if (this.worldObj.rand.nextInt(2) == 1) z = -z;
 				x = (int)((double)x + par1MovingObjectPosition.hitVec.xCoord);
 				y = (int)((double)y + par1MovingObjectPosition.hitVec.yCoord);

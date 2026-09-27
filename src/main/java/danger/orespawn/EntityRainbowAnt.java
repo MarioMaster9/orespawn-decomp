@@ -46,33 +46,39 @@ public class EntityRainbowAnt extends EntityAnt
 	}
 
 	
-	
-	
-	
+	/**
+	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+	 */
 	public boolean interact(EntityPlayer par1EntityPlayer)
 	{
-		if (par1EntityPlayer == null) {
-			return false;
-		} else if (!(par1EntityPlayer instanceof EntityPlayerMP)) {
-			return false;
-		} else {
-			ItemStack var2 = par1EntityPlayer.inventory.getCurrentItem();
-			if (var2 != null && var2.stackSize <= 0) {
+		if (par1EntityPlayer == null) return false;
+		
+		
+		
+		
+		
+		if (!(par1EntityPlayer instanceof EntityPlayerMP)) return false;
+		
+		
+		ItemStack var2 = par1EntityPlayer.inventory.getCurrentItem();
+		if (var2 != null) {
+			if (var2.stackSize <= 0) {
 				par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
 				var2 = null;
 			}
-
-			if (var2 != null) {
-				return false;
-			} else {
-				if (par1EntityPlayer.dimension != OreSpawnMain.DimensionID3) {
-					MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)par1EntityPlayer, OreSpawnMain.DimensionID3, new OreSpawnTeleporter(MinecraftServer.getServer().worldServerForDimension(OreSpawnMain.DimensionID3), OreSpawnMain.DimensionID3, this.worldObj));
-				} else {
-					MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)par1EntityPlayer, 0, new OreSpawnTeleporter(MinecraftServer.getServer().worldServerForDimension(0), 0, this.worldObj));
-				}
-
-				return true;
-			}
 		}
+		if (var2 != null) {
+			return false;
+		}
+		
+		if (par1EntityPlayer.dimension != OreSpawnMain.DimensionID3) {
+			MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)par1EntityPlayer, OreSpawnMain.DimensionID3, new OreSpawnTeleporter(MinecraftServer.getServer().worldServerForDimension(OreSpawnMain.DimensionID3), OreSpawnMain.DimensionID3, this.worldObj));
+		} else {
+			
+			MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)par1EntityPlayer, 0, new OreSpawnTeleporter(MinecraftServer.getServer().worldServerForDimension(0), 0, this.worldObj));
+		}
+		
+
+		return true;
 	}
 }

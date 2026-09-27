@@ -7,25 +7,37 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class EnchantedCow extends RedCow {
-	public EnchantedCow(World world) {
+
+public class EnchantedCow extends RedCow
+{
+	public EnchantedCow(World world)
+	{
 		super(world);
 	}
 
-	private void dropEnchantedGoldenApple() {
+	private void dropEnchantedGoldenApple()
+	{
 		EntityItem var3 = new EntityItem(this.worldObj, this.posX, this.posY + 1.0D, this.posZ, new ItemStack(Items.golden_apple, 1, 1));
 		this.worldObj.spawnEntityInWorld(var3);
 	}
 
+	/**
+	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity has recently been hit by a player. @param
+	 * par2 - Level of Looting used to kill this mob.
+	 */
 	protected void dropFewItems(boolean par1, int par2) {
 		int var3 = this.rand.nextInt(4) + this.rand.nextInt(1 + par2);
-
-		for (int var4 = 0; var4 < var3; ++var4) {
+		int var4;
+		
+		for (var4 = 0; var4 < var3; var4++)
+		{
 			this.dropItem(Items.apple, 1);
 		}
 
 		this.dropItem(Items.golden_apple, 2);
+		
 		this.dropEnchantedGoldenApple();
+		
 		super.dropFewItems(par1, par2);
 	}
 
@@ -33,6 +45,8 @@ public class EnchantedCow extends RedCow {
 		return this.spawnBabyAnimal(entityageable);
 	}
 
+	
+	
 	public EnchantedCow spawnBabyAnimal(EntityAgeable par1EntityAgeable) {
 		return new EnchantedCow(this.worldObj);
 	}

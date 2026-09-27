@@ -40,20 +40,20 @@ public class FairySword extends ItemSword
 	{
 		return "Fairy";
 	}
+	
 	/**
 	 * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
 	 * the damage on the stack.
 	 */
-	public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLiving, EntityLivingBase par3EntityLiving)
-	{
+	public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLiving, EntityLivingBase par3EntityLiving) {
 		int var2 = 5;
 		
 		if (par2EntityLiving != null) {
-			if (!par2EntityLiving.worldObj.isRemote) {
-				
-				
-				int num = 1 + par2EntityLiving.worldObj.rand.nextInt(3);
-				for (int i = 0; i < num; i++) {
+			if (!par2EntityLiving.worldObj.isRemote)
+			{
+				int num, i;
+				num = 1 + par2EntityLiving.worldObj.rand.nextInt(3);
+				for (i = 0; i < num; i++) {
 					Fairy r = null;
 					r = (Fairy)spawnCreature(par2EntityLiving.worldObj, 0, "Fairy", par2EntityLiving.posX + (double)(par2EntityLiving.worldObj.rand.nextFloat() - par2EntityLiving.worldObj.rand.nextFloat()) * 0.5D, par2EntityLiving.posY + (double)par2EntityLiving.worldObj.rand.nextFloat() + 0.01, par2EntityLiving.posZ + (double)(par2EntityLiving.worldObj.rand.nextFloat() - par2EntityLiving.worldObj.rand.nextFloat()) * 0.5D);
 					

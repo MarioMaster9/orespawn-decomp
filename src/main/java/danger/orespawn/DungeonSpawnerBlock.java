@@ -19,19 +19,19 @@ import net.minecraft.world.World;
 
 
 
-
 public class DungeonSpawnerBlock extends BlockReed
 {
-	protected DungeonSpawnerBlock(int par1) {
+	protected DungeonSpawnerBlock(int par1)
+	{
 		float var3 = 0.375F;
 		this.setBlockBounds(0.5F - var3, 0.0F, 0.5F - var3, 0.5F + var3, 1.0F, 0.5F + var3);
 		this.setTickRandomly(true);
 	}
 
 	
-	
-	
-	
+	/**
+	 * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+	 */
 	public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
 	{
 		if (par1World.getBlock(par2, par3 - 1, par4).getMaterial().isSolid()) return true;
@@ -41,43 +41,43 @@ public class DungeonSpawnerBlock extends BlockReed
 	
 	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random)
 	{
-		for (int j1 = 0; j1 < 5; ++j1)
+		for (int j1 = 0; j1 < 5; j1++)
 		{
 			
 			par1World.spawnParticle("fireworksSpark", (double)((float)par2 + par1World.rand.nextFloat()), (double)par3 + (double)par1World.rand.nextFloat(), (double)((float)par4 + par1World.rand.nextFloat()), (double)(par1World.rand.nextFloat() - par1World.rand.nextFloat()) / 4.0D, (double)par1World.rand.nextFloat() / 2.0D, (double)(par1World.rand.nextFloat() - par1World.rand.nextFloat()) / 4.0D);
 		}
-
+		
+		
+		
+		
 	}
 
-	
-	
-	
-	
-	public void onBlockAdded(World world, int x, int y, int z)
-	{
-		if (world.isRemote)
-			return;
+
+
+	public void onBlockAdded(World world, int x, int y, int z) {
+		if (world.isRemote) return;
+		
 		world.scheduleBlockUpdate(x, y, z, this, 400);
 	}
 
 	
-	
-	
-	
+	/**
+	 * Called right before the block is destroyed by a player.  Args: world, x, y, z, metaData
+	 */
 	public void onBlockDestroyedByPlayer(World par1World, int par2, int par3, int par4, int par5)
 	{
 		super.onBlockDestroyedByPlayer(par1World, par2, par3, par4, par5);
 	}
 
-	
-	
-	
-	
-	
+	/**
+	 * Ticks the block if it's been scheduled
+	 */
 	public void updateTick(World world, int clickedX, int clickedY, int clickedZ, Random par5Random)
 	{
-		if (world.isRemote)
-			return;
+		int unused1, unused2, unused3;
+		
+		if (world.isRemote) return;
+		
 		world.setBlock(clickedX, clickedY, clickedZ, Blocks.air, 0, 2);
 		world.setBlock(clickedX, clickedY + 1, clickedZ, Blocks.air, 0, 2);
 		
@@ -132,7 +132,7 @@ public class DungeonSpawnerBlock extends BlockReed
 		if (type == 47) OreSpawnMain.MyDungeon.makeEnormousCastleQ(world, clickedX, clickedY, clickedZ);
 		if (type == 48) OreSpawnMain.MyDungeon.makeSpiderHangout(world, clickedX, clickedY, clickedZ);
 		if (type == 49) OreSpawnMain.MyDungeon.makeRedAntHangout(world, clickedX, clickedY, clickedZ);
-		return;
+		
 	}
 	
 	
@@ -156,9 +156,9 @@ public class DungeonSpawnerBlock extends BlockReed
 	}
 
 	
-	
-	
-	
+	/**
+	 * Can this block stay at this position.  Similar to canPlaceBlockAt except gets checked often with plants.
+	 */
 	public boolean canBlockStay(World par1World, int par2, int par3, int par4)
 	{
 		return true;

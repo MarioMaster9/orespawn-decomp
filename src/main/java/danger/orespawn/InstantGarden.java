@@ -36,16 +36,16 @@ public class InstantGarden extends Item
 	
 	
 	
-	
-	
 	/**
 	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
 	 * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
 	 */
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer Player, World world, int cposx, int cposy, int cposz, int par7, float par8, float par9, float par10)
 	{
+		int pposx, pposy, pposz;
+		int x, y, z;
 		int deltax = 0, deltaz = 0;
-		
+		int i, j, k;
 		int bid = 0;
 		int dirx = 0, dirz = 0;
 		int height = 10, width = 7, length = 18;
@@ -61,20 +61,20 @@ public class InstantGarden extends Item
 		
 		if (cposx < 0) dirx = -1;
 		if (cposz < 0) dirz = -1;
-		int pposx = (int)(Player.posX + 0.99 * (double)dirx);
-		int pposy = (int)Player.posY;
-		int pposz = (int)(Player.posZ + 0.99 * (double)dirz);
+		pposx = (int)(Player.posX + 0.99 * (double)dirx);
+		pposy = (int)Player.posY;
+		pposz = (int)(Player.posZ + 0.99 * (double)dirz);
 		
 		
 		
 		
 		if (cposx - pposx == 0 || cposz - pposz == 0)
 		{
-			int x = cposx, y = pposy, z = cposz;
-			if (cposx - pposx < 0) deltax = -1;
-			if (cposx - pposx > 0) deltax = 1;
-			if (cposz - pposz < 0) deltaz = -1;
-			if (cposz - pposz > 0) deltaz = 1;
+			x = cposx; y = pposy; z = cposz;
+			if (x - pposx < 0) deltax = -1;
+			if (x - pposx > 0) deltax = 1;
+			if (z - pposz < 0) deltaz = -1;
+			if (z - pposz > 0) deltaz = 1;
 			if (deltax == 0 && deltaz == 0) return false;
 			if (deltax != 0 && deltaz != 0) return false;
 			
@@ -87,13 +87,13 @@ public class InstantGarden extends Item
 			}
 
 
-			for (int i = 0; i < height; i++)
+			for (i = 0; i < height; i++)
 			{
 			
-				for (int k = 0; k < length; k++)
+				for (k = 0; k < length; k++)
 				{
 					
-					for (int j = -width; j <= width; j++)
+					for (j = -width; j <= width; j++)
 					{
 						
 						world.setBlock(x + k * deltax + j * deltaz, y + i, z + k * deltaz + j * deltax, Blocks.air, 0, 2);
@@ -105,10 +105,10 @@ public class InstantGarden extends Item
 			
 			
 			
-			for (int k = 1; k < length - 1; k++)
+			for (k = 1; k < length - 1; k++)
 			{
-				int i = 0;
-				for (int j = -width; j <= width; j++)
+				i = 0;
+				for (j = -width; j <= width; j++)
 				{
 					if (i == 1) {
 						world.setBlock(x + k * deltax + j * deltaz, y - 1, z + k * deltaz + j * deltax, Blocks.farmland, 0, 2);
@@ -163,14 +163,14 @@ public class InstantGarden extends Item
 						world.setBlock(x + k * deltax + j * deltaz, y - 1, z + k * deltaz + j * deltax, Blocks.farmland, 0, 2);
 						world.setBlock(x + k * deltax + j * deltaz, y, z + k * deltaz + j * deltax, Blocks.melon_stem, 0, 2);
 					}
-					++i;
+					i++;
 				}
 			}
 			
 			
 			if (!Player.capabilities.isCreativeMode)
 			{
-				--par1ItemStack.stackSize;
+				par1ItemStack.stackSize--;
 			}
 			
 			return true;

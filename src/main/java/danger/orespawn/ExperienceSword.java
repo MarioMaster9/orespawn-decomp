@@ -58,12 +58,12 @@ public class ExperienceSword extends ItemSword
 			stack.addEnchantment(Enchantment.unbreaking, 3);
 		}
 	}
-	/**
-	 * Called each tick as long the item is on a player inventory. Uses by maps to check if is on a player hand and
-	 * update it's contents.
-	 */
+
 	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5)
 	{
+		int i;
+		ItemStack is;
+		Item it;
 		EntityLivingBase e = null;
 		ItemOreSpawnArmor ia = null;
 		EntityPlayer p = null;
@@ -77,51 +77,55 @@ public class ExperienceSword extends ItemSword
 		
 		if (par2World.rand.nextInt(60) == 1)
 		{
-			if (par3Entity != null && 
-				par3Entity instanceof EntityLivingBase) {
-				e = (EntityLivingBase)par3Entity;
-				
-				if (e instanceof EntityPlayer) {
-					p = (EntityPlayer)e;
-				}
-				for (int i = 1; i < 5; i++) {
-					ItemStack is = p.getEquipmentInSlot(i);
-					if (is != null) {
-						Item it = is.getItem();
-						if (it != null)
-						{
-							if (it instanceof ItemOreSpawnArmor) {
-								ia = (ItemOreSpawnArmor)it;
-								if (ia.get_armor_material() == 4)
-								{
-									switch (ia.get_armor_type()) {
-										case 0:
-											if (!par2World.isRemote && p != null && par2World.rand.nextInt(10) == 1) {
-												p.addExperience(1);
-											}
-											par2World.spawnParticle("portal", e.posX, e.posY + 1.5D, e.posZ, par2World.rand.nextGaussian(), par2World.rand.nextGaussian(), par2World.rand.nextGaussian());
-											break;
-											
-										case 1:
-											if (!par2World.isRemote && p != null && par2World.rand.nextInt(20) == 1) {
-												p.addExperience(1);
-											}
-											par2World.spawnParticle("portal", e.posX, e.posY + 1.25D, e.posZ, par2World.rand.nextGaussian(), par2World.rand.nextGaussian(), par2World.rand.nextGaussian());
-											break;
-											
-										case 2:
-											if (!par2World.isRemote && p != null && par2World.rand.nextInt(30) == 1) {
-												p.addExperience(1);
-											}
-											par2World.spawnParticle("portal", e.posX, e.posY + 0.75D, e.posZ, par2World.rand.nextGaussian(), par2World.rand.nextGaussian(), par2World.rand.nextGaussian());
-											break;
-											
-										case 3:
-											if (!par2World.isRemote && p != null && par2World.rand.nextInt(40) == 1) {
-												p.addExperience(1);
-											}
-											par2World.spawnParticle("portal", e.posX, e.posY + 0.25D, e.posZ, par2World.rand.nextGaussian(), par2World.rand.nextGaussian(), par2World.rand.nextGaussian());
-											break;
+			if (par3Entity != null) {
+				if (par3Entity instanceof EntityLivingBase) {
+					e = (EntityLivingBase)par3Entity;
+					
+					if (e instanceof EntityPlayer) {
+						p = (EntityPlayer)e;
+					}
+					for (i = 1; i < 5; i++) {
+						is = p.getEquipmentInSlot(i);
+						if (is != null) {
+							it = is.getItem();
+							if (it != null)
+							{
+								if (it instanceof ItemOreSpawnArmor) {
+									ia = (ItemOreSpawnArmor)it;
+									if (ia.get_armor_material() == 4)
+									{
+										switch (ia.get_armor_type()) {
+											case 0:
+												if (!par2World.isRemote && p != null && par2World.rand.nextInt(10) == 1) {
+													p.addExperience(1);
+												}
+												par2World.spawnParticle("portal", e.posX, e.posY + 1.5D, e.posZ, par2World.rand.nextGaussian(), par2World.rand.nextGaussian(), par2World.rand.nextGaussian());
+												
+												break;
+											case 1:
+												if (!par2World.isRemote && p != null && par2World.rand.nextInt(20) == 1) {
+													p.addExperience(1);
+												}
+												par2World.spawnParticle("portal", e.posX, e.posY + 1.25D, e.posZ, par2World.rand.nextGaussian(), par2World.rand.nextGaussian(), par2World.rand.nextGaussian());
+												
+												break;
+											case 2:
+												if (!par2World.isRemote && p != null && par2World.rand.nextInt(30) == 1) {
+													p.addExperience(1);
+												}
+												par2World.spawnParticle("portal", e.posX, e.posY + 0.75D, e.posZ, par2World.rand.nextGaussian(), par2World.rand.nextGaussian(), par2World.rand.nextGaussian());
+												
+												break;
+											case 3:
+												if (!par2World.isRemote && p != null && par2World.rand.nextInt(40) == 1) {
+													p.addExperience(1);
+												}
+												par2World.spawnParticle("portal", e.posX, e.posY + 0.25D, e.posZ, par2World.rand.nextGaussian(), par2World.rand.nextGaussian(), par2World.rand.nextGaussian());
+												
+												break;
+											default:
+												break;
+										}
 									}
 								}
 							}
@@ -131,14 +135,10 @@ public class ExperienceSword extends ItemSword
 			}
 		}
 	}
-
 	
-	
-	
-	
-	
-	
-	
+	/**
+	 * Returns the damage against a given entity.
+	 */
 	public int getDamageVsEntity(Entity par1Entity)
 	{
 		return this.weaponDamage;
@@ -174,7 +174,7 @@ public class ExperienceSword extends ItemSword
 	public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLiving, EntityLivingBase par3EntityLiving)
 	{
 		float i = 0.0F;
-		
+		int j;
 		EntityPlayer p = null;
 		EntityLiving l = null;
 		if (par3EntityLiving instanceof EntityPlayer) {
@@ -183,11 +183,11 @@ public class ExperienceSword extends ItemSword
 		if (par2EntityLiving != null && par2EntityLiving instanceof EntityLiving) {
 			i = 10.0F;
 		}
-		if (i > 0.0F &&
-			p != null) {
-			p.addExperience((int)i);
+		if (i > 0.0F) {
+			if (p != null) {
+				p.addExperience((int)i);
+			}
 		}
-
 		if (p != null)
 		{
 			i = (float)(p.experienceLevel / 2);
@@ -196,7 +196,7 @@ public class ExperienceSword extends ItemSword
 			}
 		}
 		if (this.worldObjr != null && par2EntityLiving != null) {
-			for (int j = 0; (float)j <= i / 2.0F; j++) {
+			for (j = 0; (float)j <= i / 2.0F; j++) {
 				this.worldObjr.spawnParticle("portal", par2EntityLiving.posX, par2EntityLiving.posY + 1.0D, par2EntityLiving.posZ, this.worldObjr.rand.nextGaussian(), this.worldObjr.rand.nextGaussian(), this.worldObjr.rand.nextGaussian());
 			}
 		}
