@@ -18,11 +18,35 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class Cassowary extends EntityAnimal {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class Cassowary extends EntityAnimal
+{
 	private float moveSpeed = 0.25F;
 
-	public Cassowary(World par1World) {
+	public Cassowary(World par1World)
+	{
 		super(par1World);
+		
 		this.setSize(0.5F, 1.2F);
 		this.moveSpeed = 0.25F;
 		this.fireResistance = 100;
@@ -38,7 +62,8 @@ public class Cassowary extends EntityAnimal {
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
@@ -46,92 +71,148 @@ public class Cassowary extends EntityAnimal {
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue((double)8.0F);
 	}
 
-	protected void entityInit() {
+	protected void entityInit()
+	{
 		super.entityInit();
 	}
 
+	/**
+	 * Called to update the entity's position/logic.
+	 */
 	public void onUpdate() {
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		super.onUpdate();
 	}
 
-	public boolean isAIEnabled() {
+	
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	public boolean isAIEnabled()
+	{
 		return true;
 	}
 
-	public boolean canBreatheUnderwater() {
+	
+	public boolean canBreatheUnderwater()
+	{
 		return false;
 	}
 
-	public int mygetMaxHealth() {
+	public int mygetMaxHealth()
+	{
 		return 10;
 	}
 
-	protected String getLivingSound() {
+	/**
+	 * Returns the sound this mob makes while it's alive.
+     */
+	protected String getLivingSound()
+	{
 		return null;
 	}
 
-	protected String getHurtSound() {
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return "orespawn:duck_hurt";
 	}
 
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return "orespawn:duck_hurt";
 	}
 
-	protected float getSoundVolume() {
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
+	protected float getSoundVolume()
+	{
 		return 0.4F;
 	}
 
-	protected Item getDropItem() {
+	
+	
+	
+	protected Item getDropItem()
+	{
 		return Items.chicken;
 	}
 
-	protected void dropFewItems(boolean par1, int par2) {
+	
+	
+	
+	protected void dropFewItems(boolean par1, int par2)
+	{
 		int var3 = 0;
 		var3 = this.rand.nextInt(3);
 		var3 += 2;
-
-		for (int var4 = 0; var4 < var3; ++var4) {
+		for (int var4 = 0; var4 < var3; var4++)
+		{
 			this.dropItem(Items.chicken, 1);
 		}
-
+		
 	}
-
-	protected void updateAITick() {
-		if (this.worldObj.rand.nextInt(200) == 1) {
-			this.setRevengeTarget((EntityLivingBase)null);
-		}
-
+	
+	
+	/**
+	 * main AI tick function, replaces updateEntityActionState
+	 */
+	protected void updateAITick()
+	{
+		if (this.worldObj.rand.nextInt(200) == 1) this.setRevengeTarget(null);
 		super.updateAITick();
 	}
 
-	public boolean getCanSpawnHere() {
-		return this.worldObj.isDaytime();
+	public boolean getCanSpawnHere()
+	{
+		if (!this.worldObj.isDaytime()) return false;
+		return true;
 	}
 
-	protected boolean canDespawn() {
+	/**
+	 * Determines if an entity can be despawned, used on idle far away entities
+	 */
+	protected boolean canDespawn()
+	{
 		if (this.isChild()) {
 			this.func_110163_bv();
 			return false;
-		} else {
-			return !this.isNoDespawnRequired();
 		}
+		if (this.isNoDespawnRequired()) return false;
+		return true;
 	}
 
+	
 	public EntityAgeable createChild(EntityAgeable entityageable) {
 		return this.spawnBabyAnimal(entityageable);
 	}
 
+	
+	
 	public Cassowary spawnBabyAnimal(EntityAgeable par1EntityAgeable) {
 		return new Cassowary(this.worldObj);
 	}
 
-	public boolean isWheat(ItemStack par1ItemStack) {
+	
+	
+	
+	public boolean isWheat(ItemStack par1ItemStack)
+	{
 		return par1ItemStack != null && par1ItemStack.getItem() == Items.apple;
 	}
 
-	public boolean isBreedingItem(ItemStack par1ItemStack) {
+	/**
+	 * Checks if the parameter is an item which this animal can be fed to breed it (wheat, carrots or seeds depending on
+	 * the animal type)
+	 */
+	public boolean isBreedingItem(ItemStack par1ItemStack)
+	{
 		return par1ItemStack.getItem() == OreSpawnMain.MyCrystalApple;
 	}
 }
