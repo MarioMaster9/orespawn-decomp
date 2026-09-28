@@ -53,9 +53,9 @@ import net.minecraft.world.World;
 
 
 
-public class Godzilla extends EntityMob {
 
-	
+public class Godzilla extends EntityMob
+{
 	private GenericTargetSorter TargetSorter = null;
 	private float moveSpeed = 0.75F;
 	private int hurt_timer = 0;
@@ -89,11 +89,11 @@ public class Godzilla extends EntityMob {
 		this.fireResistance = 10000;
 		this.isImmuneToFire = true;
 		this.renderDistanceWeight = 12.0D;
+		
 	}
-
 	
-	
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
@@ -116,17 +116,17 @@ public class Godzilla extends EntityMob {
 		this.renderdata.ri2 = 0;
 		this.renderdata.ri3 = 0;
 		this.renderdata.ri4 = 0;
+		
 	}
 
-	public int getPlayNicely()
-	{
+	public int getPlayNicely() {
 		return this.dataWatcher.getWatchableObjectInt(21);
 	}
 
 	
 	
-	
-	public RenderInfo getRenderInfo() {
+	public RenderInfo getRenderInfo()
+	{
 		return this.renderdata;
 	}
 
@@ -176,7 +176,7 @@ public class Godzilla extends EntityMob {
 	public void onUpdate()
 	{
 		double xzoff = 0.0D;
-		
+		double unused1, unused2;
 		double myoff = 20.0D;
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		super.onUpdate();
@@ -190,55 +190,55 @@ public class Godzilla extends EntityMob {
 		super.onLivingUpdate();
 	}
 
-	
-	
-	
-	
+	/**
+	 * Called when the mob is falling. Calculates and applies fall damage.
+	 */
 	protected void fall(float par1) {}
 
-	
-	
-	
-	
+	/**
+	 * Takes in the distance the entity has fallen this tick and whether its on the ground to update the fall distance
+	 * and deal fall damage if landing on the ground.  Args: distanceFallenThisTick, onGround
+     */
 	protected void updateFallState(double par1, boolean par3) {}
 
-	
-	
-	
-	
-	protected String getLivingSound() {
+
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
 		if (this.worldObj.rand.nextInt(5) == 0) {
 			return "orespawn:godzilla_living";
 		}
 		return null;
 	}
 
-	
-	
-	
-	
-	protected String getHurtSound() {
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return "orespawn:alo_hurt";
 	}
 
-	
-	
-	
-	
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return "orespawn:godzilla_death";
 	}
 
-	
-	
-	
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
 	protected float getSoundVolume() {
 		return 1.65F;
 	}
 
-	
-	
-	
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
 	protected float getSoundPitch() {
 		return 1.1F;
 	}
@@ -247,16 +247,16 @@ public class Godzilla extends EntityMob {
 	
 	
 	
-	
-	protected Item getDropItem() {
+	protected Item getDropItem()
+	{
 		return null;
 	}
 
-	
-	
-	
-	
-	protected void jump() {
+	/**
+	 * Causes this entity to do an upwards motion (jumping).
+	 */
+	protected void jump()
+	{
 		for (; this.rotationYaw < 0.0F; this.rotationYaw += 360.0F);
 		for (; this.rotationYawHead < 0.0F; this.rotationYawHead += 360.0F);
 		for (; this.rotationYaw > 360.0F; this.rotationYaw -= 360.0F);
@@ -273,8 +273,8 @@ public class Godzilla extends EntityMob {
 
 	
 	
-	
-	protected void jumpAtEntity(EntityLivingBase e) {
+	protected void jumpAtEntity(EntityLivingBase e)
+	{
 		this.motionY += 1.25D;
 		this.posY += 1.55F;
 		double d1 = e.posX - this.posX;
@@ -290,8 +290,8 @@ public class Godzilla extends EntityMob {
 	}
 
 	
-	
-	private double getHorizontalDistanceSqToEntity(Entity e) {
+	private double getHorizontalDistanceSqToEntity(Entity e)
+	{
 		double d1 = e.posZ - this.posZ;
 		double d2 = e.posX - this.posX;
 		return d1 * d1 + d2 * d2;
@@ -300,8 +300,8 @@ public class Godzilla extends EntityMob {
 	
 	
 	
-	
-	public double MygetDistanceSqToEntity(Entity par1Entity) {
+	public double MygetDistanceSqToEntity(Entity par1Entity)
+	{
 		double d0 = this.posX - par1Entity.posX;
 		double d1 = par1Entity.posY - this.posY;
 		double d2 = this.posZ - par1Entity.posZ;
@@ -313,185 +313,185 @@ public class Godzilla extends EntityMob {
 	protected void updateAITasks()
 	{
 		EntityLivingBase e = null;
-		
+		int i, j, k;
 		int xzrange = 9;
+		double dx, dz;
+		Block bid;
+		if (this.isDead) return;
+		if (this.worldObj.isRemote) return;
+		this.dataWatcher.updateObject(21, Integer.valueOf(OreSpawnMain.PlayNicely));
 		
+		super.updateAITasks();
 		
-		if (this.isDead){ return; }
-			if (this.worldObj.isRemote){ return;}
-				this.dataWatcher.updateObject(21, Integer.valueOf(OreSpawnMain.PlayNicely));
-				
-				super.updateAITasks();
-				
-				this.ticker++;
-				if (this.ticker > 30000) this.ticker = 0;
-				if (this.ticker % 100 == 0) this.stream_count = 8;
-				if (this.hurt_timer > 0) this.hurt_timer--;
-				if (this.jump_timer > 0) this.jump_timer--;
-				OreSpawnMain.godzilla_has_spawned = 1;
-				
-				if (this.worldObj.rand.nextInt(200) == 0) {
+		this.ticker++;
+		if (this.ticker > 30000) this.ticker = 0;
+		if (this.ticker % 100 == 0) this.stream_count = 8;
+		if (this.hurt_timer > 0) this.hurt_timer--;
+		if (this.jump_timer > 0) this.jump_timer--;
+		OreSpawnMain.godzilla_has_spawned = 1;
+		
+		if (this.worldObj.rand.nextInt(200) == 0) {
+			this.setAttackTarget(null);
+		}
+
+		if (OreSpawnMain.PlayNicely == 0)
+		{
+			if (this.motionY < -0.95) this.jumped = 1;
+			if (this.motionY < -1.5D) this.jumped = 2;
+			if (this.jumped != 0 && this.motionY > -0.1)
+			{
+				double df = 1.0D;
+				if (this.jumped == 2) df = 1.5D;
+				this.doJumpDamage(this.posX, this.posY, this.posZ, 10.0D, OreSpawnMain.Godzilla_stats.attack * df, 0);
+				this.doJumpDamage(this.posX, this.posY, this.posZ, 15.0D, (OreSpawnMain.Godzilla_stats.attack / 2) * df, 0);
+				this.doJumpDamage(this.posX, this.posY, this.posZ, 25.0D, (OreSpawnMain.Godzilla_stats.attack / 4) * df, 0);
+				this.jumped = 0;
+			}
+		}
+
+		xzrange = 12;
+		if (this.getAttacking() != 0) xzrange = 16;
+
+		
+		k = -3 + this.ticker % 30;
+		if (OreSpawnMain.PlayNicely == 0) {
+			for (i = -xzrange; i <= xzrange; i++) {
+				for (j = -xzrange; j <= xzrange; j++) {
+					
+					bid = this.worldObj.getBlock((int)this.posX + i, (int)this.posY + k, (int)this.posZ + j);
+					if (this.isCrushable(bid)) {
+						this.worldObj.setBlock((int)this.posX + i, (int)this.posY + k, (int)this.posZ + j, Blocks.air);
+						if (this.worldObj.rand.nextInt(15) == 1) this.dropItemRand(Item.getItemFromBlock(bid), 1);
+					} else {
+						if (bid == Blocks.grass) {
+							if (this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock((int)this.posX + i, (int)this.posY + k, (int)this.posZ + j, Blocks.dirt);
+						}
+						if (bid == Blocks.farmland) {
+							if (this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock((int)this.posX + i, (int)this.posY + k, (int)this.posZ + j, Blocks.dirt);
+						}
+					}
+				}
+			}
+		}
+
+		
+		dx = this.posX + 16.0D * Math.sin(Math.toRadians((double)this.rotationYawHead));
+		dz = this.posZ - 16.0D * Math.cos(Math.toRadians((double)this.rotationYawHead));
+		k = -3 + this.ticker % 12;
+		if (OreSpawnMain.PlayNicely == 0) {
+			for (i = -xzrange; i <= xzrange; i++) {
+				for (j = -xzrange; j <= xzrange; j++) {
+					bid = this.worldObj.getBlock((int)dx + i, (int)this.posY + k, (int)dz + j);
+					if (this.isCrushable(bid)) {
+						this.worldObj.setBlock((int)dx + i, (int)this.posY + k, (int)dz + j, Blocks.air);
+						if (this.worldObj.rand.nextInt(15) == 1) this.dropItemRandAt(Item.getItemFromBlock(bid), 1, dx, dz);
+					} else {
+						if (bid == Blocks.grass) {
+							if (this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock((int)dx + i, (int)this.posY + k, (int)dz + j, Blocks.dirt);
+						}
+						if (bid == Blocks.farmland) {
+							if (this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock((int)dx + i, (int)this.posY + k, (int)dz + j, Blocks.dirt);
+						}
+					}
+				}
+			}
+		}
+		if (OreSpawnMain.PlayNicely == 0) {
+			if (k == 0) this.doJumpDamage(dx, this.posY, dz, 15.0D, (double)(OreSpawnMain.Godzilla_stats.attack / 2), 1);
+		}
+
+		
+		if (this.worldObj.rand.nextInt(5 - this.large_unknown_detected) == 1) {
+			e = this.getAttackTarget();
+			if (OreSpawnMain.PlayNicely != 0) e = null;
+			if (e != null) {
+				if (!e.isEntityAlive()) {
 					this.setAttackTarget(null);
+					e = null;
 				}
+				else if (e instanceof Godzilla || e instanceof GodzillaHead) {
+					this.setAttackTarget(null);
+					e = null;
+				}
+			}
 
-				if (OreSpawnMain.PlayNicely == 0)
+			if (e == null) {
+				e = this.findSomethingToAttack();
+				
+				if (this.head_found == 0)
 				{
-					if (this.motionY < -0.95) this.jumped = 1;
-					if (this.motionY < -1.5D) this.jumped = 2;
-					if (this.jumped != 0 && this.motionY > -0.1)
+					
+					EntityLiving newent = (EntityLiving)spawnCreature(this.worldObj, "MobzillaHead", this.posX, this.posY + 20.0D, this.posZ);
+				}
+			}
+			if (e != null) {
+				this.wander.setBusy(1);
+				this.faceEntity(e, 10.0F, 10.0F);
+				if (this.worldObj.rand.nextInt(65) == 1 && this.MygetDistanceSqToEntity(e) > (double)300.0F) {
+					this.doLightningAttack(e);
+				} else if (this.worldObj.rand.nextInt(20 - this.large_unknown_detected * 5) == 1 && this.jump_timer == 0) {
+					this.jumpAtEntity(e);
+					this.jump_timer = 30;
+				}
+				else if (this.MygetDistanceSqToEntity(e) < (double)(300.0F + e.width / 2.0F * (e.width / 2.0F))) {
+					this.setAttacking(1);
+					this.getNavigator().tryMoveToEntityLiving(e, 1.0D);
+					
+					if (this.worldObj.rand.nextInt(4 - this.large_unknown_detected) == 0 || this.worldObj.rand.nextInt(3 - this.large_unknown_detected) == 1)
 					{
-						double df = 1.0D;
-						if (this.jumped == 2) df = 1.5D;
-						this.doJumpDamage(this.posX, this.posY, this.posZ, 10.0D, OreSpawnMain.Godzilla_stats.attack * df, 0);
-						this.doJumpDamage(this.posX, this.posY, this.posZ, 15.0D, (OreSpawnMain.Godzilla_stats.attack / 2) * df, 0);
-						this.doJumpDamage(this.posX, this.posY, this.posZ, 25.0D, (OreSpawnMain.Godzilla_stats.attack / 4) * df, 0);
-						this.jumped = 0;
+						this.attackEntityAsMob(e);
 					}
-				}
-
-				xzrange = 12;
-				if (this.getAttacking() != 0) xzrange = 16;
-
-				
-				int k = -3 + this.ticker % 30;
-				if (OreSpawnMain.PlayNicely == 0) {
-					for (int i = -xzrange; i <= xzrange; i++) {
-						for (int j = -xzrange; j <= xzrange; j++) {
-							
-							Block bid = this.worldObj.getBlock((int)this.posX + i, (int)this.posY + k, (int)this.posZ + j);
-							if (this.isCrushable(bid)) {
-								this.worldObj.setBlock((int)this.posX + i, (int)this.posY + k, (int)this.posZ + j, Blocks.air);
-								if (this.worldObj.rand.nextInt(15) == 1) this.dropItemRand(Item.getItemFromBlock(bid), 1);
-							} else {
-								if (bid == Blocks.grass && 
-									this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock((int)this.posX + i, (int)this.posY + k, (int)this.posZ + j, Blocks.dirt);
-
-								if (bid == Blocks.farmland && 
-									this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock((int)this.posX + i, (int)this.posY + k, (int)this.posZ + j, Blocks.dirt);
-
-							}
-						}
-					}
-				}
-
-				
-				double dx = this.posX + 16.0D * Math.sin(Math.toRadians((double)this.rotationYawHead));
-				double dz = this.posZ - 16.0D * Math.cos(Math.toRadians((double)this.rotationYawHead));
-				k = -3 + this.ticker % 12;
-				if (OreSpawnMain.PlayNicely == 0) {
-					for (int i = -xzrange; i <= xzrange; i++) {
-						for (int j = -xzrange; j <= xzrange; j++) {
-							Block bid = this.worldObj.getBlock((int)dx + i, (int)this.posY + k, (int)dz + j);
-							if (this.isCrushable(bid)) {
-								this.worldObj.setBlock((int)dx + i, (int)this.posY + k, (int)dz + j, Blocks.air);
-								if (this.worldObj.rand.nextInt(15) == 1) this.dropItemRandAt(Item.getItemFromBlock(bid), 1, dx, dz);
-							} else {
-								if (bid == Blocks.grass && 
-									this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock((int)dx + i, (int)this.posY + k, (int)dz + j, Blocks.dirt);
-
-								if (bid == Blocks.farmland && 
-									this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock((int)dx + i, (int)this.posY + k, (int)dz + j, Blocks.dirt);
-
-							}
-						}
-					}
-				}
-				if (OreSpawnMain.PlayNicely == 0 && 
-					k == 0) this.doJumpDamage(dx, this.posY, dz, 15.0D, (double)(OreSpawnMain.Godzilla_stats.attack / 2), 1);
-
-				
-				
-				if (this.worldObj.rand.nextInt(5 - this.large_unknown_detected) == 1) {
-					e = this.getAttackTarget();
-					if (OreSpawnMain.PlayNicely != 0) e = null;
-					if (e != null) {
-						if (!e.isEntityAlive()) {
-							this.setAttackTarget(null);
-							e = null;
-						}
-						else if (e instanceof Godzilla || e instanceof GodzillaHead) {
-							this.setAttackTarget(null);
-							e = null;
-						}
-					}
-
-					if (e == null) {
-						e = this.findSomethingToAttack();
-						
-						if (this.head_found == 0)
-						{
-							
-							EntityLiving newent = (EntityLiving)spawnCreature(this.worldObj, "MobzillaHead", this.posX, this.posY + 20.0D, this.posZ);
-						}
-					}
-					if (e != null) {
-						this.wander.setBusy(1);
-						this.faceEntity(e, 10.0F, 10.0F);
-						if (this.worldObj.rand.nextInt(65) == 1 && this.MygetDistanceSqToEntity(e) > (double)300.0F) {
-							this.doLightningAttack(e);
-						} else if (this.worldObj.rand.nextInt(20 - this.large_unknown_detected * 5) == 1 && this.jump_timer == 0) {
-							this.jumpAtEntity(e);
-							this.jump_timer = 30;
-						}
-						else if (this.MygetDistanceSqToEntity(e) < (double)(300.0F + e.width / 2.0F * (e.width / 2.0F))) {
+				} else {
+					this.getNavigator().tryMoveToEntityLiving(e, 1.0D);
+					if (this.getHorizontalDistanceSqToEntity(e) > 625.0D)
+					{
+						if (this.stream_count > 0) {
 							this.setAttacking(1);
-							this.getNavigator().tryMoveToEntityLiving(e, 1.0D);
 							
-							if (this.worldObj.rand.nextInt(4 - this.large_unknown_detected) == 0 || this.worldObj.rand.nextInt(3 - this.large_unknown_detected) == 1)
-							{
-								this.attackEntityAsMob(e);
+							
+							double rr = Math.atan2(e.posZ - this.posZ, e.posX - this.posX);
+							double rhdir = Math.toRadians((double)((this.rotationYawHead + 90.0F) % 360.0F));
+							double rdd;
+							double pi = 3.1415926545;
+							
+							rdd = Math.abs(rr - rhdir) % (pi * 2.0D);
+							if (rdd > pi) rdd -= pi * 2.0D;
+							rdd = Math.abs(rdd);
+							
+							if (rdd < 0.5D) {
+								this.firecanon(e);
 							}
 						} else {
-							this.getNavigator().tryMoveToEntityLiving(e, 1.0D);
-							if (this.getHorizontalDistanceSqToEntity(e) > 625.0D)
-							{
-								if (this.stream_count > 0) {
-									this.setAttacking(1);
-									
-									
-									double rr = Math.atan2(e.posZ - this.posZ, e.posX - this.posX);
-									double rhdir = Math.toRadians((double)((this.rotationYawHead + 90.0F) % 360.0F));
-									
-									double pi = 3.1415926545;
-									
-									double rdd = Math.abs(rr - rhdir) % (pi * 2.0D);
-									if (rdd > pi) rdd -= pi * 2.0D;
-									rdd = Math.abs(rdd);
-									
-									if (rdd < 0.5D) {
-										this.firecanon(e);
-									}
-								} else {
-									this.setAttacking(0);
-								}
-							} else {
-								this.setAttacking(0);
-							}
-							
+							this.setAttacking(0);
 						}
-					} else
-					{
+					} else {
 						this.setAttacking(0);
-						this.wander.setBusy(0);
-						this.stream_count = 8;
 					}
+					
 				}
+			} else
+			{
+				this.setAttacking(0);
+				this.wander.setBusy(0);
+				this.stream_count = 8;
+			}
+		}
 
-				if (this.worldObj.rand.nextInt(35) == 1 && 
-					this.getHealth() < (float)this.mygetMaxHealth())
-				{
-					this.heal(5.0F);
-				}
-		//	}
-	//	}
+		if (this.worldObj.rand.nextInt(35) == 1) {
+			if (this.getHealth() < (float)this.mygetMaxHealth())
+			{
+				this.heal(5.0F);
+			}
+		}
+		
 	}
 
-	
-	
-	
-	
-	
-	public static Entity spawnCreature(World par0World, String par1, double par2, double par4, double par6) {
+
+
+
+
+	public static Entity spawnCreature(World par0World, String par1, double par2, double par4, double par6)
+	{
 		Entity var8 = null;
 		var8 = EntityList.createEntityByName(par1, par0World);
 		if (var8 != null) {
@@ -502,16 +502,16 @@ public class Godzilla extends EntityMob {
 			
 			par0World.spawnEntityInWorld(var8);
 		}
-
 		return var8;
 	}
 
-	
-	
-	
-	
-	
-	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2) {
+
+
+
+
+
+	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2)
+	{
 		if (par1EntityLiving == null)
 		{
 			return false;
@@ -566,14 +566,14 @@ public class Godzilla extends EntityMob {
 		{
 			return false;
 		}
-		
-		if (par1EntityLiving instanceof EntityPlayer) {
+		if (par1EntityLiving instanceof EntityPlayer)
+		{
 			EntityPlayer p = (EntityPlayer)par1EntityLiving;
-			if (p.capabilities.isCreativeMode) {
+			if (p.capabilities.isCreativeMode == true) {
 				return false;
 			}
 		}
-
+		
 		return true;
 	}
 
@@ -581,8 +581,8 @@ public class Godzilla extends EntityMob {
 	
 	
 	
-	
-	private boolean isVillagerTarget(EntityLivingBase par1EntityLiving, boolean par2) {
+	private boolean isVillagerTarget(EntityLivingBase par1EntityLiving, boolean par2)
+	{
 		if (par1EntityLiving == null)
 		{
 			return false;
@@ -625,27 +625,27 @@ public class Godzilla extends EntityMob {
 			
 			
 
-			if (var4 == null) {
+			if (var4 == null)
+			{
 				continue;
 			}
-			
-			if (var4 == this) {
+			if (var4 == this)
+			{
 				continue;
 			}
-			
-			if (!var4.isEntityAlive()) {
+			if (!var4.isEntityAlive())
+			{
 				continue;
 			}
-
 			if (var4 instanceof Godzilla) {
 				continue;
 			}
 			if (var4 instanceof GodzillaHead) {
 				continue;
 			}
-			if (var4 instanceof Ghost ||
-				var4 instanceof GhostSkelly)
-				continue;
+			if (var4 instanceof Ghost) continue;
+			if (var4 instanceof GhostSkelly) continue;
+			
 			DamageSource var21 = null;
 			var21 = DamageSource.setExplosionSource(null);
 			var21.setExplosion();
@@ -658,8 +658,8 @@ public class Godzilla extends EntityMob {
 				float f3 = (float)Math.atan2(var4.posZ - this.posZ, var4.posX - this.posX);
 				var4.addVelocity(Math.cos((double)f3) * ks, inair, Math.sin((double)f3) * ks);
 			}
+			
 		}
-
 		return null;
 	}
 
@@ -670,68 +670,68 @@ public class Godzilla extends EntityMob {
 		if (OreSpawnMain.PlayNicely != 0) {
 			this.head_found = 1;
 			return null;
-		} else {
-			List var5 = null;
-			Iterator var2 = null;
-			Entity var3 = null;
-			EntityLivingBase var4 = null;
-			EntityLivingBase ret = null;
-			int vf = 0;
+		}
+		List var5 = null;
+		Iterator var2 = null;
+		Entity var3 = null;
+		EntityLivingBase var4 = null;
+		EntityLivingBase ret = null;
+		int vf = 0;
+		
+		var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand((double)64.0F, (double)40.0F, (double)64.0F));
+		if (var5 == null) return null;
+		Collections.sort(var5, this.TargetSorter);
+		var2 = var5.iterator();
+		
+		this.head_found = 0;
+		while (var2.hasNext())
+		{
+			var3 = (Entity)var2.next();
+			var4 = (EntityLivingBase)var3;
 			
-			var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand((double)64.0F, (double)40.0F, (double)64.0F));
-			if (var5 == null) return null;
-			Collections.sort(var5, this.TargetSorter);
-			var2 = var5.iterator();
-			
-			this.head_found = 0;
-			while (var2.hasNext())
+			if (var4 instanceof GodzillaHead) {
+				this.head_found = 1;
+			}
+			if (vf == 0 && this.isVillagerTarget(var4, false))
 			{
-				var3 = (Entity)var2.next();
-				var4 = (EntityLivingBase)var3;
-				
-				if (var4 instanceof GodzillaHead) {
-					this.head_found = 1;
-				}
-				if (vf == 0 && this.isVillagerTarget(var4, false))
-				{
-					ret = var4;
-					vf = 1;
-				}
-
-				if (ret == null && vf == 0 && this.isSuitableTarget(var4, false))
-				{
-					ret = var4;
-				}
+				ret = var4;
+				vf = 1;
 			}
 
-			return ret;
+			if (ret == null && vf == 0 && this.isSuitableTarget(var4, false))
+			{
+				ret = var4;
+			}
 		}
+
+		return ret;
 	}
 
-	
-	
-	
-	public boolean getCanSpawnHere() {
+	public boolean getCanSpawnHere()
+	{
+		Block bid;
+		int i, j, k;
+		
 		if (!this.isValidLightLevel()) return false;
-		if (this.worldObj.isDaytime()) return false;
+		if (this.worldObj.isDaytime() == true) return false;
 		if (this.posY < 50.0D) return false;
 		
 		if (OreSpawnMain.godzilla_has_spawned != 0) return false;
 		if (this.worldObj.rand.nextInt(40) != 1) return false;
 		
 		
-		for (int k = -8; k <= 8; k++)
+		for (k = -8; k <= 8; k++)
 		{
-			for (int j = -8; j <= 8; j++)
+			for (j = -8; j <= 8; j++)
 			{
-				for (int i = 5; i < 15; i++)
+				for (i = 5; i < 15; i++)
 				{
-					Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 					if (bid != Blocks.air) return false;
-
 				}
 			}
 		}
+		
 
 		Godzilla target = null;
 		target = (Godzilla)this.worldObj.findNearestEntityWithinAABB(Godzilla.class, this.boundingBox.expand((double)64.0F, 16.0D, (double)64.0F), this);
@@ -743,18 +743,18 @@ public class Godzilla extends EntityMob {
 		return true;
 	}
 
-	
-	public final int getAttacking() {
+	public final int getAttacking()
+	{
 		return this.dataWatcher.getWatchableObjectByte(20);
 	}
 
-	
-	public final void setAttacking(int par1) {
+	public final void setAttacking(int par1)
+	{
 		this.dataWatcher.updateObject(20, Byte.valueOf((byte)par1));
 	}
 
-	
-	private ItemStack dropItemRand(Item index, int par1) {
+	private ItemStack dropItemRand(Item index, int par1)
+	{
 		EntityItem var3 = null;
 		ItemStack is = new ItemStack(index, par1, 0);
 		var3 = new EntityItem(this.worldObj, 
@@ -766,8 +766,8 @@ public class Godzilla extends EntityMob {
 		return is;
 	}
 
-	
-	private ItemStack dropItemRandAt(Item index, int par1, double dx, double dz) {
+	private ItemStack dropItemRandAt(Item index, int par1, double dx, double dz)
+	{
 		EntityItem var3 = null;
 		ItemStack is = new ItemStack(index, par1, 0);
 		var3 = new EntityItem(this.worldObj,
@@ -842,8 +842,8 @@ public class Godzilla extends EntityMob {
 	
 	
 	
-	
-	private boolean isCrushable(Block bid) {
+	private boolean isCrushable(Block bid)
+	{
 		if (bid == null) return false;
 		if (!this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) return false;
 		if (bid == Blocks.grass) return false;
@@ -875,16 +875,16 @@ public class Godzilla extends EntityMob {
 		return true;
 	}
 
-	
-	private void firecanon(EntityLivingBase e) {
+	private void firecanon(EntityLivingBase e)
+	{
 		double yoff = 19.0D;
 		double xzoff = 22.0D;
-		
-		
+		double cx, cz;
+		float r1, r2, r3;
 		BetterFireball bf = null;
-		
-		double cx = this.posX - xzoff * Math.sin(Math.toRadians((double)this.rotationYaw));
-		double cz = this.posZ + xzoff * Math.cos(Math.toRadians((double)this.rotationYaw));
+		int i;
+		cx = this.posX - xzoff * Math.sin(Math.toRadians((double)this.rotationYaw));
+		cz = this.posZ + xzoff * Math.cos(Math.toRadians((double)this.rotationYaw));
 		if (this.stream_count > 0) {
 			
 			
@@ -895,10 +895,10 @@ public class Godzilla extends EntityMob {
 			bf.setBig();
 			this.worldObj.playSoundAtEntity(this, "random.fuse", 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 			this.worldObj.spawnEntityInWorld(bf);
-			for (int i = 0; i < 5; i++) {
-				float r1 = 5.0F * (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat());
-				float r2 = 3.0F * (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat());
-				float r3 = 5.0F * (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat());
+			for (i = 0; i < 5; i++) {
+				r1 = 5.0F * (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat());
+				r2 = 3.0F * (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat());
+				r3 = 5.0F * (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat());
 				bf = new BetterFireball(this.worldObj, this, e.posX - cx + (double)r1, e.posY + (double)(e.height / 2.0F) - (this.posY + yoff) + (double)r2, e.posZ - cz + (double)r3);
 				bf.setLocationAndAngles(cx, this.posY + yoff, cz, this.rotationYaw, 0.0F);
 				bf.setPosition(cx, this.posY + yoff, cz);
@@ -908,20 +908,27 @@ public class Godzilla extends EntityMob {
 			}
 			this.stream_count--;
 		}
+		
 	}
 
-
-	public boolean attackEntityAsMob(Entity par1Entity) {
-		if (par1Entity != null && par1Entity instanceof EntityLivingBase) {
+	public boolean attackEntityAsMob(Entity par1Entity)
+	{
+		if (par1Entity != null && par1Entity instanceof EntityLivingBase)
+		{
 			float s = par1Entity.height * par1Entity.width;
-			if (s > 30.0F && !MyUtils.isRoyalty(par1Entity) && !(par1Entity instanceof Godzilla) && !(par1Entity instanceof GodzillaHead) && !(par1Entity instanceof PitchBlack) && !(par1Entity instanceof Kraken)) {
-				EntityLivingBase e = (EntityLivingBase)par1Entity;
-				e.setHealth(e.getHealth() / 2.0F);
-				e.attackEntityFrom(DamageSource.causeMobDamage(this), (float)OreSpawnMain.Godzilla_stats.attack * 10.0F);
-				this.large_unknown_detected = 1;
+			if (s > 30.0F) {
+				if (!MyUtils.isRoyalty(par1Entity)
+						&& !(par1Entity instanceof Godzilla)
+						&& !(par1Entity instanceof GodzillaHead)
+						&& !(par1Entity instanceof PitchBlack)
+						&& !(par1Entity instanceof Kraken)) {
+					EntityLivingBase e = (EntityLivingBase)par1Entity;
+					e.setHealth(e.getHealth() / 2.0F);
+					e.attackEntityFrom(DamageSource.causeMobDamage(this), (float)OreSpawnMain.Godzilla_stats.attack * 10.0F);
+					this.large_unknown_detected = 1;
+				}
 			}
 		}
-
 		if (par1Entity != null && par1Entity instanceof EntityDragon) {
 			EntityDragon dr = (EntityDragon)par1Entity;
 			DamageSource var21 = null;
@@ -933,127 +940,120 @@ public class Godzilla extends EntityMob {
 				dr.attackEntityFromPart(dr.dragonPartBody, var21, (float)OreSpawnMain.Godzilla_stats.attack / 2.0F);
 			}
 		}
-
-		if (!super.attackEntityAsMob(par1Entity)) {
-			return false;
-		} else {
-			if (par1Entity != null && par1Entity instanceof EntityLivingBase) {
+		if (super.attackEntityAsMob(par1Entity))
+		{
+			if (par1Entity != null && par1Entity instanceof EntityLivingBase)
+			{
 				double ks = 3.2;
 				double inair = 0.3;
 				float f3 = (float)Math.atan2(par1Entity.posZ - this.posZ, par1Entity.posX - this.posX);
-				if (par1Entity.isDead || par1Entity instanceof EntityPlayer) {
-					inair *= 2.0D;
-				}
-
+				if (par1Entity.isDead || par1Entity instanceof EntityPlayer) inair *= 2.0D;
 				par1Entity.addVelocity(Math.cos((double)f3) * ks, inair, Math.sin((double)f3) * ks);
 			}
-
 			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
-	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+	/**
+	 * Called when the entity is attacked.
+	 */
+	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+	{
 		boolean ret = false;
 		float dm = par2;
 		float s = 0.0F;
-		if (this.hurt_timer > 0) {
-			return false;
-		} else {
-			if (par2 > 750.0F) {
-				dm = 750.0F;
-			}
+		if (this.hurt_timer > 0) return false;
+		if (dm > 750.0F) dm = 750.0F;
 
-			Entity e = par1DamageSource.getEntity();
-			if (e != null && e instanceof EntityLivingBase) {
-				EntityLivingBase enl = (EntityLivingBase)e;
-				s = enl.height * enl.width;
-				if (s > 30.0F && !MyUtils.isRoyalty(enl) && !(enl instanceof Godzilla) && !(enl instanceof GodzillaHead) && !(enl instanceof PitchBlack) && !(enl instanceof Kraken)) {
+		Entity e = par1DamageSource.getEntity();
+		if (e != null && e instanceof EntityLivingBase)
+		{
+			EntityLivingBase enl = (EntityLivingBase)e;
+			s = enl.height * enl.width;
+			if (s > 30.0F) {
+				if (!MyUtils.isRoyalty(enl)
+						&& !(enl instanceof Godzilla)
+						&& !(enl instanceof GodzillaHead)
+						&& !(enl instanceof PitchBlack)
+						&& !(enl instanceof Kraken)) {
 					dm /= 10.0F;
 					this.hurt_timer = 50;
 					this.large_unknown_detected = 1;
 				}
 			}
+		}
 
-			if (!par1DamageSource.getDamageType().equals("cactus")) {
-				ret = super.attackEntityFrom(par1DamageSource, dm);
-				this.hurt_timer = 20;
-				e = par1DamageSource.getEntity();
-				if (e != null && e instanceof EntityLivingBase && !(e instanceof GodzillaHead) && !(e instanceof Godzilla)) {
+		if (!par1DamageSource.getDamageType().equals("cactus")) {
+			ret = super.attackEntityFrom(par1DamageSource, dm);
+			this.hurt_timer = 20;
+			
+			e = par1DamageSource.getEntity();
+			if (e != null && e instanceof EntityLivingBase)
+			{
+				if (!(e instanceof GodzillaHead) && !(e instanceof Godzilla)) {
 					this.setAttackTarget((EntityLivingBase)e);
 					this.setTarget(e);
 					this.getNavigator().tryMoveToEntityLiving((EntityLivingBase)e, 1.2);
 				}
 			}
-
-			return ret;
 		}
+		return ret;
 	}
 
-	public void onStruckByLightning(EntityLightningBolt par1EntityLightningBolt) {
-	}
+	
+	public void onStruckByLightning(EntityLightningBolt par1EntityLightningBolt) {}
 
-	private void doLightningAttack(EntityLivingBase e) {
-		if (e != null) {
-			float var2 = 100.0F;
-			e.attackEntityFrom(DamageSource.causeMobDamage(this), var2);
-			e.setFire(5);
-
-			for (int var3 = 0; var3 < 20; ++var3) {
-				this.worldObj.spawnParticle("smoke", e.posX + (double)this.rand.nextFloat() - (double)this.rand.nextFloat(), e.posY + (double)this.rand.nextFloat() - (double)this.rand.nextFloat(), e.posZ + (double)this.rand.nextFloat(), 0.0D, 0.0D, 0.0D);
-				this.worldObj.spawnParticle("largesmoke", e.posX + (double)this.rand.nextFloat() - (double)this.rand.nextFloat(), e.posY + (double)this.rand.nextFloat() - (double)this.rand.nextFloat(), e.posZ + (double)this.rand.nextFloat() - (double)this.rand.nextFloat(), 0.0D, 0.0D, 0.0D);
-				this.worldObj.spawnParticle("fireworksSpark", e.posX, e.posY, e.posZ, this.worldObj.rand.nextGaussian(), this.worldObj.rand.nextGaussian(), this.worldObj.rand.nextGaussian());
-			}
-
-			this.worldObj.playSoundAtEntity(e, "random.explode", 0.5F, 1.0F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.5F);
-			if (!this.worldObj.isRemote) {
-				this.worldObj.createExplosion(this, e.posX, e.posY, e.posZ, 3.0F, this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
-			}
-
-			this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, e.posX, e.posY + 1.0D, e.posZ));
-			this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.posX, this.posY + 15.0D, this.posZ));
+	private void doLightningAttack(EntityLivingBase e)
+	{
+		if (e == null) return;
+		float var2 = 100.0F;
+		e.attackEntityFrom(DamageSource.causeMobDamage(this), var2);
+		e.setFire(5);
+		for (int var3 = 0; var3 < 20; var3++)
+		{
+			this.worldObj.spawnParticle("smoke", e.posX + (double)this.rand.nextFloat() - (double)this.rand.nextFloat(), e.posY + (double)this.rand.nextFloat() - (double)this.rand.nextFloat(), e.posZ + (double)this.rand.nextFloat(), 0.0D, 0.0D, 0.0D);
+			this.worldObj.spawnParticle("largesmoke", e.posX + (double)this.rand.nextFloat() - (double)this.rand.nextFloat(), e.posY + (double)this.rand.nextFloat() - (double)this.rand.nextFloat(), e.posZ + (double)this.rand.nextFloat() - (double)this.rand.nextFloat(), 0.0D, 0.0D, 0.0D);
+			this.worldObj.spawnParticle("fireworksSpark", e.posX, e.posY, e.posZ, this.worldObj.rand.nextGaussian(), this.worldObj.rand.nextGaussian(), this.worldObj.rand.nextGaussian());
 		}
-	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	protected void dropFewItems(boolean par1, int par2) {
-		ItemStack is = null;
 		
+		this.worldObj.playSoundAtEntity(e, "random.explode", 0.5F, 1.0F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.5F);
+		
+		if (!this.worldObj.isRemote) this.worldObj.createExplosion(this, e.posX, e.posY, e.posZ, 3.0F, this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
+		
+		this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, e.posX, e.posY + 1.0D, e.posZ));
+		this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.posX, this.posY + 15.0D, this.posZ));
+	}
+
+	
+	protected void dropFewItems(boolean par1, int par2)
+	{
+		int var4, var5;
+		ItemStack is = null;
+		int i, var3;
 		
 		this.dropItemRand(Items.item_frame, 1);
 		
-		int var5 = 50 + this.worldObj.rand.nextInt(30);
-		for (int var4 = 0; var4 < var5; ++var4) {
+		var5 = 50 + this.worldObj.rand.nextInt(30);
+		for (var4 = 0; var4 < var5; var4++) {
 			this.dropItemRand(OreSpawnMain.MyGodzillaScale, 1);
 		}
 		var5 = 100 + this.worldObj.rand.nextInt(160);
-		for (int var4 = 0; var4 < var5; ++var4) {
+		for (var4 = 0; var4 < var5; var4++) {
 			this.dropItemRand(Items.beef, 1);
 		}
 		var5 = 50 + this.worldObj.rand.nextInt(60);
-		for (int var4 = 0; var4 < var5; ++var4) {
+		for (var4 = 0; var4 < var5; var4++) {
 			this.dropItemRand(Items.bone, 1);
 		}
 
 		
-		int i = 25 + this.worldObj.rand.nextInt(15);
-		for (int var4 = 0; var4 < i; ++var4) {
-			int var3 = this.worldObj.rand.nextInt(80);
+		i = 25 + this.worldObj.rand.nextInt(15);
+		for (var4 = 0; var4 < i; var4++) {
+			var3 = this.worldObj.rand.nextInt(80);
 			switch (var3) {
 				case 0:
 					is = this.dropItemRand(OreSpawnMain.MyUltimateSword, 1);
@@ -1283,14 +1283,14 @@ public class Godzilla extends EntityMob {
 				case 40:
 					this.dropItemRand(Item.getItemFromBlock(Blocks.gold_block), 1);
 					break;
-					
 				case 41:
-					EntityItem var33 = null;
-					is = new ItemStack(Items.golden_apple, 1, 1);
-					var33 = new EntityItem(this.worldObj, this.posX + (double)OreSpawnMain.OreSpawnRand.nextInt(3) - (double)OreSpawnMain.OreSpawnRand.nextInt(3), this.posY + 1.0D, this.posZ + (double)OreSpawnMain.OreSpawnRand.nextInt(3) - (double)OreSpawnMain.OreSpawnRand.nextInt(3), is);
-					
-					if (var33 != null) this.worldObj.spawnEntityInWorld(var33);
-					
+					{
+						EntityItem var33 = null;
+						is = new ItemStack(Items.golden_apple, 1, 1);
+						var33 = new EntityItem(this.worldObj, this.posX + (double)OreSpawnMain.OreSpawnRand.nextInt(3) - (double)OreSpawnMain.OreSpawnRand.nextInt(3), this.posY + 1.0D, this.posZ + (double)OreSpawnMain.OreSpawnRand.nextInt(3) - (double)OreSpawnMain.OreSpawnRand.nextInt(3), is);
+						
+						if (var33 != null) this.worldObj.spawnEntityInWorld(var33);
+					}
 					break;
 				case 42:
 					is = this.dropItemRand(OreSpawnMain.MyExperienceSword, 1);
@@ -1514,6 +1514,12 @@ public class Godzilla extends EntityMob {
 					is = this.dropItemRand(OreSpawnMain.MyUltimateHoe, 1);
 					if (this.worldObj.rand.nextInt(2) == 1) is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
 					if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.efficiency, 1 + this.worldObj.rand.nextInt(5));
+					break;
+				default:
+					
+					
+					
+					
 					break;
 			}
 		}
