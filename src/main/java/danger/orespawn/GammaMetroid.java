@@ -29,13 +29,33 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
-public class GammaMetroid extends EntityTameable {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class GammaMetroid extends EntityTameable
+{
 	private GenericTargetSorter TargetSorter = null;
 	private float moveSpeed = 0.15F;
-	private int closest = 99999;
-	private int tx = 0;
-	private int ty = 0;
-	private int tz = 0;
 
 	public GammaMetroid(World par1World) {
 		super(par1World);
@@ -55,7 +75,8 @@ public class GammaMetroid extends EntityTameable {
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
@@ -67,42 +88,66 @@ public class GammaMetroid extends EntityTameable {
 		if (this.isChild()) {
 			this.func_110163_bv();
 			return false;
-		} else if (this.isTamed()) {
-			return false;
-		} else {
-			return !this.isNoDespawnRequired();
 		}
+		if (this.isTamed()) return false;
+		if (this.isNoDespawnRequired()) return false;
+		return true;
 	}
 
-	public boolean attackEntityAsMob(Entity par1Entity) {
+
+
+	public boolean attackEntityAsMob(Entity par1Entity)
+	{
 		boolean var4 = par1Entity.attackEntityFrom(DamageSource.causeMobDamage(this), (float)OreSpawnMain.GammaMetroid_stats.attack);
 		return var4;
 	}
 
-	public boolean interact(EntityPlayer par1EntityPlayer) {
+	/**
+	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+	 */
+	public boolean interact(EntityPlayer par1EntityPlayer)
+	{
 		ItemStack var2 = par1EntityPlayer.inventory.getCurrentItem();
-		if (var2 != null && var2.stackSize <= 0) {
-			par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
-			var2 = null;
+		
+		
+		if (var2 != null)
+		{
+			if (var2.stackSize <= 0)
+			{
+				par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
+				var2 = null;
+			}
 		}
 
 		if (super.interact(par1EntityPlayer)) {
 			return true;
-		} else if (var2 != null && var2.getItem() == Items.iron_ingot && par1EntityPlayer.getDistanceSqToEntity(this) < 25.0D) {
-			if (!this.isTamed()) {
-				if (!this.worldObj.isRemote) {
-					if (this.rand.nextInt(3) == 0) {
+		}
+		
+		if (var2 != null && var2.getItem() == Items.iron_ingot && par1EntityPlayer.getDistanceSqToEntity(this) < 25.0D)
+		{
+			if (!this.isTamed())
+			{
+				if (!this.worldObj.isRemote)
+				{
+					if (this.rand.nextInt(3) == 0)
+					{
 						this.setTamed(true);
 						this.func_152115_b(par1EntityPlayer.getUniqueID().toString());
 						this.playTameEffect(true);
 						this.worldObj.setEntityState(this, (byte)7);
 						this.heal((float)this.mygetMaxHealth() - this.getHealth());
-					} else {
+						
+					}
+					else
+					{
 						this.playTameEffect(false);
 						this.worldObj.setEntityState(this, (byte)6);
 					}
+					
 				}
-			} else if (this.func_152114_e(par1EntityPlayer)) {
+			}
+			else if (this.func_152114_e(par1EntityPlayer))
+			{
 				if (this.worldObj.isRemote) {
 					this.playTameEffect(true);
 					this.worldObj.setEntityState(this, (byte)7);
@@ -113,204 +158,286 @@ public class GammaMetroid extends EntityTameable {
 				}
 			}
 
-			if (!par1EntityPlayer.capabilities.isCreativeMode) {
-				--var2.stackSize;
-				if (var2.stackSize <= 0) {
+			if (!par1EntityPlayer.capabilities.isCreativeMode)
+			{
+				var2.stackSize--;
+				if (var2.stackSize <= 0)
+				{
 					par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
 				}
 			}
-
 			return true;
-		} else if (this.isTamed() && var2 != null && var2.getItem() == Item.getItemFromBlock(Blocks.deadbush) && par1EntityPlayer.getDistanceSqToEntity(this) < 25.0D && this.func_152114_e(par1EntityPlayer)) {
-			if (!this.worldObj.isRemote) {
+		} else if (this.isTamed() && var2 != null && var2.getItem() == Item.getItemFromBlock(Blocks.deadbush) && par1EntityPlayer.getDistanceSqToEntity(this) < 25.0D && this.func_152114_e(par1EntityPlayer))
+		{
+			
+			if (!this.worldObj.isRemote)
+			{
 				this.setTamed(false);
 				this.func_152115_b("");
 				this.playTameEffect(false);
 				this.worldObj.setEntityState(this, (byte)6);
 			}
-
-			if (!par1EntityPlayer.capabilities.isCreativeMode) {
-				--var2.stackSize;
-				if (var2.stackSize <= 0) {
+			if (!par1EntityPlayer.capabilities.isCreativeMode)
+			{
+				var2.stackSize--;
+				if (var2.stackSize <= 0)
+				{
 					par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
 				}
 			}
-
 			return true;
-		} else if (this.isTamed() && var2 != null && var2.getItem() == Items.name_tag && par1EntityPlayer.getDistanceSqToEntity(this) < 16.0D && this.func_152114_e(par1EntityPlayer)) {
+		}
+		
+		if (this.isTamed() && var2 != null && var2.getItem() == Items.name_tag && par1EntityPlayer.getDistanceSqToEntity(this) < 16.0D && this.func_152114_e(par1EntityPlayer))
+		{
 			this.setCustomNameTag(var2.getDisplayName());
-			if (!par1EntityPlayer.capabilities.isCreativeMode) {
-				--var2.stackSize;
-				if (var2.stackSize <= 0) {
+			if (!par1EntityPlayer.capabilities.isCreativeMode)
+			{
+				var2.stackSize--;
+				if (var2.stackSize <= 0)
+				{
 					par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
 				}
 			}
-
 			return true;
 		} else if (this.isTamed() && this.func_152114_e(par1EntityPlayer) && par1EntityPlayer.getDistanceSqToEntity(this) < 25.0D) {
+			
 			if (!this.isSitting()) {
 				this.setSitting(true);
 			} else {
 				this.setSitting(false);
 			}
-
 			return true;
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 
-	public void onUpdate() {
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		super.onUpdate();
 	}
 
-	public int mygetMaxHealth() {
+	public int mygetMaxHealth()
+	{
 		return OreSpawnMain.GammaMetroid_stats.health;
 	}
 
-	public int getTotalArmorValue() {
+	/**
+	 * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+	 */
+	public int getTotalArmorValue()
+	{
 		return OreSpawnMain.GammaMetroid_stats.defense;
 	}
 
-	protected boolean isAIEnabled() {
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	protected boolean isAIEnabled()
+	{
 		return true;
 	}
 
-	public void onLivingUpdate() {
+	/**
+	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+	 * use this to react to sunlight and start to burn.
+	 */
+	public void onLivingUpdate()
+	{
 		super.onLivingUpdate();
 	}
 
-	protected String getLivingSound() {
-		return this.worldObj.rand.nextInt(5) == 1 ? "orespawn:wtf_living" : null;
+
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
+		if (this.worldObj.rand.nextInt(5) == 1) {
+			return "orespawn:wtf_living";
+		}
+		return null;
 	}
 
-	protected String getHurtSound() {
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return "orespawn:duck_hurt";
 	}
 
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return "orespawn:alo_death";
 	}
 
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
 	protected float getSoundVolume() {
 		return 1.5F;
 	}
 
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
 	protected float getSoundPitch() {
 		return 1.0F;
 	}
 
-	protected Item getDropItem() {
+
+
+
+
+
+	protected Item getDropItem()
+	{
 		return Items.iron_ingot;
 	}
 
-	private void dropItemRand(Item index, int par1) {
+	private void dropItemRand(Item index, int par1)
+	{
 		EntityItem var3 = new EntityItem(this.worldObj, this.posX + (double)OreSpawnMain.OreSpawnRand.nextInt(4) - (double)OreSpawnMain.OreSpawnRand.nextInt(4), this.posY + 1.0D, this.posZ + (double)OreSpawnMain.OreSpawnRand.nextInt(4) - (double)OreSpawnMain.OreSpawnRand.nextInt(4), new ItemStack(index, par1, 0));
+		
 		this.worldObj.spawnEntityInWorld(var3);
 	}
 
-	protected void dropFewItems(boolean par1, int par2) {
-		int i = 5 + OreSpawnMain.OreSpawnRand.nextInt(10);
-
-		for (int var4 = 0; var4 < i; ++var4) {
+	protected void dropFewItems(boolean par1, int par2)
+	{
+		int var4, i;
+		
+		i = 5 + OreSpawnMain.OreSpawnRand.nextInt(10);
+		for (var4 = 0; var4 < i; var4++) {
 			this.dropItemRand(Items.gold_nugget, 1);
 		}
 
 		i = 6 + OreSpawnMain.OreSpawnRand.nextInt(10);
-
-		for (int var5 = 0; var5 < i; ++var5) {
+		for (var4 = 0; var4 < i; var4++) {
 			this.dropItemRand(Items.iron_ingot, 1);
 		}
-
+		
 	}
+
+
+
 
 	protected void updateAITasks() {
-		if (!this.isDead) {
-			super.updateAITasks();
-			if (this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && this.worldObj.rand.nextInt(5) == 0) {
-				EntityLivingBase e = this.findSomethingToAttack();
-				if (e != null) {
-					this.faceEntity(e, 10.0F, 10.0F);
-					if (this.getDistanceSqToEntity(e) <= 9.0D) {
-						if (this.worldObj.rand.nextInt(4) == 0 || this.worldObj.rand.nextInt(5) == 1) {
-							this.attackEntityAsMob(e);
-						}
-					} else {
-						this.getNavigator().tryMoveToEntityLiving(e, 1.25D);
+		if (this.isDead) return;
+		super.updateAITasks();
+		if (this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && this.worldObj.rand.nextInt(5) == 0) {
+			EntityLivingBase e = this.findSomethingToAttack();
+			if (e != null) {
+				this.faceEntity(e, 10.0F, 10.0F);
+				if (this.getDistanceSqToEntity(e) <= 9.0D)
+				{
+					if (this.worldObj.rand.nextInt(4) == 0 || this.worldObj.rand.nextInt(5) == 1)
+					{
+						this.attackEntityAsMob(e);
 					}
+				} else {
+					this.getNavigator().tryMoveToEntityLiving(e, 1.25D);
 				}
-			}
-
-		}
-	}
-
-	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2) {
-		if (this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL) {
-			return false;
-		} else if (par1EntityLiving == null) {
-			return false;
-		} else if (par1EntityLiving == this) {
-			return false;
-		} else if (!par1EntityLiving.isEntityAlive()) {
-			return false;
-		} else {
-			if (OreSpawnMain.OreSpawnUtils.isIgnoreable(par1EntityLiving)) {
-				return false;
-			} else if (!this.getEntitySenses().canSee(par1EntityLiving)) {
-				return false;
-			} else if (par1EntityLiving instanceof GammaMetroid) {
-				return false;
-			} else if (par1EntityLiving instanceof EntityMob) {
-				return false;
-			} else if (this.isTamed()) {
-				return false;
-			} else {
-				if (par1EntityLiving instanceof EntityPlayer) {
-					EntityPlayer p = (EntityPlayer)par1EntityLiving;
-					if (p.capabilities.isCreativeMode) {
-						return false;
-					}
-				}
-
-				return true;
 			}
 		}
 	}
 
-	private EntityLivingBase findSomethingToAttack() {
-		if (OreSpawnMain.PlayNicely != 0) {
-			return null;
-		} else if (this.isChild()) {
-			return null;
-		} else {
-			List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(10.0D, 3.0D, 10.0D));
-			Collections.sort(var5, this.TargetSorter);
-			Iterator var2 = var5.iterator();
-			Entity var3 = null;
-			EntityLivingBase var4 = null;
 
-			while (var2.hasNext()) {
-				var3 = (Entity)var2.next();
-				var4 = (EntityLivingBase)var3;
-				if (this.isSuitableTarget(var4, false)) {
-					return var4;
-				}
-			}
 
-			return null;
+
+	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2)
+	{
+		if (this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL) return false;
+		
+		if (par1EntityLiving == null)
+		{
+			return false;
 		}
+		if (par1EntityLiving == this)
+		{
+			return false;
+		}
+		if (!par1EntityLiving.isEntityAlive())
+		{
+			return false;
+		}
+		if (OreSpawnMain.OreSpawnUtils.isIgnoreable(par1EntityLiving)) return false;
+		
+		if (!this.getEntitySenses().canSee(par1EntityLiving))
+		{
+			
+			return false;
+		}
+		if (par1EntityLiving instanceof GammaMetroid)
+		{
+			return false;
+		}
+		if (par1EntityLiving instanceof EntityMob)
+		{
+			return false;
+		}
+		
+		if (this.isTamed()) return false;
+		
+		if (par1EntityLiving instanceof EntityPlayer)
+		{
+			EntityPlayer p = (EntityPlayer)par1EntityLiving;
+			if (p.capabilities.isCreativeMode == true) {
+				return false;
+			}
+		}
+		
+		
+		return true;
 	}
 
-	protected boolean isValidLightLevel() {
+	private EntityLivingBase findSomethingToAttack()
+	{
+		if (OreSpawnMain.PlayNicely != 0) return null;
+		if (this.isChild()) return null;
+		List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(10.0D, 3.0D, 10.0D));
+		Collections.sort(var5, this.TargetSorter);
+		Iterator var2 = var5.iterator();
+		Entity var3 = null;
+		EntityLivingBase var4 = null;
+
+		while (var2.hasNext())
+		{
+			var3 = (Entity)var2.next();
+			var4 = (EntityLivingBase)var3;
+			
+			if (this.isSuitableTarget(var4, false))
+			{
+				return var4;
+			}
+		}
+		return null;
+	}
+
+	protected boolean isValidLightLevel()
+	{
 		int i = MathHelper.floor_double(this.posX);
 		int j = MathHelper.floor_double(this.boundingBox.minY);
 		int k = MathHelper.floor_double(this.posZ);
-		if (this.worldObj.getSavedLightValue(EnumSkyBlock.Sky, i, j, k) > this.rand.nextInt(32)) {
+		
+		if (this.worldObj.getSavedLightValue(EnumSkyBlock.Sky, i, j, k) > this.rand.nextInt(32))
+		{
 			return false;
-		} else {
+		}
+		else
+		{
 			int l = this.worldObj.getBlockLightValue(i, j, k);
-			if (this.worldObj.isThundering()) {
+			
+			if (this.worldObj.isThundering())
+			{
 				int i1 = this.worldObj.skylightSubtracted;
 				this.worldObj.skylightSubtracted = 10;
 				l = this.worldObj.getBlockLightValue(i, j, k);
@@ -321,174 +448,168 @@ public class GammaMetroid extends EntityTameable {
 		}
 	}
 
-	public boolean getCanSpawnHere() {
-		for (int k = -3; k < 3; k++) {
-			for (int j = -3; j < 3; j++) {
-				for (int i = 0; i < 5; i++) {
-					Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
+		Block bid;
+		int i, j, k;
+		
+		for (k = -3; k < 3; k++)
+		{
+			for (j = -3; j < 3; j++)
+			{
+				for (i = 0; i < 5; i++)
+				{
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 					if (bid == Blocks.mob_spawner) {
 						TileEntityMobSpawner tileentitymobspawner = null;
 						tileentitymobspawner = (TileEntityMobSpawner)this.worldObj.getTileEntity((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 						String s = tileentitymobspawner.func_145881_a().getEntityNameToSpawn();
-						if (s != null && s.equals("WTF?")) {
-							return true;
+						if (s != null) {
+							if (s.equals("WTF?")) return true;
 						}
 					}
 				}
 			}
 		}
-
-		if (!this.isValidLightLevel()) {
-			return false;
-		} else if (this.worldObj.provider.dimensionId == OreSpawnMain.DimensionID4) {
-			return true;
-		} else if (this.posY > 50.0D) {
-			return false;
-		} else {
-			for (int var10 = -1; var10 < 1; ++var10) {
-				for (int j = -1; j < 1; j++) {
-					for (int i = 1; i < 4; i++) {
-						Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + var10);
-						if (bid != Blocks.air) {
-							return false;
-						}
-					}
+		if (!this.isValidLightLevel()) return false;
+		if (this.worldObj.provider.dimensionId == OreSpawnMain.DimensionID4) return true;
+		if (this.posY > 50.0D) return false;
+		
+		
+		for (k = -1; k < 1; k++)
+		{
+			for (j = -1; j < 1; j++)
+			{
+				for (i = 1; i < 4; i++)
+				{
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+					if (bid != Blocks.air) return false;
 				}
 			}
-
-			return true;
 		}
+		return true;
 	}
 
-	private boolean scan_it(int x, int y, int z, int dx, int dy, int dz) {
+	private int closest = 99999;
+	private int tx = 0, ty = 0, tz = 0;
+	
+	private boolean scan_it(int x, int y, int z, int dx, int dy, int dz){
 		int found = 0;
-
-		for (int i = -dy; i <= dy; i++) {
-			for (int j = -dz; j <= dz; j++) {
-				Block bid = this.worldObj.getBlock(x + dx, y + i, z + j);
-				if (bid == Blocks.stone) {
-					int d = dx * dx + j * j + i * i;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + dx;
-						this.ty = y + i;
-						this.tz = z + j;
-						++found;
+		int i, j, d;
+		Block bid;
+		
+		//Fixed x, scan two sides of 3d rectangle
+		for(i=-dy;i<=dy;i++){
+			for(j=-dz;j<=dz;j++){
+				bid = this.worldObj.getBlock(x+dx, y+i, z+j);
+				if(bid == Blocks.stone){
+					d = (dx*dx) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+dx; ty = y+i; tz = z+j;
+						found++;
 					}
 				}
-
-				bid = this.worldObj.getBlock(x - dx, y + i, z + j);
-				if (bid == Blocks.stone) {
-					int d = dx * dx + j * j + i * i;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x - dx;
-						this.ty = y + i;
-						this.tz = z + j;
-						++found;
+				bid = this.worldObj.getBlock(x-dx, y+i, z+j);
+				if(bid == Blocks.stone){
+					d = (dx*dx) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x-dx; ty = y+i; tz = z+j;
+						found++;
+					}
+				}
+			}
+		}
+		//Fixed y, scan two sides of 3d rectangle
+		for(i=-dx;i<=dx;i++){
+			for(j=-dz;j<=dz;j++){
+				bid = this.worldObj.getBlock(x+i, y+dy, z+j);
+				if(bid == Blocks.stone){
+					d = (dy*dy) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+i; ty = y+dy; tz = z+j;
+						found++;
+					}
+				}
+				bid = this.worldObj.getBlock(x+i, y-dy, z+j);
+				if(bid == Blocks.stone){
+					d = (dy*dy) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+i; ty = y-dy; tz = z+j;
+						found++;
+					}
+				}
+			}
+		}
+		//Fixed z, scan two sides of 3d rectangle
+		for(i=-dx;i<=dx;i++){
+			for(j=-dy;j<=dy;j++){
+				bid = this.worldObj.getBlock(x+i, y+j, z+dz);
+				if(bid == Blocks.stone){
+					d = (dz*dz) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+i; ty = y+j; tz = z+dz;
+						found++;
+					}
+				}
+				bid = this.worldObj.getBlock(x+i, y+j, z-dz);
+				if(bid == Blocks.stone){
+					d = (dz*dz) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+i; ty = y+j; tz = z-dz;
+						found++;
 					}
 				}
 			}
 		}
 
-		for (int var12 = -dx; var12 <= dx; ++var12) {
-			for (int j = -dz; j <= dz; j++) {
-				Block bid = this.worldObj.getBlock(x + var12, y + dy, z + j);
-				if (bid == Blocks.stone) {
-					int d = dy * dy + j * j + var12 * var12;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var12;
-						this.ty = y + dy;
-						this.tz = z + j;
-						++found;
-					}
-				}
-
-				bid = this.worldObj.getBlock(x + var12, y - dy, z + j);
-				if (bid == Blocks.stone) {
-					int d = dy * dy + j * j + var12 * var12;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var12;
-						this.ty = y - dy;
-						this.tz = z + j;
-						++found;
-					}
-				}
-			}
-		}
-
-		for (int var13 = -dx; var13 <= dx; ++var13) {
-			for (int j = -dy; j <= dy; j++) {
-				Block bid = this.worldObj.getBlock(x + var13, y + j, z + dz);
-				if (bid == Blocks.stone) {
-					int d = dz * dz + j * j + var13 * var13;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var13;
-						this.ty = y + j;
-						this.tz = z + dz;
-						++found;
-					}
-				}
-
-				bid = this.worldObj.getBlock(x + var13, y + j, z - dz);
-				if (bid == Blocks.stone) {
-					int d = dz * dz + j * j + var13 * var13;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var13;
-						this.ty = y + j;
-						this.tz = z - dz;
-						++found;
-					}
-				}
-			}
-		}
-
-		if (found != 0) {
-			return true;
-		} else {
-			return false;
-		}
+		if(found != 0)return true;
+		return false;
 	}
 
-	protected void updateAITick() {
-		if (!this.isDead) {
-			super.updateAITick();
-			if ((this.worldObj.rand.nextInt(20) == 0 && this.getHealth() < (float)this.mygetMaxHealth() || this.worldObj.rand.nextInt(100) == 0) && OreSpawnMain.PlayNicely == 0 && !this.isSitting()) {
+	/**
+	 * main AI tick function, replaces updateEntityActionState
+	 */
+	protected void updateAITick()
+	{
+		int i, j;
+		
+		if (this.isDead) return;
+		super.updateAITick();
+		
+		if (this.worldObj.rand.nextInt(20) == 0 && this.getHealth() < (float)this.mygetMaxHealth() || this.worldObj.rand.nextInt(100) == 0)
+		{
+			
+			
+			if (OreSpawnMain.PlayNicely == 0 && !this.isSitting()) {
 				this.closest = 99999;
 				this.tx = this.ty = this.tz = 0;
-
-				for (int i = 1; i < 6; i++) {
-					int j = i;
-					if (i > 2) {
-						j = 2;
-					}
-
-					if (this.scan_it((int)this.posX, (int)this.posY + 1, (int)this.posZ, i, j, i)) {
-						break;
-					}
-
-					if (i >= 4) {
-						++i;
-					}
+				for (i = 1; i < 6; i++) {
+					j = i;
+					if (j > 2) j = 2;
+					if (this.scan_it((int)this.posX, (int)this.posY + 1, (int)this.posZ, i, j, i) == true) break;
+					if (i >= 4) i++;
 				}
 
 				if (this.closest < 99999) {
+					
 					this.getNavigator().tryMoveToXYZ((double)this.tx, (double)this.ty, (double)this.tz, 1.0D);
 					if (this.closest < 12) {
-						if (this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) {
-							this.worldObj.setBlock(this.tx, this.ty, this.tz, Blocks.air, 0, 2);
-						}
-
+						
+						if (this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) this.worldObj.setBlock(this.tx, this.ty, this.tz, Blocks.air, 0, 2);
 						this.heal(1.0F);
 						this.playSound("random.burp", 0.5F, this.worldObj.rand.nextFloat() * 0.2F + 1.5F);
 					}
 				}
 			}
-
 		}
 	}
 
@@ -496,21 +617,32 @@ public class GammaMetroid extends EntityTameable {
 		return this.spawnBabyAnimal(entityageable);
 	}
 
+
+
 	public GammaMetroid spawnBabyAnimal(EntityAgeable par1EntityAgeable) {
 		GammaMetroid w = new GammaMetroid(this.worldObj);
-		if (this.isTamed()) {
+		if (this.isTamed())
+		{
 			this.func_152115_b(this.func_152113_b());
 			w.setTamed(true);
 		}
-
 		return w;
 	}
 
-	public boolean isWheat(ItemStack par1ItemStack) {
+
+
+
+	public boolean isWheat(ItemStack par1ItemStack)
+	{
 		return par1ItemStack != null && par1ItemStack.getItem() == Items.iron_ingot;
 	}
 
-	public boolean isBreedingItem(ItemStack par1ItemStack) {
+	/**
+	 * Checks if the parameter is an item which this animal can be fed to breed it (wheat, carrots or seeds depending on
+	 * the animal type)
+	 */
+	public boolean isBreedingItem(ItemStack par1ItemStack)
+	{
 		return par1ItemStack.getItem() == OreSpawnMain.MyCrystalApple;
 	}
 }
