@@ -20,71 +20,113 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class EnderKnight extends EntityMob {
+
+
+
+public class EnderKnight extends EntityMob
+{
 	private static final UUID attackingSpeedBoostModifierUUID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
-	private static final AttributeModifier attackingSpeedBoostModifier;
+	private static final AttributeModifier attackingSpeedBoostModifier = (new AttributeModifier(attackingSpeedBoostModifierUUID, "Attacking speed boost", (double)6.2F, 0)).setSaved(false);
+	
+
+	/**
+	 * Counter to delay the teleportation of an enderman towards the currently attacked target
+	 */
 	private int teleportDelay;
+
+	/**
+	 * A player must stare at an enderman for 5 ticks before it becomes aggressive. This field counts those ticks.
+	 */
 	private int stareTimer;
 	private Entity lastEntityToAttack;
-
-	public EnderKnight(World par1World) {
+	
+	public EnderKnight(World par1World)
+	{
 		super(par1World);
 		this.setSize(0.6F, 2.9F);
 		this.stepHeight = 1.0F;
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)OreSpawnMain.EnderKnight_stats.health);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.32);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue((double)OreSpawnMain.EnderKnight_stats.attack);
 	}
 
-	protected void entityInit() {
+	protected void entityInit()
+	{
 		super.entityInit();
 		this.dataWatcher.addObject(18, new Byte((byte)0));
 	}
 
-	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
+	/**
+	 * (abstract) Protected helper method to write subclass entity data to NBT.
+	 */
+	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
+	{
 		super.writeEntityToNBT(par1NBTTagCompound);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+	/**
+	 * (abstract) Protected helper method to read subclass entity data from NBT.
+	 */
+	public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
+	{
 		super.readEntityFromNBT(par1NBTTagCompound);
 	}
 
-	protected Entity findPlayerToAttack() {
-		if (OreSpawnMain.PlayNicely != 0) {
-			return null;
-		} else {
-			EntityPlayer entityplayer = this.worldObj.getClosestVulnerablePlayerToEntity(this, (double)64.0F);
-			if (entityplayer != null) {
-				if (this.shouldAttackPlayer(entityplayer)) {
-					if (this.stareTimer == 0) {
-						this.worldObj.playSoundAtEntity(entityplayer, "mob.endermen.stare", 1.0F, 1.0F);
-					}
-
-					if (this.stareTimer++ == 5) {
-						this.stareTimer = 0;
-					}
-
-					this.setScreaming(true);
-					return entityplayer;
+	/**
+	 * Finds the closest player within 16 blocks to attack, or null if this Entity isn't interested in attacking
+	 * (Animals, Spiders at day, peaceful PigZombies).
+	 */
+	protected Entity findPlayerToAttack()
+	{
+		if (OreSpawnMain.PlayNicely != 0) return null;
+		EntityPlayer entityplayer = this.worldObj.getClosestVulnerablePlayerToEntity(this, (double)64.0F);
+		
+		if (entityplayer != null)
+		{
+			if (this.shouldAttackPlayer(entityplayer))
+			{
+				
+				if (this.stareTimer == 0)
+				{
+					this.worldObj.playSoundAtEntity(entityplayer, "mob.endermen.stare", 1.0F, 1.0F);
 				}
 
+				if (this.stareTimer++ == 5)
+				{
+					this.stareTimer = 0;
+				}
+
+				this.setScreaming(true);
+				return entityplayer;
+			}
+			else
+			{
 				this.stareTimer = 0;
 				this.setScreaming(false);
 			}
-
-			return null;
 		}
+
+		return null;
 	}
 
-	private boolean shouldAttackPlayer(EntityPlayer par1EntityPlayer) {
+	/**
+	 * Checks to see if this enderman should be attacking this player
+	 */
+	private boolean shouldAttackPlayer(EntityPlayer par1EntityPlayer)
+	{
 		ItemStack itemstack = par1EntityPlayer.inventory.armorInventory[3];
-		if (itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.pumpkin)) {
+		
+		if (itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.pumpkin))
+		{
 			return false;
-		} else {
+		}
+		else
+		{
 			Vec3 vec3 = par1EntityPlayer.getLook(1.0F).normalize();
 			Vec3 vec31 = Vec3.createVectorHelper(this.posX - par1EntityPlayer.posX, this.boundingBox.minY + (double)(this.height / 2.0F) - (par1EntityPlayer.posY + (double)par1EntityPlayer.getEyeHeight()), this.posZ - par1EntityPlayer.posZ);
 			double d0 = vec31.lengthVector();
@@ -94,56 +136,83 @@ public class EnderKnight extends EntityMob {
 		}
 	}
 
-	public void onLivingUpdate() {
-		if (this.isWet()) {
+	/**
+	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+	 * use this to react to sunlight and start to burn.
+	 */
+	public void onLivingUpdate()
+	{
+		if (this.isWet())
+		{
 			this.attackEntityFrom(DamageSource.drown, 1.0F);
 		}
 
-		if (this.lastEntityToAttack != this.entityToAttack) {
+		if (this.lastEntityToAttack != this.entityToAttack)
+		{
 			IAttributeInstance attributeinstance = this.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
 			attributeinstance.removeModifier(attackingSpeedBoostModifier);
-			if (this.entityToAttack != null) {
+			
+			if (this.entityToAttack != null)
+			{
 				attributeinstance.applyModifier(attackingSpeedBoostModifier);
 			}
 		}
 
 		this.lastEntityToAttack = this.entityToAttack;
-
-		for (int i = 0; i < 2; i++) {
+		int i;
+		
+		
+		for (i = 0; i < 2; i++)
+		{
 			this.worldObj.spawnParticle("portal", this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height - 0.25D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D);
 		}
 
-		if (this.worldObj.isDaytime() && !this.worldObj.isRemote) {
+		if (this.worldObj.isDaytime() && !this.worldObj.isRemote)
+		{
 			float f = this.getBrightness(1.0F);
-			if (f > 0.5F && this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ)) && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F) {
+			
+			if (f > 0.5F && this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ)) && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F)
+			{
 				this.entityToAttack = null;
 				this.setScreaming(false);
 				this.teleportRandomly();
 			}
 		}
 
-		if (this.isWet() || this.isBurning()) {
+		if (this.isWet() || this.isBurning())
+		{
 			this.setScreaming(false);
 			this.teleportRandomly();
 		}
 
+		
 		this.isJumping = false;
-		if (this.entityToAttack != null) {
+		
+		if (this.entityToAttack != null)
+		{
 			this.faceEntity(this.entityToAttack, 100.0F, 100.0F);
 		}
 
-		if (!this.worldObj.isRemote && this.isEntityAlive()) {
-			if (this.entityToAttack != null) {
-				if (this.entityToAttack instanceof EntityPlayer && this.shouldAttackPlayer((EntityPlayer)this.entityToAttack)) {
-					if (this.entityToAttack.getDistanceSqToEntity(this) < 16.0D) {
+		if (!this.worldObj.isRemote && this.isEntityAlive())
+		{
+			if (this.entityToAttack != null)
+			{
+				if (this.entityToAttack instanceof EntityPlayer && this.shouldAttackPlayer((EntityPlayer)this.entityToAttack))
+				{
+					if (this.entityToAttack.getDistanceSqToEntity(this) < 16.0D)
+					{
 						this.teleportRandomly();
 					}
 
 					this.teleportDelay = 0;
-				} else if (this.entityToAttack.getDistanceSqToEntity(this) > 256.0D && this.teleportDelay++ >= 30 && this.teleportToEntity(this.entityToAttack)) {
+				}
+				else if (this.entityToAttack.getDistanceSqToEntity(this) > 256.0D && this.teleportDelay++ >= 30 && this.teleportToEntity(this.entityToAttack))
+				{
 					this.teleportDelay = 0;
 				}
-			} else {
+			}
+			else
+			{
 				this.setScreaming(false);
 				this.teleportDelay = 0;
 			}
@@ -151,15 +220,23 @@ public class EnderKnight extends EntityMob {
 
 		super.onLivingUpdate();
 	}
-
-	protected boolean teleportRandomly() {
-		double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * (double)64.0F;
+	
+	/**
+	 * Teleport the enderman to a random nearby position
+	 */
+	protected boolean teleportRandomly()
+	{
+		double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * 64.0D;
 		double d1 = this.posY + (double)(this.rand.nextInt(64) - 32);
-		double d2 = this.posZ + (this.rand.nextDouble() - 0.5D) * (double)64.0F;
+		double d2 = this.posZ + (this.rand.nextDouble() - 0.5D) * 64.0D;
 		return this.teleportTo(d0, d1, d2);
 	}
-
-	protected boolean teleportToEntity(Entity par1Entity) {
+	
+	/**
+	 * Teleport the enderman to another entity
+	 */
+	protected boolean teleportToEntity(Entity par1Entity)
+	{
 		Vec3 vec3 = Vec3.createVectorHelper(this.posX - par1Entity.posX, this.boundingBox.minY + (double)(this.height / 2.0F) - par1Entity.posY + (double)par1Entity.getEyeHeight(), this.posZ - par1Entity.posZ);
 		vec3 = vec3.normalize();
 		double d0 = 16.0D;
@@ -169,7 +246,12 @@ public class EnderKnight extends EntityMob {
 		return this.teleportTo(d1, d2, d3);
 	}
 
-	protected boolean teleportTo(double par1, double par3, double par5) {
+	
+	/**
+	 * Teleport the enderman
+	 */
+	protected boolean teleportTo(double par1, double par3, double par5)
+	{
 		double d3 = this.posX;
 		double d4 = this.posY;
 		double d5 = this.posZ;
@@ -180,34 +262,49 @@ public class EnderKnight extends EntityMob {
 		int i = MathHelper.floor_double(this.posX);
 		int j = MathHelper.floor_double(this.posY);
 		int k = MathHelper.floor_double(this.posZ);
-		if (this.worldObj.blockExists(i, j, k)) {
+		Block l;
+		
+		if (this.worldObj.blockExists(i, j, k))
+		{
 			boolean flag1 = false;
 
-			while(!flag1 && j > 0) {
-				Block l = this.worldObj.getBlock(i, j - 1, k);
-				if (l != Blocks.air && l.getMaterial().blocksMovement()) {
+			while (!flag1 && j > 0)
+			{
+				l = this.worldObj.getBlock(i, j - 1, k);
+				
+				if (l != Blocks.air && l.getMaterial().blocksMovement())
+				{
 					flag1 = true;
-				} else {
+				}
+				else
+				{
 					--this.posY;
 					--j;
 				}
 			}
 
-			if (flag1) {
+			if (flag1)
+			{
 				this.setPosition(this.posX, this.posY, this.posZ);
-				if (this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty() && !this.worldObj.isAnyLiquid(this.boundingBox)) {
+				
+				if (this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty() && !this.worldObj.isAnyLiquid(this.boundingBox))
+				{
 					flag = true;
 				}
 			}
 		}
 
-		if (!flag) {
+		if (!flag)
+		{
 			this.setPosition(d3, d4, d5);
 			return false;
-		} else {
+		}
+		else
+		{
 			short short1 = 128;
-
-			for (int lx = 0; lx < short1; ++lx) {
+			int lx;
+			for (lx = 0; lx < short1; ++lx)
+			{
 				double d6 = (double)lx / ((double)short1 - 1.0D);
 				float f = (this.rand.nextFloat() - 0.5F) * 0.2F;
 				float f1 = (this.rand.nextFloat() - 0.5F) * 0.2F;
@@ -224,94 +321,141 @@ public class EnderKnight extends EntityMob {
 		}
 	}
 
-	protected String getLivingSound() {
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
 		return this.isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
 	}
 
-	protected String getHurtSound() {
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return "mob.endermen.hit";
 	}
 
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return "mob.endermen.death";
 	}
 
-	public int getTotalArmorValue() {
+	/**
+	 * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+	 */
+	public int getTotalArmorValue()
+	{
 		return OreSpawnMain.EnderKnight_stats.defense;
 	}
 
-	protected Item getDropItem() {
-		return this.worldObj.rand.nextInt(2) == 1 ? Items.ender_eye : Items.ender_pearl;
+	
+	
+	
+	protected Item getDropItem()
+	{
+		if (this.worldObj.rand.nextInt(2) == 1) return Items.ender_eye;
+		return Items.ender_pearl;
 	}
 
-	protected void dropFewItems(boolean par1, int par2) {
+	/**
+	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity has recently been hit by a player. @param
+	 * par2 - Level of Looting used to kill this mob.
+	 */
+	protected void dropFewItems(boolean par1, int par2)
+	{
 		Item j = this.getDropItem();
-		if (j != null) {
+		
+		if (j != null)
+		{
 			int k = this.rand.nextInt(2 + par2);
 
-			for (int l = 0; l < k; ++l) {
+			for (int l = 0; l < k; ++l)
+			{
 				this.dropItem(j, 1);
 			}
 		}
-
 	}
 
-	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-		if (this.isEntityInvulnerable()) {
+	
+	/**
+	 * Called when the entity is attacked.
+	 */
+	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+	{
+		if (this.isEntityInvulnerable())
+		{
 			return false;
-		} else {
+		}
+		else
+		{
 			this.setScreaming(true);
-			if (par1DamageSource instanceof EntityDamageSourceIndirect) {
-				for (int i = 0; i < 16; i++) {
-					if (this.teleportRandomly()) {
+			
+			
+			
+			if (par1DamageSource instanceof EntityDamageSourceIndirect)
+			{
+				
+				for (int i = 0; i < 16; i++)
+				{
+					if (this.teleportRandomly())
+					{
 						return true;
 					}
 				}
 
 				return super.attackEntityFrom(par1DamageSource, par2);
-			} else {
+			}
+			else
+			{
 				return super.attackEntityFrom(par1DamageSource, par2);
 			}
 		}
 	}
 
-	public boolean getCanSpawnHere() {
-		for (int k = -3; k < 3; k++) {
-			for (int j = -3; j < 3; j++) {
-				for (int i = 0; i < 5; i++) {
-					Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+	public boolean getCanSpawnHere()
+	{
+		Block bid;
+		int i, j, k;
+		int unused1, unused2;
+		
+		for (k = -3; k < 3; k++)
+		{
+			for (j = -3; j < 3; j++)
+			{
+				for (i = 0; i < 5; i++)
+				{
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 					if (bid == Blocks.mob_spawner) {
 						TileEntityMobSpawner tileentitymobspawner = null;
 						tileentitymobspawner = (TileEntityMobSpawner)this.worldObj.getTileEntity((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 						String s = tileentitymobspawner.func_145881_a().getEntityNameToSpawn();
-						if (s != null && s.equals("Ender Knight")) {
-							return true;
+						if (s != null) {
+							if (s.equals("Ender Knight")) {
+								return true;
+							}
 						}
 					}
 				}
 			}
 		}
-
-		if (!this.isValidLightLevel()) {
-			return false;
-		} else if (this.worldObj.isDaytime()) {
-			return false;
-		} else if (this.posY < (double)30.0F) {
-			return false;
-		} else {
-			return true;
-		}
+		if (!this.isValidLightLevel()) return false;
+		if (this.worldObj.isDaytime() == true) return false;
+		if (this.posY < 30.0D) return false;
+		return true;
 	}
 
-	public boolean isScreaming() {
+	public boolean isScreaming()
+	{
 		return this.dataWatcher.getWatchableObjectByte(18) > 0;
 	}
 
-	public void setScreaming(boolean par1) {
+	public void setScreaming(boolean par1)
+	{
 		this.dataWatcher.updateObject(18, (byte)(par1 ? 1 : 0));
-	}
-
-	static {
-		attackingSpeedBoostModifier = (new AttributeModifier(attackingSpeedBoostModifierUUID, "Attacking speed boost", (double)6.2F, 0)).setSaved(false);
 	}
 }
