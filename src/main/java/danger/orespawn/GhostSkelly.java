@@ -12,32 +12,41 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class GhostSkelly extends EntityAmbientCreature {
+
+
+
+
+
+public class GhostSkelly extends EntityAmbientCreature
+{
 	private ChunkCoordinates currentFlightTarget = null;
 	private RenderInfo renderdata = new RenderInfo();
 
 	public GhostSkelly(World par1World) {
 		super(par1World);
+		
 		this.setSize(1.5F, 2.0F);
 		this.getNavigator().setAvoidsWater(false);
 		this.experienceValue = 10;
 		this.noClip = true;
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.1D);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)0.1F);
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(0.0D);
 	}
 
-	protected void entityInit() {
+	
+	protected void entityInit()
+	{
 		super.entityInit();
 		if (this.renderdata == null) {
 			this.renderdata = new RenderInfo();
 		}
-
 		this.renderdata.rf1 = 0.0F;
 		this.renderdata.rf2 = 0.0F;
 		this.renderdata.rf3 = 0.0F;
@@ -48,11 +57,15 @@ public class GhostSkelly extends EntityAmbientCreature {
 		this.renderdata.ri4 = 0;
 	}
 
-	public RenderInfo getRenderInfo() {
+	
+	
+	public RenderInfo getRenderInfo()
+	{
 		return this.renderdata;
 	}
 
-	public void setRenderInfo(RenderInfo r) {
+	public void setRenderInfo(RenderInfo r)
+	{
 		this.renderdata.rf1 = r.rf1;
 		this.renderdata.rf2 = r.rf2;
 		this.renderdata.rf3 = r.rf3;
@@ -64,151 +77,207 @@ public class GhostSkelly extends EntityAmbientCreature {
 	}
 
 	protected boolean canDespawn() {
-		return !this.isNoDespawnRequired();
-	}
-
-	protected float getSoundVolume() {
-		return 0.5F;
-	}
-
-	protected float getSoundPitch() {
-		return 1.5F;
-	}
-
-	protected String getLivingSound() {
-		return this.worldObj.rand.nextInt(2) == 0 ? "orespawn:chain_rattles" : null;
-	}
-
-	protected String getHurtSound() {
-		return null;
-	}
-
-	protected String getDeathSound() {
-		return null;
-	}
-
-	public boolean canBePushed() {
-		return false;
-	}
-
-	protected void collideWithEntity(Entity par1Entity) {
-	}
-
-	protected void collideWithNearbyEntities() {
-	}
-
-	public int mygetMaxHealth() {
-		return 5;
-	}
-
-	protected boolean isAIEnabled() {
+		if (this.isNoDespawnRequired()) return false;
 		return true;
 	}
 
-	public void onUpdate() {
-		if (this.isNoDespawnRequired()) {
-			this.noClip = false;
-		}
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
+	protected float getSoundVolume()
+	{
+		return 0.5F;
+	}
 
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
+	protected float getSoundPitch()
+	{
+		return 1.5F;
+	}
+
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
+		if (this.worldObj.rand.nextInt(2) == 0) {
+			return "orespawn:chain_rattles";
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
+		return null;
+	}
+
+	/**
+	 * Returns true if this entity should push and be pushed by other entities when colliding.
+	 */
+	public boolean canBePushed()
+	{
+		return false;
+	}
+
+	protected void collideWithEntity(Entity par1Entity) {}
+
+	protected void collideWithNearbyEntities() {}
+
+	public int mygetMaxHealth()
+	{
+		return 5;
+	}
+
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	protected boolean isAIEnabled()
+	{
+		return true;
+	}
+
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
+		if (this.isNoDespawnRequired()) this.noClip = false;
 		super.onUpdate();
 		this.motionY *= 0.65;
 	}
 
-	protected void updateAITasks() {
+	protected void updateAITasks()
+	{
 		Block bid = Blocks.air;
-		int i = 0;
-		int j = 0;
-		if (!this.isDead) {
-			super.updateAITasks();
-			if (this.currentFlightTarget == null) {
-				this.currentFlightTarget = new ChunkCoordinates((int)this.posX, (int)this.posY, (int)this.posZ);
-			}
-
-			if (this.worldObj.rand.nextInt(40) == 1 || this.currentFlightTarget.getDistanceSquared((int)this.posX, (int)this.posY, (int)this.posZ) < 2.0F) {
-				EntityPlayer target = null;
-				target = (EntityPlayer)this.worldObj.findNearestEntityWithinAABB(EntityPlayer.class, this.boundingBox.expand(16.0D, 16.0D, 16.0D), this);
-				if (target != null) {
-					this.currentFlightTarget.set((int)target.posX + this.rand.nextInt(3) - this.rand.nextInt(3), (int)(target.posY + 1.0D), (int)target.posZ + this.rand.nextInt(3) - this.rand.nextInt(3));
-				} else {
-					for (i = 0; i < 3; i++) {
-						bid = this.worldObj.getBlock((int)this.posX, (int)this.posY + i, (int)this.posZ);
-						if (bid == Blocks.air) {
-							break;
-						}
-					}
-
-					for (j = -1; j >= -3; --j) {
-						bid = this.worldObj.getBlock((int)this.posX, (int)this.posY + j, (int)this.posZ);
-						if (bid != Blocks.air) {
-							break;
-						}
-					}
-
-					this.currentFlightTarget.set((int)this.posX + this.rand.nextInt(10) - this.rand.nextInt(10), (int)this.posY + i + j + this.rand.nextInt(4) + 1, (int)this.posZ + this.rand.nextInt(10) - this.rand.nextInt(10));
-				}
-			}
-
-			double var1 = (double)this.currentFlightTarget.posX + 0.5D - this.posX;
-			double var3 = (double)this.currentFlightTarget.posY + 0.1 - this.posY;
-			double var5 = (double)this.currentFlightTarget.posZ + 0.5D - this.posZ;
-			this.motionX += (Math.signum(var1) * 0.1 - this.motionX) * 0.05;
-			this.motionY += (Math.signum(var3) * 0.7 - this.motionY) * 0.1;
-			this.motionZ += (Math.signum(var5) * 0.1 - this.motionZ) * 0.05;
-			float var7 = (float)(Math.atan2(this.motionZ, this.motionX) * 180.0D / Math.PI) - 90.0F;
-			float var8 = MathHelper.wrapAngleTo180_float(var7 - this.rotationYaw);
-			this.moveForward = 0.05F;
-			this.rotationYaw += var8 / 6.0F;
+		int i = 0, j = 0;
+		if (this.isDead) return;
+		super.updateAITasks();
+		
+		
+		if (this.currentFlightTarget == null) {
+			this.currentFlightTarget = new ChunkCoordinates((int)this.posX, (int)this.posY, (int)this.posZ);
 		}
+		if (this.worldObj.rand.nextInt(40) == 1 || this.currentFlightTarget.getDistanceSquared((int)this.posX, (int)this.posY, (int)this.posZ) < 2.0F)
+		{
+			EntityPlayer target = null;
+			
+			target = (EntityPlayer)this.worldObj.findNearestEntityWithinAABB(EntityPlayer.class, this.boundingBox.expand(16.0D, 16.0D, 16.0D), this);
+			if (target != null) {
+				
+				this.currentFlightTarget.set((int)target.posX + this.rand.nextInt(3) - this.rand.nextInt(3), (int)(target.posY + 1.0D), (int)target.posZ + this.rand.nextInt(3) - this.rand.nextInt(3));
+			} else {
+				
+				for (i = 0; i < 3; i++) {
+					bid = this.worldObj.getBlock((int)this.posX, (int)this.posY + i, (int)this.posZ);
+					if (bid == Blocks.air) break;
+				}
+
+				for (j = -1; j >= -3; j--) {
+					bid = this.worldObj.getBlock((int)this.posX, (int)this.posY + j, (int)this.posZ);
+					if (bid != Blocks.air) break;
+				}
+				this.currentFlightTarget.set((int)this.posX + this.rand.nextInt(10) - this.rand.nextInt(10), (int)this.posY + i + j + this.rand.nextInt(4) + 1, (int)this.posZ + this.rand.nextInt(10) - this.rand.nextInt(10));
+			}
+		}
+		
+		double var1 = (double)this.currentFlightTarget.posX + 0.5D - this.posX;
+		double var3 = (double)this.currentFlightTarget.posY + 0.1 - this.posY;
+		double var5 = (double)this.currentFlightTarget.posZ + 0.5D - this.posZ;
+		this.motionX += (Math.signum(var1) * 0.1 - this.motionX) * 0.05;
+		this.motionY += (Math.signum(var3) * 0.7 - this.motionY) * 0.1;
+		this.motionZ += (Math.signum(var5) * 0.1 - this.motionZ) * 0.05;
+		float var7 = (float)(Math.atan2(this.motionZ, this.motionX) * 180.0D / Math.PI) - 90.0F;
+		float var8 = MathHelper.wrapAngleTo180_float(var7 - this.rotationYaw);
+		this.moveForward = 0.05F;
+		this.rotationYaw += var8 / 6.0F;
 	}
 
-	protected boolean canTriggerWalking() {
+	/**
+	 * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+	 * prevent them from trampling crops
+	 */
+	protected boolean canTriggerWalking()
+	{
 		return false;
 	}
 
-	protected void fall(float par1) {
-	}
+	/**
+	 * Called when the mob is falling. Calculates and applies fall damage.
+	 */
+	protected void fall(float par1) {}
 
-	protected void updateFallState(double par1, boolean par3) {
-	}
-
-	public boolean doesEntityNotTriggerPressurePlate() {
+	/**
+	 * Takes in the distance the entity has fallen this tick and whether its on the ground to update the fall distance
+	 * and deal fall damage if landing on the ground.  Args: distanceFallenThisTick, onGround
+	 */
+	protected void updateFallState(double par1, boolean par3) {}
+	
+	/**
+	 * Return whether this entity should NOT trigger a pressure plate or a tripwire.
+	 */
+	public boolean doesEntityNotTriggerPressurePlate()
+	{
 		return true;
 	}
 
-	public boolean getCanSpawnHere() {
-		for (int k = -2; k < 2; k++) {
-			for (int j = -2; j < 2; j++) {
-				for (int i = 0; i < 5; i++) {
-					Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
+		Block bid;
+		int i, j, k;
+		
+		for (k = -2; k < 2; k++)
+		{
+			for (j = -2; j < 2; j++)
+			{
+				for (i = 0; i < 5; i++)
+				{
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 					if (bid == Blocks.mob_spawner) {
 						TileEntityMobSpawner tileentitymobspawner = null;
 						tileentitymobspawner = (TileEntityMobSpawner)this.worldObj.getTileEntity((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 						String s = tileentitymobspawner.func_145881_a().getEntityNameToSpawn();
-						if (s != null && s.equals("Ghost Pumpkin Skelly")) {
-							return true;
+						if (s != null) {
+							if (s.equals("Ghost Pumpkin Skelly")) return true;
 						}
 					}
 				}
 			}
 		}
-
-		if (this.worldObj.isDaytime()) {
-			return false;
-		} else {
-			return true;
-		}
+		if (this.worldObj.isDaytime()) return false;
+		return true;
 	}
 
-	public void initCreature() {
-	}
+	/**
+	 * Initialize this creature.
+	 */
+	public void initCreature() {}
 
-	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+	{
 		boolean ret = false;
+		
 		if (par1DamageSource.getDamageType().equals("inWall")) {
 			return ret;
-		} else {
-			ret = super.attackEntityFrom(par1DamageSource, par2);
-			return ret;
 		}
+		
+		ret = super.attackEntityFrom(par1DamageSource, par2);
+		
+		return ret;
 	}
 }
