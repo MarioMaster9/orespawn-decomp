@@ -36,23 +36,23 @@ public class InstantShelter extends Item
 	
 	
 	
-	
-	
 	/**
 	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
 	 * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
 	 */
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer Player, World world, int cposx, int cposy, int cposz, int par7, float par8, float par9, float par10)
 	{
+		int pposx, pposy, pposz;
+		int x, y, z;
 		int deltax = 0, deltaz = 0;
-		
+		int i, j, k;
 		int bid = 0;
 		int dirx = 0, dirz = 0;
-		
+		int height, width, length;
 		int stuffdir = 0;
 		
-		int length = 3, width = length;
-		int height = 3;
+		width = length = 3;
+		height = 3;
 		
 		
 		
@@ -64,16 +64,16 @@ public class InstantShelter extends Item
 		
 		if (cposx < 0) dirx = -1;
 		if (cposz < 0) dirz = -1;
-		int pposx = (int)(Player.posX + 0.99 * (double)dirx);
-		int pposy = (int)Player.posY;
-		int pposz = (int)(Player.posZ + 0.99 * (double)dirz);
+		pposx = (int)(Player.posX + 0.99 * (double)dirx);
+		pposy = (int)Player.posY;
+		pposz = (int)(Player.posZ + 0.99 * (double)dirz);
 		
 		
 		
 		
 		if (cposx - pposx == 0 || cposz - pposz == 0)
 		{
-			int x = cposx, y = pposy - 1, z = cposz;
+			x = cposx; y = pposy - 1; z = cposz;
 			if (x - pposx < 0) {
 				deltax = -1;
 				stuffdir = 3;
@@ -108,11 +108,11 @@ public class InstantShelter extends Item
 			}
 			
 			
-			for (int i = -width; i <= width; i++)
+			for (i = -width; i <= width; i++)
 			{
-				for (int j = -length; j <= length; j++)
+				for (j = -length; j <= length; j++)
 				{
-					for (int k = 0; k <= height + 1; k++)
+					for (k = 0; k <= height + 1; k++)
 					{
 						if (k == height + 1) {
 							world.setBlock(x + i, y + k, z + j, Blocks.planks);
@@ -135,7 +135,7 @@ public class InstantShelter extends Item
 			}
 			
 			
-			int i = 2; int k = 1; int j = length - 1;
+			i = 2; k = 1; j = length - 1;
 			world.setBlock(x + i * deltax + j * deltaz, y + k, z + i * deltaz + j * deltax, Blocks.furnace);
 			world.setBlockMetadataWithNotify(x + i * deltax + j * deltaz, y + k, z + i * deltaz + j * deltax, stuffdir, 3);
 			i = 1;
