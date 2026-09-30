@@ -7,47 +7,47 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
-public class ThunderBolt extends EntityThrowable {
-	
-	
-	
-	
-	
-	
-	public ThunderBolt(World par1World) {
+
+
+
+
+public class ThunderBolt extends EntityThrowable
+{
+	public ThunderBolt(World par1World)
+	{
 		super(par1World);
 	}
 
-	
-	
-	public ThunderBolt(World par1World, EntityLivingBase par3EntityPlayer) {
+
+	public ThunderBolt(World par1World, EntityLivingBase par3EntityPlayer)
+	{
 		super(par1World, par3EntityPlayer);
 	}
 
-	
-	public ThunderBolt(World par1World, EntityLivingBase par2EntityLiving, int par3) {
+	public ThunderBolt(World par1World, EntityLivingBase par2EntityLiving, int par3)
+	{
 		super(par1World, par2EntityLiving);
 	}
 
-	
-	public ThunderBolt(World par1World, double par2, double par4, double par6) {
+	public ThunderBolt(World par1World, double par2, double par4, double par6)
+	{
 		super(par1World, par2, par4, par6);
 	}
 
-	
-	
-	
-	
-	protected void onImpact(MovingObjectPosition par1MovingObjectPosition) {
+	/**
+	 * Called when this EntityThrowable hits a block or entity.
+	 */
+	protected void onImpact(MovingObjectPosition par1MovingObjectPosition)
+	{
 		if (par1MovingObjectPosition.entityHit != null)
 		{
 			float var2 = 40.0F;
 			
 			if (MyUtils.isRoyalty(par1MovingObjectPosition.entityHit)) {
 				this.setDead();
-				
 				return;
 			}
+			
 			par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), var2 / 2.0F);
 			par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeMobDamage(this.getThrower()), var2 / 2.0F);
 			par1MovingObjectPosition.entityHit.setFire(1);
@@ -71,17 +71,19 @@ public class ThunderBolt extends EntityThrowable {
 		this.setDead();
 	}
 
-	
-	
-	
-	
-	
+
+
+	/**
+	 * Called to update the entity's position/logic.
+	 */
 	public void onUpdate() {
 		super.onUpdate();
 		
 		
 		int mx = 4;
-		for (int i = 0; i < mx; i++)
+		for (int i = 0; i < mx; i++) {
 			this.worldObj.spawnParticle("fireworksSpark", this.posX, this.posY, this.posZ, this.worldObj.rand.nextGaussian() / 10.0D, this.worldObj.rand.nextGaussian() / 10.0D, this.worldObj.rand.nextGaussian() / 10.0D);
+		}
+		
 	}
 }

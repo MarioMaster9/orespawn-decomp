@@ -9,44 +9,71 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
-public class SunspotUrchin extends EntityThrowable {
+
+
+
+
+
+
+
+
+
+public class SunspotUrchin extends EntityThrowable
+{
 	private float my_rotation = 0.0F;
 	private int my_index = OreSpawnConstants.SunspotUrchinIndex;
 
-	public SunspotUrchin(World par1World) {
+	public SunspotUrchin(World par1World)
+	{
 		super(par1World);
 	}
 
-	public SunspotUrchin(World par1World, int par2) {
+	public SunspotUrchin(World par1World, int par2)
+	{
 		super(par1World);
 	}
 
-	public SunspotUrchin(World par1World, EntityLivingBase par2EntityLiving) {
+	public SunspotUrchin(World par1World, EntityLivingBase par2EntityLiving)
+	{
 		super(par1World, par2EntityLiving);
 	}
 
-	public SunspotUrchin(World par1World, EntityLivingBase par2EntityLiving, int par3) {
+	public SunspotUrchin(World par1World, EntityLivingBase par2EntityLiving, int par3)
+	{
 		super(par1World, par2EntityLiving);
 	}
 
-	public SunspotUrchin(World par1World, double par2, double par4, double par6) {
+	public SunspotUrchin(World par1World, double par2, double par4, double par6)
+	{
 		super(par1World, par2, par4, par6);
 	}
 
-	public int getUrchinIndex() {
+
+	public int getUrchinIndex()
+	{
 		return this.my_index;
 	}
 
+	/**
+	 * Called when this EntityThrowable hits a block or entity.
+	 */
 	protected void onImpact(MovingObjectPosition par1MovingObjectPosition) {
-		if (par1MovingObjectPosition.entityHit != null) {
+		if (par1MovingObjectPosition.entityHit != null)
+		{
 			float var2 = 3.0F;
-			if (par1MovingObjectPosition.entityHit instanceof EntityCreeper) {
+			
+			if (par1MovingObjectPosition.entityHit instanceof EntityCreeper)
+			{
 				var2 = 6.0F;
 			}
 
-			if (!(par1MovingObjectPosition.entityHit instanceof EntityPlayer)) {
+			
+			
+			if (!(par1MovingObjectPosition.entityHit instanceof EntityPlayer))
+			{
 				par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), var2);
-				if (!par1MovingObjectPosition.entityHit.isImmuneToFire()) {
+				if (!par1MovingObjectPosition.entityHit.isImmuneToFire())
+				{
 					par1MovingObjectPosition.entityHit.setFire(5);
 				}
 			}
@@ -54,50 +81,67 @@ public class SunspotUrchin extends EntityThrowable {
 			int i = par1MovingObjectPosition.blockX;
 			int j = par1MovingObjectPosition.blockY;
 			int k = par1MovingObjectPosition.blockZ;
-			switch (par1MovingObjectPosition.sideHit) {
+			
+			switch (par1MovingObjectPosition.sideHit)
+			{
 				case 0:
-					--j;
+					j--;
 					break;
 				case 1:
-					++j;
+					j++;
 					break;
 				case 2:
-					--k;
+					k--;
 					break;
 				case 3:
-					++k;
+					k++;
 					break;
 				case 4:
-					--i;
+					i--;
 					break;
 				case 5:
-					++i;
+					i++;
+					break;
 			}
-
-			if (this.worldObj.isAirBlock(i, j, k)) {
+			if (this.worldObj.isAirBlock(i, j, k))
+			{
 				this.worldObj.setBlock(i, j, k, Blocks.fire);
 			}
 		}
 
-		for (int var3 = 0; var3 < 5; ++var3) {
+		for (int var3 = 0; var3 < 5; var3++)
+		{
 			this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, (double)this.worldObj.rand.nextFloat(), (double)this.worldObj.rand.nextFloat(), (double)this.worldObj.rand.nextFloat());
+			
 			this.worldObj.spawnParticle("reddust", this.posX, this.posY, this.posZ, (double)this.worldObj.rand.nextFloat(), (double)this.worldObj.rand.nextFloat(), (double)this.worldObj.rand.nextFloat());
+			
 		}
 
-		if (!this.worldObj.isRemote) {
+		if (!this.worldObj.isRemote)
+		{
 			this.setDead();
 		}
-
 	}
 
-	public void onUpdate() {
+
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
 		super.onUpdate();
 		this.setFire(1);
 
-		for (this.my_rotation += 30.0F; this.my_rotation > 360.0F; this.my_rotation -= 360.0F) {
+		
+		this.my_rotation += 30.0F;
+		
+		while (this.my_rotation > 360.0F) {
+			this.my_rotation -= 360.0F;
 		}
-
+		
+		
 		this.rotationPitch = this.prevRotationPitch = this.my_rotation;
+		
 		this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
 	}
 }
