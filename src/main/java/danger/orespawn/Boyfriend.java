@@ -1075,7 +1075,7 @@ public class Boyfriend extends EntityTameable implements IRangedAttackMob
 			this.worldObj.spawnEntityInWorld(var8);
 			
 		} else {
-			Shoes var2 = new Shoes(this.worldObj, this, 6);
+			Shoes var2 = new Shoes(this.worldObj, this, OreSpawnConstants.GameControllerIndex);
 			double var3 = par1EntityLiving.posX - this.posX;
 			double var5 = par1EntityLiving.posY + (double)par1EntityLiving.getEyeHeight() - 1.1 - var2.posY;
 			double var7 = par1EntityLiving.posZ - this.posZ;

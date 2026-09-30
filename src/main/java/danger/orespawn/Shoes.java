@@ -61,16 +61,16 @@ public class Shoes extends EntityThrowable
 		return this.dataWatcher.getWatchableObjectInt(20);
 	}
 
-	
-	
-	
+	/**
+	 * Called when this EntityThrowable hits a block or entity.
+	 */
 	protected void onImpact(MovingObjectPosition par1MovingObjectPosition)
 	{
 		if (par1MovingObjectPosition.entityHit != null)
 		{
 			float var2 = 2.0F;
 			
-			if (this.getShoeId() == 6) {
+			if (this.getShoeId() == OreSpawnConstants.GameControllerIndex) {
 				var2 = 6.0F;
 			}
 
@@ -129,5 +129,6 @@ public class Shoes extends EntityThrowable
 
 		
 		this.rotationPitch = this.prevRotationPitch = this.my_rotation;
+		
 	}
 }
