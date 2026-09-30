@@ -29,7 +29,7 @@ public class ItemSpiderRobotKit extends Item
 	{
 		this.maxStackSize = 1;
 		this.setCreativeTab(CreativeTabs.tabTools);
-		if (i == OreSpawnMain.BaseItemID + 471) {
+		if (i == OreSpawnMain.BaseItemID + OreSpawnConstants.SpiderRobotKitItemID) {
 			this.setMaxDamage(OreSpawnMain.SpiderRobot_stats.health);
 		} else {
 			this.setMaxDamage(OreSpawnMain.AntRobot_stats.health);
