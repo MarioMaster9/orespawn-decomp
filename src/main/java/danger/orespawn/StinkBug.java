@@ -26,11 +26,35 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class StinkBug extends EntityAnimal {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class StinkBug extends EntityAnimal
+{
 	private float moveSpeed = 0.15F;
 
-	public StinkBug(World par1World) {
+	public StinkBug(World par1World)
+	{
 		super(par1World);
+		
 		this.setSize(0.55F, 0.55F);
 		this.fireResistance = 10;
 		this.getNavigator().setAvoidsWater(true);
@@ -45,7 +69,8 @@ public class StinkBug extends EntityAnimal {
 		this.tasks.addTask(10, new EntityAIMoveIndoors(this));
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
@@ -53,127 +78,192 @@ public class StinkBug extends EntityAnimal {
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(0.0D);
 	}
 
-	protected void entityInit() {
+	protected void entityInit()
+	{
 		super.entityInit();
 	}
 
-	public void onUpdate() {
+
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		super.onUpdate();
 	}
 
-	protected void updateAITick() {
-		if (!this.isDead) {
-			if (this.worldObj.rand.nextInt(200) == 1) {
-				this.setRevengeTarget((EntityLivingBase)null);
-			}
 
-			super.updateAITick();
-		}
+
+	/**
+	 * main AI tick function, replaces updateEntityActionState
+	 */
+	protected void updateAITick()
+	{
+		if (this.isDead) return;
+		if (this.worldObj.rand.nextInt(200) == 1) this.setRevengeTarget(null);
+		super.updateAITick();
+		
 	}
 
-	public boolean isAIEnabled() {
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	public boolean isAIEnabled()
+	{
 		return true;
 	}
 
-	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-		boolean ret = false;
-		if (this.isDead) {
-			return false;
-		} else {
-			ret = super.attackEntityFrom(par1DamageSource, par2);
-			if (this.getHealth() <= 0.0F || this.isDead) {
-				AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(this.posX - 8.0D, this.posY - 5.0D, this.posZ - 8.0D, this.posX + 8.0D, this.posY + 10.0D, this.posZ + 8.0D);
-				List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, bb);
-				Iterator var2 = var5.iterator();
-				EntityLivingBase var3 = null;
 
-				while (var2.hasNext()) {
-					var3 = (EntityLivingBase)var2.next();
-					if (var3 != null) {
-						var3.addPotionEffect(new PotionEffect(Potion.confusion.id, 300, 0));
-					}
+	/**
+	 * Called when the entity is attacked.
+	 */
+	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+	{
+		boolean ret = false;
+		
+		if (this.isDead) return false;
+		
+		ret = super.attackEntityFrom(par1DamageSource, par2);
+		
+		
+		if (this.getHealth() <= 0.0F || this.isDead) {
+			AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(this.posX - 8.0D, this.posY - 5.0D, this.posZ - 8.0D, this.posX + 8.0D, this.posY + 10.0D, this.posZ + 8.0D);
+			
+			List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, bb);
+			Iterator var2 = var5.iterator();
+			EntityLivingBase var3 = null;
+
+			while (var2.hasNext())
+			{
+				var3 = (EntityLivingBase)var2.next();
+				if (var3 != null)
+				{
+					var3.addPotionEffect(new PotionEffect(Potion.confusion.id, 300, 0));
 				}
 			}
-
-			return ret;
 		}
+		return ret;
 	}
 
-	public boolean canBreatheUnderwater() {
+
+	public boolean canBreatheUnderwater()
+	{
 		return false;
 	}
 
-	public int mygetMaxHealth() {
+	public int mygetMaxHealth()
+	{
 		return 5;
 	}
 
-	protected String getLivingSound() {
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
 		return null;
 	}
 
-	protected String getHurtSound() {
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return null;
 	}
 
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return "orespawn:fart";
 	}
 
-	protected float getSoundVolume() {
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
+	protected float getSoundVolume()
+	{
 		return 1.0F;
 	}
 
-	protected Item getDropItem() {
+
+
+
+	protected Item getDropItem()
+	{
 		return OreSpawnMain.MyDeadStinkBug;
 	}
 
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
 	public boolean getCanSpawnHere() {
-		for (int k = -3; k < 3; k++) {
-			for (int j = -3; j < 3; j++) {
-				for (int i = 0; i < 5; i++) {
-					Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+		Block bid;
+		int i, j, k;
+		
+		for (k = -3; k < 3; k++)
+		{
+			for (j = -3; j < 3; j++)
+			{
+				for (i = 0; i < 5; i++)
+				{
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 					if (bid == Blocks.mob_spawner) {
 						TileEntityMobSpawner tileentitymobspawner = null;
 						tileentitymobspawner = (TileEntityMobSpawner)this.worldObj.getTileEntity((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 						String s = tileentitymobspawner.func_145881_a().getEntityNameToSpawn();
-						if (s != null && s.equals("Stink Bug")) {
-							return true;
+						if (s != null) {
+							if (s.equals("Stink Bug")) return true;
 						}
 					}
 				}
 			}
 		}
-
-		if (this.posY < 50.0D) {
-			return false;
-		} else {
-			return true;
-		}
+		if (this.posY < 50.0D) return false;
+		return true;
 	}
 
-	protected boolean canDespawn() {
+	/**
+	 * Determines if an entity can be despawned, used on idle far away entities
+	 */
+	protected boolean canDespawn()
+	{
 		if (this.isChild()) {
 			this.func_110163_bv();
 			return false;
-		} else {
-			return !this.isNoDespawnRequired();
 		}
+		if (this.isNoDespawnRequired()) return false;
+		return true;
 	}
+
 
 	public EntityAgeable createChild(EntityAgeable entityageable) {
 		return this.spawnBabyAnimal(entityageable);
 	}
 
+
+
 	public StinkBug spawnBabyAnimal(EntityAgeable par1EntityAgeable) {
 		return new StinkBug(this.worldObj);
 	}
 
-	public boolean isWheat(ItemStack par1ItemStack) {
+
+
+
+	public boolean isWheat(ItemStack par1ItemStack)
+	{
 		return par1ItemStack != null && par1ItemStack.getItem() == Items.fish;
 	}
 
-	public boolean isBreedingItem(ItemStack par1ItemStack) {
+	/**
+	 * Checks if the parameter is an item which this animal can be fed to breed it (wheat, carrots or seeds depending on
+	 * the animal type)
+	 */
+	public boolean isBreedingItem(ItemStack par1ItemStack)
+	{
 		return par1ItemStack.getItem() == OreSpawnMain.MyCrystalApple;
 	}
 }

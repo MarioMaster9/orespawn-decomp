@@ -15,9 +15,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.world.World;
 
-public class Slice extends ItemSword {
-	public Slice(int par1, Item.ToolMaterial par2EnumToolMaterial) {
+
+
+
+
+
+
+
+
+public class Slice extends ItemSword
+{
+	public Slice(int par1, Item.ToolMaterial par2EnumToolMaterial)
+	{
 		super(par2EnumToolMaterial);
+		
 		this.maxStackSize = 1;
 		this.setMaxDamage(2600);
 		this.setCreativeTab(CreativeTabs.tabCombat);
@@ -29,6 +40,12 @@ public class Slice extends ItemSword {
 		par1ItemStack.addEnchantment(Enchantment.baneOfArthropods, 1);
 	}
 
+	/**
+	 * Called each tick while using an item.
+	 * @param stack The Item being used
+	 * @param player The Player using the item
+	 * @param count The amount of time in tick the item has been used for continuously
+	 */
 	public void onUsingTick(ItemStack stack, EntityPlayer player, int count)
 	{
 		int lvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack);
@@ -36,19 +53,70 @@ public class Slice extends ItemSword {
 			stack.addEnchantment(Enchantment.sharpness, 5);
 			stack.addEnchantment(Enchantment.baneOfArthropods, 1);
 		}
-
 	}
 
-	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5)
-	{
+	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5) {
 		this.onUsingTick(stack, (EntityPlayer)null, 0);
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{
-		return entity != null && (entity instanceof EntityPlayer || entity instanceof Girlfriend || entity instanceof Boyfriend);
+		if (entity != null) {
+			if (entity instanceof EntityPlayer || entity instanceof Girlfriend || entity instanceof Boyfriend) {
+				return true;
+			}
+		}
+		return false;
 	}
 
+	/**
+	 * Called when a entity tries to play the 'swing' animation.
+	 *
+	 * @param entityLiving The entity swinging the item.
+	 * @param stack The Item stack
+	 * @return True to cancel any further processing by EntityLiving
+	 */
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack)
 	{
 		if (entityLiving != null && entityLiving instanceof EntityPlayer) {
@@ -63,25 +131,52 @@ public class Slice extends ItemSword {
 			p.worldObj.spawnEntityInWorld(lb);
 			stack.damageItem(1, p);
 		}
-
 		return false;
 	}
 
-	public String getMaterialName() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public String getMaterialName()
+	{
 		return "Uranium/Titanium";
 	}
 
-	public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving) {
+	public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
+	{
 		par1ItemStack.damageItem(1, par3EntityLiving);
 		return true;
 	}
 
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	/**
+	 * How long it takes to use or consume an item
+	 */
+	public int getMaxItemUseDuration(ItemStack par1ItemStack)
+	{
 		return 9000;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister) {
+	public void registerIcons(IIconRegister iconRegister)
+	{
 		this.itemIcon = iconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5));
 	}
 }
