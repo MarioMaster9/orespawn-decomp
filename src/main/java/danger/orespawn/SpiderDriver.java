@@ -44,44 +44,45 @@ public class SpiderDriver extends EntitySpider
 		return true;
 	}
 
-	
-	
-	
-	
-	public boolean isAIEnabled() {
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	public boolean isAIEnabled()
+	{
 		return true;
 	}
 
-	
-	protected Entity findPlayerToAttack() {
+	protected Entity findPlayerToAttack()
+	{
 		double d0 = 16.0D;
 		return this.worldObj.getClosestVulnerablePlayerToEntity(this, d0);
 	}
 
-	
-	
-	protected void updateAITasks() {
-		if (!this.isDead) {
-			super.updateAITasks();
-			if (this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && this.worldObj.rand.nextInt(5) == 0 && this.ridingEntity == null) {
-				EntityLivingBase e = this.findSpiderRobot();
-				if (e != null) {
-					this.faceEntity(e, 10.0F, 10.0F);
-					if (this.getDistanceSqToEntity(e) < (double)((4.0F + e.width / 2.0F) * (4.0F + e.width / 2.0F))) {
-						this.mountEntity(e);
-					} else {
-						this.getNavigator().tryMoveToEntityLiving(e, 0.55);
-					}
+
+	protected void updateAITasks()
+	{
+		if (this.isDead) return;
+		super.updateAITasks();
+		if (this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && this.worldObj.rand.nextInt(5) == 0 && this.ridingEntity == null) {
+			EntityLivingBase e = this.findSpiderRobot();
+			if (e != null) {
+				this.faceEntity(e, 10.0F, 10.0F);
+				if (this.getDistanceSqToEntity(e) < (double)((4.0F + e.width / 2.0F) * (4.0F + e.width / 2.0F))) {
+					this.mountEntity(e);
+				} else {
+					this.getNavigator().tryMoveToEntityLiving(e, 0.55);
 				}
 			}
-
-			if (this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && this.worldObj.rand.nextInt(4) == 0 && this.ridingEntity != null) {
-				EntityLivingBase e = this.findSomethingToAttack();
-				if (e != null) {
-					this.faceEntity(e, 10.0F, 10.0F);
-					if ((this.getDistanceSqToEntity(e) < (double)((11.0F + e.width / 2.0F) * (11.0F + e.width / 2.0F)))) {
-						
-					} else if (this.ridingEntity instanceof SpiderRobot) {
+		}
+		
+		if (this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && this.worldObj.rand.nextInt(4) == 0 && this.ridingEntity != null) {
+			EntityLivingBase e = this.findSomethingToAttack();
+			if (e != null) {
+				this.faceEntity(e, 10.0F, 10.0F);
+				if ((this.getDistanceSqToEntity(e) < (double)((11.0F + e.width / 2.0F) * (11.0F + e.width / 2.0F)))) {
+					
+				} else {
+					if (this.ridingEntity instanceof SpiderRobot) {
 						SpiderRobot sp = (SpiderRobot)this.ridingEntity;
 						
 						double d1 = e.posZ - this.posZ;
@@ -92,16 +93,15 @@ public class SpiderDriver extends EntitySpider
 				}
 			}
 		}
+		
+		
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	protected void attackEntity(Entity par1Entity, float par2) {
+	/**
+	 * Basic mob attack. Default to touch of death in EntityCreature. Overridden by each mob to define their attack.
+	 */
+	protected void attackEntity(Entity par1Entity, float par2)
+	{
 		if (this.attackTime <= 0 && par2 < 2.0F && par1Entity.boundingBox.maxY > this.boundingBox.minY && par1Entity.boundingBox.minY < this.boundingBox.maxY)
 		{
 			this.attackTime = 16;
@@ -110,19 +110,19 @@ public class SpiderDriver extends EntitySpider
 				((EntityLivingBase)par1Entity).addPotionEffect(new PotionEffect(Potion.poison.id, 60, 0));
 			}
 		}
-
 	}
 
-	
-	
-	
-	public int getTotalArmorValue() {
+	/**
+	 * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+	 */
+	public int getTotalArmorValue()
+	{
 		if (this.ridingEntity != null) return 8;
 		return 20;
 	}
 
-	
-	private EntityLivingBase findSpiderRobot() {
+	private EntityLivingBase findSpiderRobot()
+	{
 		if (OreSpawnMain.PlayNicely != 0) return null;
 		List var5 = this.worldObj.getEntitiesWithinAABB(SpiderRobot.class, this.boundingBox.expand(25.0D, 15.0D, 25.0D));
 		Collections.sort(var5, this.TargetSorter);
@@ -141,12 +141,12 @@ public class SpiderDriver extends EntitySpider
 		return null;
 	}
 
-	
-	
-	
-	
-	
-	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2) {
+
+
+
+
+	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2)
+	{
 		if (this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL) return false;
 		
 		if (par1EntityLiving == null)
@@ -192,7 +192,7 @@ public class SpiderDriver extends EntitySpider
 		if (par1EntityLiving instanceof EntityPlayer)
 		{
 			EntityPlayer p = (EntityPlayer)par1EntityLiving;
-			if (p.capabilities.isCreativeMode) {
+			if (p.capabilities.isCreativeMode == true) {
 				return false;
 			}
 			return true;
@@ -202,8 +202,8 @@ public class SpiderDriver extends EntitySpider
 		return true;
 	}
 
-	
-	private EntityLivingBase findSomethingToAttack() {
+	private EntityLivingBase findSomethingToAttack()
+	{
 		if (OreSpawnMain.PlayNicely != 0) return null;
 		List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand((double)35.0F, 15.0D, (double)35.0F));
 		Collections.sort(var5, this.TargetSorter);
@@ -224,11 +224,11 @@ public class SpiderDriver extends EntitySpider
 		return null;
 	}
 
-	
-	
-	
-	
-	public boolean getCanSpawnHere() {
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
 		SpiderRobot target = null;
 		target = (SpiderRobot)this.worldObj.findNearestEntityWithinAABB(SpiderRobot.class, this.boundingBox.expand((double)24.0F, 12.0D, (double)24.0F), this);
 		if (target != null)
