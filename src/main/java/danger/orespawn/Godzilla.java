@@ -74,7 +74,7 @@ public class Godzilla extends EntityMob
 		if (OreSpawnMain.PlayNicely == 0) {
 			this.setSize(9.9F, 25.0F);
 		} else {
-			this.setSize(2.475F, 6.25F);
+			this.setSize(9.9F / 4.0F, 6.25F);
 		}
 		this.getNavigator().setAvoidsWater(true);
 		this.experienceValue = 10000;

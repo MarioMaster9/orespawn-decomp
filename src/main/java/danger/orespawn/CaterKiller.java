@@ -61,7 +61,7 @@ public class CaterKiller extends EntityMob {
 		if (OreSpawnMain.PlayNicely == 0) {
 			this.setSize(2.9F, 4.6F);
 		} else {
-			this.setSize(1.45F, 2.3F);
+			this.setSize(2.9F / 2.0F, 2.3F);
 		}
 		this.getNavigator().setAvoidsWater(true);
 		this.experienceValue = 200;
@@ -419,7 +419,7 @@ public class CaterKiller extends EntityMob {
 				}
 			}
 		}
-
+		//Fixed y, scan two sides of 3d rectangle
 		for (i=-dx;i<=dx;i++){
 			for(j=-dz;j<=dz;j++){
 				bid = this.worldObj.getBlock(x+i, y+dy, z+j);
@@ -446,7 +446,7 @@ public class CaterKiller extends EntityMob {
 				}
 			}
 		}
-
+		//Fixed z, scan two sides of 3d rectangle
 		for (i=-dx;i<=dx;i++){
 			for(j=-dy;j<=dy;j++){
 				bid = this.worldObj.getBlock(x+i, y+j, z+dz);
@@ -486,7 +486,7 @@ public class CaterKiller extends EntityMob {
 		if (this.isDead) return;
 		super.updateAITasks();
 		this.dataWatcher.updateObject(21, OreSpawnMain.PlayNicely);
-		int i; int j; int k; double dx; double dz;
+		int i; int j; int k; double dx; double dz; // scuffed match
 		if (this.getHealth() + 1.0F < this.getMaxHealth()) {
 			++this.ticker;
 			if (this.ticker > 2400) {

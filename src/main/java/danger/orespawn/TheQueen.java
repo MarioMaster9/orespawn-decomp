@@ -88,7 +88,7 @@ public class TheQueen extends EntityMob
 		if (OreSpawnMain.PlayNicely == 0) {
 			this.setSize(22.0F, 24.0F);
 		} else {
-			this.setSize(5.5F, 6.0F);
+			this.setSize(22.0F / 4.0F, 6.0F);
 		}
 		this.getNavigator().setAvoidsWater(false);
 		this.experienceValue = 25000;
