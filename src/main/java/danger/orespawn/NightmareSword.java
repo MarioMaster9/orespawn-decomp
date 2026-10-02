@@ -14,9 +14,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.world.World;
 
-public class NightmareSword extends ItemSword {
-	public NightmareSword(int par1, Item.ToolMaterial par2EnumToolMaterial) {
+
+
+
+
+
+
+
+public class NightmareSword extends ItemSword
+{
+	public NightmareSword(int par1, Item.ToolMaterial par2EnumToolMaterial)
+	{
 		super(par2EnumToolMaterial);
+		
 		this.maxStackSize = 1;
 		this.setMaxDamage(1200);
 		this.setCreativeTab(CreativeTabs.tabCombat);
@@ -27,8 +37,15 @@ public class NightmareSword extends ItemSword {
 		par1ItemStack.addEnchantment(Enchantment.sharpness, 1);
 		par1ItemStack.addEnchantment(Enchantment.knockback, 3);
 		par1ItemStack.addEnchantment(Enchantment.fireAspect, 1);
+		
 	}
 
+	/**
+	 * Called each tick while using an item.
+	 * @param stack The Item being used
+	 * @param player The Player using the item
+	 * @param count The amount of time in tick the item has been used for continuously
+	 */
 	public void onUsingTick(ItemStack stack, EntityPlayer player, int count)
 	{
 		int lvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.knockback.effectId, stack);
@@ -37,24 +54,29 @@ public class NightmareSword extends ItemSword {
 			stack.addEnchantment(Enchantment.knockback, 3);
 			stack.addEnchantment(Enchantment.fireAspect, 1);
 		}
-
 	}
 
-	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5)
-	{
+	public void onUpdate(ItemStack stack, World par2World, Entity par3Entity, int par4, boolean par5) {
 		this.onUsingTick(stack, (EntityPlayer)null, 0);
 	}
 
-	public String getMaterialName() {
+
+	public String getMaterialName()
+	{
 		return "Uranium/Titanium";
 	}
 
-	public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving) {
+	public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
+	{
 		par1ItemStack.damageItem(1, par3EntityLiving);
 		return true;
 	}
 
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	/**
+	 * How long it takes to use or consume an item
+	 */
+	public int getMaxItemUseDuration(ItemStack par1ItemStack)
+	{
 		return 5000;
 	}
 

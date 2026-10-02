@@ -15,11 +15,17 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
-public class PoisonSword extends ItemSword {
+
+
+
+
+public class PoisonSword extends ItemSword
+{
 	private int weaponDamage;
 	private final Item.ToolMaterial toolMaterial;
 
-	public PoisonSword(int par1, Item.ToolMaterial par2EnumToolMaterial) {
+	public PoisonSword(int par1, Item.ToolMaterial par2EnumToolMaterial)
+	{
 		super(par2EnumToolMaterial);
 		this.toolMaterial = par2EnumToolMaterial;
 		this.weaponDamage = 15;
@@ -33,21 +39,33 @@ public class PoisonSword extends ItemSword {
 		par1ItemStack.addEnchantment(Enchantment.sharpness, 1);
 	}
 
+	/**
+	 * Called each tick while using an item.
+	 * @param stack The Item being used
+	 * @param player The Player using the item
+	 * @param count The amount of time in tick the item has been used for continuously
+	 */
 	public void onUsingTick(ItemStack stack, EntityPlayer player, int count)
 	{
 		int lvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack);
 		if (lvl <= 0) {
 			stack.addEnchantment(Enchantment.sharpness, 1);
 		}
-
 	}
+
+
+
 
 	public String getMaterialName() {
 		return "Emerald";
 	}
 
+
+
+
 	public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLiving, EntityLivingBase par3EntityLiving) {
 		int var2 = 5;
+		
 		if (par2EntityLiving != null) {
 			var2 = 10 + par2EntityLiving.worldObj.rand.nextInt(10);
 			par2EntityLiving.addPotionEffect(new PotionEffect(Potion.poison.id, var2 * 20, 0));
@@ -61,12 +79,17 @@ public class PoisonSword extends ItemSword {
 		return true;
 	}
 
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	/**
+	 * How long it takes to use or consume an item
+	 */
+	public int getMaxItemUseDuration(ItemStack par1ItemStack)
+	{
 		return 3000;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister) {
+	public void registerIcons(IIconRegister iconRegister)
+	{
 		this.itemIcon = iconRegister.registerIcon("OreSpawn:" + this.getUnlocalizedName().substring(5));
 	}
 }
