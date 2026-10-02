@@ -8,17 +8,63 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
-public class Tshirt extends EntityAnimal {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class Tshirt extends EntityAnimal
+{
 	private float moveSpeed = 0.0F;
 
-	public Tshirt(World par1World) {
+	public Tshirt(World par1World)
+	{
 		super(par1World);
 		this.setSize(4.0F, 4.0F);
+		
 		this.experienceValue = 40;
 		this.fireResistance = 100;
+		
+		
+		
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
@@ -26,76 +72,140 @@ public class Tshirt extends EntityAnimal {
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(0.0D);
 	}
 
-	protected void entityInit() {
+
+	protected void entityInit()
+	{
 		super.entityInit();
 	}
 
 	protected boolean canDespawn() {
-		return !this.isNoDespawnRequired();
-	}
-
-	public void onUpdate() {
-		super.onUpdate();
-	}
-
-	public int mygetMaxHealth() {
-		return 1;
-	}
-
-	public int getTotalArmorValue() {
-		return 0;
-	}
-
-	protected boolean isAIEnabled() {
+		if (this.isNoDespawnRequired()) return false;
 		return true;
 	}
 
-	public void onLivingUpdate() {
+
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
+		super.onUpdate();
+	}
+
+	public int mygetMaxHealth()
+	{
+		return 1;
+	}
+
+	/**
+	 * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+	 */
+	public int getTotalArmorValue()
+	{
+		return 0;
+	}
+
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	protected boolean isAIEnabled()
+	{
+		return true;
+	}
+
+	/**
+	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+	 * use this to react to sunlight and start to burn.
+	 */
+	public void onLivingUpdate()
+	{
 		super.onLivingUpdate();
 	}
 
-	protected String getLivingSound() {
+
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
 		return null;
 	}
 
-	protected String getHurtSound() {
+
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return null;
 	}
 
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return null;
 	}
 
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
 	protected float getSoundVolume() {
 		return 1.0F;
 	}
 
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
 	protected float getSoundPitch() {
 		return 1.0F;
 	}
 
-	protected Item getDropItem() {
+
+
+
+
+
+	protected Item getDropItem()
+	{
 		return Items.emerald;
 	}
 
-	public void initCreature() {
+	/**
+	 * Initialize this creature.
+	 */
+	public void initCreature()
+	{
+		
 	}
 
-	public boolean interact(EntityPlayer par1EntityPlayer) {
+	/**
+	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+	 */
+	public boolean interact(EntityPlayer par1EntityPlayer)
+	{
 		return false;
 	}
 
-	public boolean getCanSpawnHere() {
-		if (!this.worldObj.isDaytime()) {
+
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
+		if ((!this.worldObj.isDaytime() ? true : false) == true) return false;
+		if (this.posY < 50.0D) return false;
+		Tshirt target = null;
+		target = (Tshirt)this.worldObj.findNearestEntityWithinAABB(Tshirt.class, this.boundingBox.expand(20.0D, 8.0D, 20.0D), this);
+		if (target != null)
+		{
 			return false;
-		} else if (this.posY < 50.0D) {
-			return false;
-		} else {
-			Tshirt target = null;
-			target = (Tshirt)this.worldObj.findNearestEntityWithinAABB(Tshirt.class, this.boundingBox.expand(20.0D, 8.0D, 20.0D), this);
-			return target == null;
 		}
+		return true;
 	}
+
+
 
 	public EntityAgeable createChild(EntityAgeable entityageable) {
 		return null;
