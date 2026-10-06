@@ -31,18 +31,54 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
-public class WaterDragon extends EntityTameable {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class WaterDragon extends EntityTameable
+{
 	private GenericTargetSorter TargetSorter = null;
 	private RenderInfo renderdata = new RenderInfo();
 	private int stream_count = 0;
 	private int hurt_timer = 0;
 	private float moveSpeed = 0.25F;
-	private int closest = 99999;
-	private int tx = 0;
-	private int ty = 0;
-	private int tz = 0;
 
-	public WaterDragon(World par1World) {
+	public WaterDragon(World par1World)
+	{
 		super(par1World);
 		this.moveSpeed = 0.25F;
 		this.setSize(1.25F, 1.9F);
@@ -50,6 +86,7 @@ public class WaterDragon extends EntityTameable {
 		this.experienceValue = 100;
 		this.fireResistance = 3;
 		this.isImmuneToFire = true;
+		
 		this.TargetSorter = new GenericTargetSorter(this);
 		this.renderdata = new RenderInfo();
 		this.tasks.addTask(0, new EntityAISwimming(this));
@@ -62,7 +99,8 @@ public class WaterDragon extends EntityTameable {
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 	}
 
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
@@ -70,13 +108,13 @@ public class WaterDragon extends EntityTameable {
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue((double)OreSpawnMain.WaterDragon_stats.attack);
 	}
 
-	protected void entityInit() {
+	protected void entityInit()
+	{
 		super.entityInit();
 		this.dataWatcher.addObject(20, (byte)0);
 		if (this.renderdata == null) {
 			this.renderdata = new RenderInfo();
 		}
-
 		this.renderdata.rf1 = 0.0F;
 		this.renderdata.rf2 = 0.0F;
 		this.renderdata.rf3 = 0.0F;
@@ -87,30 +125,52 @@ public class WaterDragon extends EntityTameable {
 		this.renderdata.ri4 = 0;
 	}
 
-	public boolean interact(EntityPlayer par1EntityPlayer) {
+	/**
+	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+	 */
+	public boolean interact(EntityPlayer par1EntityPlayer)
+	{
 		ItemStack var2 = par1EntityPlayer.inventory.getCurrentItem();
-		if (var2 != null && var2.stackSize <= 0) {
-			par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
-			var2 = null;
+		
+		
+		if (var2 != null)
+		{
+			if (var2.stackSize <= 0)
+			{
+				par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
+				var2 = null;
+			}
 		}
 
 		if (super.interact(par1EntityPlayer)) {
 			return true;
-		} else if (var2 != null && var2.getItem() == Items.fish && par1EntityPlayer.getDistanceSqToEntity(this) < 25.0D) {
-			if (!this.isTamed()) {
-				if (!this.worldObj.isRemote) {
-					if (this.rand.nextInt(3) == 0) {
+		}
+		
+		if (var2 != null && var2.getItem() == Items.fish && par1EntityPlayer.getDistanceSqToEntity(this) < 25.0D)
+		{
+			if (!this.isTamed())
+			{
+				if (!this.worldObj.isRemote)
+				{
+					if (this.rand.nextInt(3) == 0)
+					{
 						this.setTamed(true);
 						this.func_152115_b(par1EntityPlayer.getUniqueID().toString());
 						this.playTameEffect(true);
 						this.worldObj.setEntityState(this, (byte)7);
 						this.heal((float)this.mygetMaxHealth() - this.getHealth());
-					} else {
+						
+					}
+					else
+					{
 						this.playTameEffect(false);
 						this.worldObj.setEntityState(this, (byte)6);
+						
 					}
 				}
-			} else if (this.func_152114_e(par1EntityPlayer)) {
+			}
+			else if (this.func_152114_e(par1EntityPlayer))
+			{
 				if (this.worldObj.isRemote) {
 					this.playTameEffect(true);
 					this.worldObj.setEntityState(this, (byte)7);
@@ -121,78 +181,95 @@ public class WaterDragon extends EntityTameable {
 				}
 			}
 
-			if (!par1EntityPlayer.capabilities.isCreativeMode) {
-				--var2.stackSize;
-				if (var2.stackSize <= 0) {
+			if (!par1EntityPlayer.capabilities.isCreativeMode)
+			{
+				var2.stackSize--;
+				if (var2.stackSize <= 0)
+				{
 					par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
 				}
 			}
-
 			return true;
 		} else if (this.isTamed() && var2 != null && var2.getItem() == Item.getItemFromBlock(Blocks.deadbush) && par1EntityPlayer.getDistanceSqToEntity(this) < 25.0D && this.func_152114_e(par1EntityPlayer)) {
-			if (!this.worldObj.isRemote) {
+			
+			
+			if (!this.worldObj.isRemote)
+			{
 				this.setTamed(false);
 				this.func_152115_b("");
 				this.playTameEffect(false);
 				this.worldObj.setEntityState(this, (byte)6);
 			}
-
-			if (!par1EntityPlayer.capabilities.isCreativeMode) {
-				--var2.stackSize;
-				if (var2.stackSize <= 0) {
+			if (!par1EntityPlayer.capabilities.isCreativeMode)
+			{
+				var2.stackSize--;
+				if (var2.stackSize <= 0)
+				{
 					par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
 				}
 			}
-
 			return true;
-		} else if (this.isTamed() && var2 != null && var2.getItem() == Items.name_tag && par1EntityPlayer.getDistanceSqToEntity(this) < 16.0D && this.func_152114_e(par1EntityPlayer)) {
+		}
+		
+		if (this.isTamed() && var2 != null && var2.getItem() == Items.name_tag && par1EntityPlayer.getDistanceSqToEntity(this) < 16.0D && this.func_152114_e(par1EntityPlayer)) {
+			
 			this.setCustomNameTag(var2.getDisplayName());
-			if (!par1EntityPlayer.capabilities.isCreativeMode) {
-				--var2.stackSize;
-				if (var2.stackSize <= 0) {
+			if (!par1EntityPlayer.capabilities.isCreativeMode)
+			{
+				var2.stackSize--;
+				if (var2.stackSize <= 0)
+				{
 					par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack)null);
 				}
 			}
-
 			return true;
 		} else if (this.isTamed() && this.func_152114_e(par1EntityPlayer) && par1EntityPlayer.getDistanceSqToEntity(this) < 25.0D) {
+			
 			if (!this.isSitting()) {
 				this.setSitting(true);
 			} else {
 				this.setSitting(false);
 			}
-
 			return true;
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 
 	protected boolean canDespawn() {
 		if (this.isChild()) {
 			this.func_110163_bv();
 			return false;
-		} else if (this.isNoDespawnRequired()) {
-			return false;
-		} else {
-			return !this.isTamed();
 		}
+		if (this.isNoDespawnRequired()) return false;
+		if (this.isTamed()) return false;
+		return true;
 	}
 
-	public void onUpdate() {
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)this.moveSpeed);
 		super.onUpdate();
 	}
 
-	public int mygetMaxHealth() {
+	public int mygetMaxHealth()
+	{
 		return OreSpawnMain.WaterDragon_stats.health;
 	}
 
-	public RenderInfo getRenderInfo() {
+
+
+
+	public RenderInfo getRenderInfo()
+	{
 		return this.renderdata;
 	}
 
-	public void setRenderInfo(RenderInfo r) {
+	public void setRenderInfo(RenderInfo r)
+	{
 		this.renderdata.rf1 = r.rf1;
 		this.renderdata.rf2 = r.rf2;
 		this.renderdata.rf3 = r.rf3;
@@ -203,89 +280,151 @@ public class WaterDragon extends EntityTameable {
 		this.renderdata.ri4 = r.ri4;
 	}
 
-	public int getTotalArmorValue() {
+	/**
+	 * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+	 */
+	public int getTotalArmorValue()
+	{
 		return OreSpawnMain.WaterDragon_stats.defense;
 	}
 
-	protected boolean isAIEnabled() {
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	protected boolean isAIEnabled()
+	{
 		return true;
 	}
 
-	public void onLivingUpdate() {
+	/**
+	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+	 * use this to react to sunlight and start to burn.
+	 */
+	public void onLivingUpdate()
+	{
 		super.onLivingUpdate();
+		
+		
+		
 		if (this.isInWater()) {
 			this.moveSpeed = 0.55F;
 		} else {
 			this.moveSpeed = 0.25F;
 		}
-
 	}
 
-	public int getWaterDragonHealth() {
+
+
+	public int getWaterDragonHealth()
+	{
 		return (int)this.getHealth();
 	}
 
-	public int getAttackStrength(Entity par1Entity) {
+	/**
+	 * Returns the amount of damage a mob should deal.
+	 */
+	public int getAttackStrength(Entity par1Entity)
+	{
 		int var2 = 4;
-		if (this.worldObj.difficultySetting == EnumDifficulty.EASY) {
+		if (this.worldObj.difficultySetting == EnumDifficulty.EASY)
+		{
 			var2 = 6;
-			if (this.worldObj.difficultySetting == EnumDifficulty.NORMAL) {
+			if (this.worldObj.difficultySetting == EnumDifficulty.NORMAL)
+			{
 				var2 = 8;
-			} else if (this.worldObj.difficultySetting == EnumDifficulty.HARD) {
+			}
+			else if (this.worldObj.difficultySetting == EnumDifficulty.HARD)
+			{
 				var2 = 10;
 			}
 		}
-
 		return var2;
 	}
 
-	protected String getLivingSound() {
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
 		return null;
 	}
 
-	protected String getHurtSound() {
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
 		return "orespawn:waterdragon_hurt";
 	}
 
-	protected String getDeathSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return "orespawn:waterdragon_death";
 	}
 
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
 	protected float getSoundVolume() {
 		return 1.0F;
 	}
 
+	/**
+	 * Gets the pitch of living sounds in living entities.
+	 */
 	protected float getSoundPitch() {
 		return 1.0F;
 	}
 
-	protected Item getDropItem() {
+
+
+
+
+
+	protected Item getDropItem()
+	{
 		return Items.fish;
 	}
 
-	private ItemStack dropItemRand(Item index, int par1) {
+	private ItemStack dropItemRand(Item index, int par1)
+	{
 		EntityItem var3 = null;
 		ItemStack is = new ItemStack(index, par1, 0);
+		
 		var3 = new EntityItem(this.worldObj, this.posX + (double)OreSpawnMain.OreSpawnRand.nextInt(2) - (double)OreSpawnMain.OreSpawnRand.nextInt(2), this.posY + 1.0D, this.posZ + (double)OreSpawnMain.OreSpawnRand.nextInt(2) - (double)OreSpawnMain.OreSpawnRand.nextInt(2), is);
-		if (var3 != null) {
-			this.worldObj.spawnEntityInWorld(var3);
-		}
-
+		
+		if (var3 != null) this.worldObj.spawnEntityInWorld(var3);
 		return is;
 	}
 
-	protected void dropFewItems(boolean par1, int par2) {
+
+
+
+	protected void dropFewItems(boolean par1, int par2)
+	{
+		int var4, var5, i;
 		ItemStack is = null;
+		
 		this.dropItemRand(OreSpawnMain.MyWaterDragonScale, 1);
 		this.dropItemRand(Items.item_frame, 1);
-		int var5 = 9 + this.worldObj.rand.nextInt(6);
-
-		for (int var4 = 0; var4 < var5; ++var4) {
+		
+		var5 = 9 + this.worldObj.rand.nextInt(6);
+		for (var4 = 0; var4 < var5; var4++) {
 			this.dropItemRand(Items.fish, 1);
 		}
 
-		int var7 = this.worldObj.rand.nextInt(20);
-		switch (var7) {
+		
+		
+		
+		
+		
+		
+		
+		var4 = this.worldObj.rand.nextInt(20);
+		switch (var4) {
 			case 0:
 				is = this.dropItemRand(OreSpawnMain.MyUltimateAxe, 1);
 				break;
@@ -297,398 +436,302 @@ public class WaterDragon extends EntityTameable {
 				break;
 			case 3:
 				is = this.dropItemRand(Items.iron_sword, 1);
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.sharpness, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.baneOfArthropods, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.knockback, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.looting, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(2) == 1) {
-					is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.fireAspect, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.sharpness, 1 + this.worldObj.rand.nextInt(5));
-				}
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.sharpness, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.baneOfArthropods, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.knockback, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.looting, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(2) == 1) is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.fireAspect, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.sharpness, 1 + this.worldObj.rand.nextInt(5));
 				break;
 			case 4:
 				is = this.dropItemRand(Items.iron_shovel, 1);
-				if (this.worldObj.rand.nextInt(2) == 1) {
-					is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.efficiency, 1 + this.worldObj.rand.nextInt(5));
-				}
+				if (this.worldObj.rand.nextInt(2) == 1) is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.efficiency, 1 + this.worldObj.rand.nextInt(5));
 				break;
 			case 5:
 				is = this.dropItemRand(Items.iron_pickaxe, 1);
-				if (this.worldObj.rand.nextInt(2) == 1) {
-					is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.efficiency, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.fortune, 1 + this.worldObj.rand.nextInt(5));
-				}
+				if (this.worldObj.rand.nextInt(2) == 1) is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.efficiency, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.fortune, 1 + this.worldObj.rand.nextInt(5));
 				break;
 			case 6:
 				is = this.dropItemRand(Items.iron_axe, 1);
-				if (this.worldObj.rand.nextInt(2) == 1) {
-					is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.efficiency, 1 + this.worldObj.rand.nextInt(5));
-				}
+				if (this.worldObj.rand.nextInt(2) == 1) is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.efficiency, 1 + this.worldObj.rand.nextInt(5));
 				break;
 			case 7:
 				is = this.dropItemRand(Items.iron_hoe, 1);
-				if (this.worldObj.rand.nextInt(2) == 1) {
-					is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.efficiency, 1 + this.worldObj.rand.nextInt(5));
-				}
+				if (this.worldObj.rand.nextInt(2) == 1) is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.efficiency, 1 + this.worldObj.rand.nextInt(5));
 				break;
 			case 8:
 				is = this.dropItemRand(Items.iron_helmet, 1);
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.protection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.blastProtection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.fireProtection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.projectileProtection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(2) == 1) {
-					is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.respiration, 1 + this.worldObj.rand.nextInt(2));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.aquaAffinity, 1 + this.worldObj.rand.nextInt(5));
-				}
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.protection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.blastProtection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.fireProtection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.projectileProtection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(2) == 1) is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.respiration, 1 + this.worldObj.rand.nextInt(2));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.aquaAffinity, 1 + this.worldObj.rand.nextInt(5));
 				break;
 			case 9:
 				is = this.dropItemRand(Items.iron_chestplate, 1);
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.protection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.blastProtection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.fireProtection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.projectileProtection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(2) == 1) {
-					is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
-				}
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.protection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.blastProtection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.fireProtection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.projectileProtection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(2) == 1) is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
 				break;
 			case 10:
 				is = this.dropItemRand(Items.iron_leggings, 1);
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.protection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.blastProtection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.fireProtection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.projectileProtection, 1 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(2) == 1) {
-					is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
-				}
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.protection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.blastProtection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.fireProtection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.projectileProtection, 1 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(2) == 1) is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
 				break;
 			case 11:
 				is = this.dropItemRand(Items.iron_boots, 1);
-				if (this.worldObj.rand.nextInt(6) == 1) {
-					is.addEnchantment(Enchantment.featherFalling, 5 + this.worldObj.rand.nextInt(5));
-				}
-
-				if (this.worldObj.rand.nextInt(2) == 1) {
-					is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
-				}
+				if (this.worldObj.rand.nextInt(6) == 1) is.addEnchantment(Enchantment.featherFalling, 5 + this.worldObj.rand.nextInt(5));
+				if (this.worldObj.rand.nextInt(2) == 1) is.addEnchantment(Enchantment.unbreaking, 2 + this.worldObj.rand.nextInt(4));
 				break;
 			case 12:
 				is = this.dropItemRand(OreSpawnMain.MyUltimateShovel, 1);
 				break;
 			case 13:
 				this.dropItemRand(Item.getItemFromBlock(Blocks.iron_block), 1);
+				break;
 			case 14:
+				break;
+			default:
+				
+				
+				break;
 		}
-
 	}
 
-	public boolean attackEntityAsMob(Entity par1Entity) {
+
+
+
+	public boolean attackEntityAsMob(Entity par1Entity)
+	{
 		boolean var4 = par1Entity.attackEntityFrom(DamageSource.causeMobDamage(this), (float)OreSpawnMain.WaterDragon_stats.attack);
-		if (!var4) {
-			return false;
-		} else {
-			if (par1Entity != null && par1Entity instanceof EntityLivingBase) {
+		if (var4) {
+			if (par1Entity != null && par1Entity instanceof EntityLivingBase)
+			{
+				
 				double ks = 1.1;
 				double inair = 0.14;
 				float f3 = (float)Math.atan2(par1Entity.posZ - this.posZ, par1Entity.posX - this.posX);
-				if (par1Entity.isDead || par1Entity instanceof EntityPlayer) {
-					inair *= 2.0D;
-				}
-
+				if (par1Entity.isDead || par1Entity instanceof EntityPlayer) inair *= 2.0D;
 				par1Entity.addVelocity(Math.cos((double)f3) * ks, inair, Math.sin((double)f3) * ks);
 			}
-
 			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
-	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+
+	/**
+	 * Called when the entity is attacked.
+	 */
+	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+	{
 		boolean ret = false;
+		
+		
 		if (par1DamageSource.getDamageType().equals("cactus")) {
 			return false;
-		} else {
-			Entity e = par1DamageSource.getEntity();
-			if (e != null && e instanceof WaterDragon) {
-				return false;
-			} else if (e != null && e instanceof AttackSquid) {
-				return false;
-			} else if (e != null && e instanceof WaterBall) {
-				return false;
-			} else {
-				if (this.hurt_timer <= 0) {
-					ret = super.attackEntityFrom(par1DamageSource, par2);
-					this.hurt_timer = 10;
-				}
-
-				if (e != null && e instanceof EntityLiving) {
-					if (e instanceof AttackSquid) {
-						return false;
-					}
-
-					if (e instanceof WaterDragon) {
-						return false;
-					}
-
-					this.setAttackTarget((EntityLiving)e);
-					this.setTarget(e);
-					this.getNavigator().tryMoveToEntityLiving((EntityLiving)e, 1.2);
-				}
-
-				return ret;
-			}
 		}
+		
+		
+		Entity e = par1DamageSource.getEntity();
+		if (e != null && e instanceof WaterDragon) return false;
+		if (e != null && e instanceof AttackSquid) return false;
+		if (e != null && e instanceof WaterBall) return false;
+		
+		
+		if (this.hurt_timer <= 0) {
+			ret = super.attackEntityFrom(par1DamageSource, par2);
+			this.hurt_timer = 10;
+		}
+
+		if (e != null && e instanceof EntityLiving)
+		{
+			if (e instanceof AttackSquid) return false;
+			if (e instanceof WaterDragon) return false;
+			this.setAttackTarget((EntityLiving)e);
+			this.setTarget(e);
+			this.getNavigator().tryMoveToEntityLiving((EntityLiving)e, 1.2);
+		}
+
+		return ret;
 	}
 
-	private boolean scan_it(int x, int y, int z, int dx, int dy, int dz) {
+	private int closest = 99999;
+	private int tx = 0, ty = 0, tz = 0;
+
+
+	private boolean scan_it(int x, int y, int z, int dx, int dy, int dz){
 		int found = 0;
+		int i, j, d;
+		Block bid;
 
-		for (int i = -dy; i <= dy; i++) {
-			for (int j = -dz; j <= dz; j++) {
-				Block bid = this.worldObj.getBlock(x + dx, y + i, z + j);
-				if (bid == Blocks.water || bid == Blocks.flowing_water) {
-					int d = dx * dx + j * j + i * i;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + dx;
-						this.ty = y + i;
-						this.tz = z + j;
-						++found;
+		//Fixed x, scan two sides of 3d rectangle
+		for(i=-dy;i<=dy;i++){
+			for(j=-dz;j<=dz;j++){
+				bid = worldObj.getBlock(x+dx, y+i, z+j);
+				if(bid == Blocks.water || bid == Blocks.flowing_water){
+					d = (dx*dx) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+dx; ty = y+i; tz = z+j;
+						found++;
 					}
 				}
-
-				bid = this.worldObj.getBlock(x - dx, y + i, z + j);
-				if (bid == Blocks.water || bid == Blocks.flowing_water) {
-					int d = dx * dx + j * j + i * i;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x - dx;
-						this.ty = y + i;
-						this.tz = z + j;
-						++found;
+				bid = worldObj.getBlock(x-dx, y+i, z+j);
+				if(bid == Blocks.water || bid == Blocks.flowing_water){
+					d = (dx*dx) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x-dx; ty = y+i; tz = z+j;
+						found++;
 					}
-				}
+				} 			
 			}
 		}
-
-		for (int var12 = -dx; var12 <= dx; ++var12) {
-			for (int j = -dz; j <= dz; j++) {
-				Block bid = this.worldObj.getBlock(x + var12, y + dy, z + j);
-				if (bid == Blocks.water || bid == Blocks.flowing_water) {
-					int d = dy * dy + j * j + var12 * var12;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var12;
-						this.ty = y + dy;
-						this.tz = z + j;
-						++found;
+		//Fixed y, scan two sides of 3d rectangle
+		for(i=-dx;i<=dx;i++){
+			for(j=-dz;j<=dz;j++){
+				bid = worldObj.getBlock(x+i, y+dy, z+j);
+				if(bid == Blocks.water || bid == Blocks.flowing_water){
+					d = (dy*dy) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+i; ty = y+dy; tz = z+j;
+						found++;
 					}
 				}
-
-				bid = this.worldObj.getBlock(x + var12, y - dy, z + j);
-				if (bid == Blocks.water || bid == Blocks.flowing_water) {
-					int d = dy * dy + j * j + var12 * var12;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var12;
-						this.ty = y - dy;
-						this.tz = z + j;
-						++found;
+				bid = worldObj.getBlock(x+i, y-dy, z+j);
+				if(bid == Blocks.water || bid == Blocks.flowing_water){
+					d = (dy*dy) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+i; ty = y-dy; tz = z+j;
+						found++;
 					}
-				}
+				} 			
 			}
-		}
-
-		for (int var13 = -dx; var13 <= dx; ++var13) {
-			for (int j = -dy; j <= dy; j++) {
-				Block bid = this.worldObj.getBlock(x + var13, y + j, z + dz);
-				if (bid == Blocks.water || bid == Blocks.flowing_water) {
-					int d = dz * dz + j * j + var13 * var13;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var13;
-						this.ty = y + j;
-						this.tz = z + dz;
-						++found;
+		}    	
+		//Fixed z, scan two sides of 3d rectangle
+		for(i=-dx;i<=dx;i++){
+			for(j=-dy;j<=dy;j++){
+				bid = worldObj.getBlock(x+i, y+j, z+dz);
+				if(bid == Blocks.water || bid == Blocks.flowing_water){
+					d = (dz*dz) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+i; ty = y+j; tz = z+dz;
+						found++;
 					}
 				}
-
-				bid = this.worldObj.getBlock(x + var13, y + j, z - dz);
-				if (bid == Blocks.water || bid == Blocks.flowing_water) {
-					int d = dz * dz + j * j + var13 * var13;
-					if (d < this.closest) {
-						this.closest = d;
-						this.tx = x + var13;
-						this.ty = y + j;
-						this.tz = z - dz;
-						++found;
+				bid = worldObj.getBlock((int)x+i, (int)y+j, (int)z-dz);
+				if(bid == Blocks.water || bid == Blocks.flowing_water){
+					d = (dz*dz) + (j*j) + (i*i);
+					if(d < closest){
+						closest = d;
+						tx = x+i; ty = y+j; tz = z-dz;
+						found++;
 					}
-				}
+				} 			
 			}
-		}
+		}    	
 
-		if (found != 0) {
-			return true;
-		} else {
-			return false;
-		}
+		if(found != 0)return true;
+		return false;
 	}
 
-	protected void updateAITasks() {
-		if (!this.isDead) {
-			super.updateAITasks();
-			if (this.hurt_timer > 0) {
-				--this.hurt_timer;
+	protected void updateAITasks()
+	{
+		int i, j;
+		
+		if (this.isDead) return;
+		super.updateAITasks();
+		if (this.hurt_timer > 0) this.hurt_timer--;
+		
+		if (!this.isInWater() && this.worldObj.rand.nextInt(25) == 0 && !this.isSitting()) {
+			
+			
+			this.closest = 99999;
+			this.tx = this.ty = this.tz = 0;
+			for (i = 1; i < 12; i++) {
+				j = i;
+				if (j > 10) j = 10;
+				if (this.scan_it((int)this.posX, (int)this.posY - 1, (int)this.posZ, i, j, i) == true) break;
+				if (i >= 5) i++;
 			}
 
-			if (!this.isInWater() && this.worldObj.rand.nextInt(25) == 0 && !this.isSitting()) {
-				this.closest = 99999;
-				this.tx = this.ty = this.tz = 0;
-
-				for (int i = 1; i < 12; i++) {
-					int j = i;
-					if (i > 10) {
-						j = 10;
-					}
-
-					if (this.scan_it((int)this.posX, (int)this.posY - 1, (int)this.posZ, i, j, i)) {
-						break;
-					}
-
-					if (i >= 5) {
-						++i;
-					}
-				}
-
-				if (this.closest < 99999) {
-					this.getNavigator().tryMoveToXYZ((double)this.tx, (double)(this.ty - 1), (double)this.tz, 1.33);
-				} else {
-					if (this.worldObj.rand.nextInt(50) == 1) {
-						this.heal(-1.0F);
-					}
-
-					if (this.getHealth() <= 0.0F) {
-						this.setDead();
-						return;
-					}
+			if (this.closest < 99999) {
+				this.getNavigator().tryMoveToXYZ((double)this.tx, (double)(this.ty - 1), (double)this.tz, 1.33);
+			} else {
+				if (this.worldObj.rand.nextInt(50) == 1)
+					this.heal(-1.0F);
+				if (this.getHealth() <= 0.0F) {
+					this.setDead();
+					return;
 				}
 			}
-
-			if (this.worldObj.rand.nextInt(200) == 0) {
-				this.setAttackTarget((EntityLivingBase)null);
-			}
-
-			if (this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && this.worldObj.rand.nextInt(5) == 1) {
-				EntityLivingBase e = this.findSomethingToAttack();
-				if (e != null) {
-					this.faceEntity(e, 10.0F, 10.0F);
-					if (this.getDistanceSqToEntity(e) < (double)((4.0F + e.width / 2.0F) * (4.0F + e.width / 2.0F))) {
-						this.setAttacking(1);
-						if (this.worldObj.rand.nextInt(4) == 0 || this.worldObj.rand.nextInt(5) == 1) {
-							this.attackEntityAsMob(e);
-						}
-					} else {
-						this.getNavigator().tryMoveToEntityLiving(e, 1.0D);
-						this.watercanon(e);
+		}
+		
+		if (this.worldObj.rand.nextInt(200) == 0) this.setAttackTarget(null);
+		
+		
+		if (this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL && this.worldObj.rand.nextInt(5) == 1) {
+			EntityLivingBase e = this.findSomethingToAttack();
+			if (e != null) {
+				this.faceEntity(e, 10.0F, 10.0F);
+				if (this.getDistanceSqToEntity(e) < (double)((4.0F + e.width / 2.0F) * (4.0F + e.width / 2.0F))) {
+					this.setAttacking(1);
+					
+					if (this.worldObj.rand.nextInt(4) == 0 || this.worldObj.rand.nextInt(5) == 1)
+					{
+						this.attackEntityAsMob(e);
 					}
 				} else {
-					this.setAttacking(0);
+					this.getNavigator().tryMoveToEntityLiving(e, 1.0D);
+					this.watercanon(e);
 				}
+			} else {
+				this.setAttacking(0);
 			}
-
-			if (this.worldObj.rand.nextInt(100) == 1 && this.isInWater() && this.getHealth() < (float)this.mygetMaxHealth()) {
+		}
+		
+		
+		if (this.worldObj.rand.nextInt(100) == 1 && this.isInWater()) {
+			if (this.getHealth() < (float)this.mygetMaxHealth()) {
 				this.playSound("splash", 1.5F, this.worldObj.rand.nextFloat() * 0.2F + 0.9F);
+				
 				this.heal(1.0F);
 			}
-
 		}
 	}
 
-	private void watercanon(EntityLivingBase e) {
+
+
+
+	private void watercanon(EntityLivingBase e)
+	{
 		double yoff = 1.75D;
 		double xzoff = 1.5D;
+		
+		
 		if (this.stream_count > 0) {
 			this.setAttacking(2);
+			
 			if (this.rand.nextInt(15) == 1) {
 				EntitySmallFireball var2 = new EntitySmallFireball(this.worldObj, this, e.posX - this.posX, e.posY + 0.75D - (this.posY + yoff), e.posZ - this.posZ);
 				var2.setLocationAndAngles(this.posX - xzoff * Math.sin(Math.toRadians((double)this.rotationYawHead)), this.posY + yoff, this.posZ + xzoff * Math.cos(Math.toRadians((double)this.rotationYawHead)), this.rotationYaw, this.rotationPitch);
@@ -705,91 +748,140 @@ public class WaterDragon extends EntityTameable {
 			var2.setThrowableHeading(var3, var5 + (double)var9, var7, 1.4F, 5.0F);
 			this.worldObj.playSoundAtEntity(this, "random.bow", 0.75F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 			this.worldObj.spawnEntityInWorld(var2);
-			--this.stream_count;
+			this.stream_count--;
 		} else {
 			this.setAttacking(0);
 		}
 
-		if (this.stream_count <= 0 && this.rand.nextInt(4) == 1) {
-			this.stream_count = 8;
-		}
-
+		if (this.stream_count <= 0 && this.rand.nextInt(4) == 1) this.stream_count = 8;
+		
 	}
 
-	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2) {
-		if (this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL) {
+
+
+
+
+
+
+
+	private boolean isSuitableTarget(EntityLivingBase par1EntityLiving, boolean par2)
+	{
+		if (this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL) return false;
+		
+		if (par1EntityLiving == null)
+		{
 			return false;
-		} else if (par1EntityLiving == null) {
+		}
+		if (par1EntityLiving == this)
+		{
 			return false;
-		} else if (par1EntityLiving == this) {
+		}
+		if (!par1EntityLiving.isEntityAlive())
+		{
 			return false;
-		} else if (!par1EntityLiving.isEntityAlive()) {
+		}
+		if (!this.getEntitySenses().canSee(par1EntityLiving))
+		{
+			
 			return false;
-		} else if (!this.getEntitySenses().canSee(par1EntityLiving)) {
+		}
+		if (par1EntityLiving instanceof WaterDragon)
+		{
 			return false;
-		} else if (par1EntityLiving instanceof WaterDragon) {
-			return false;
-		} else if (par1EntityLiving instanceof EntityMob) {
+		}
+		if (par1EntityLiving instanceof EntityMob)
+		{
 			return true;
-		} else if (this.isTamed()) {
-			return false;
-		} else if (par1EntityLiving instanceof EntityPlayer) {
-			EntityPlayer p = (EntityPlayer)par1EntityLiving;
-			return !p.capabilities.isCreativeMode;
-		} else {
-			return OreSpawnMain.OreSpawnUtils.isAttackableNonMob(par1EntityLiving);
 		}
+		
+		if (this.isTamed()) return false;
+
+		if (par1EntityLiving instanceof EntityPlayer)
+		{
+			EntityPlayer p = (EntityPlayer)par1EntityLiving;
+			if (p.capabilities.isCreativeMode == true) {
+				return false;
+			}
+			return true;
+		}
+		
+		if (OreSpawnMain.OreSpawnUtils.isAttackableNonMob(par1EntityLiving)) {
+			return true;
+		}
+		
+		return false;
 	}
 
-	private EntityLivingBase findSomethingToAttack() {
-		if (OreSpawnMain.PlayNicely != 0) {
-			return null;
-		} else if (this.isChild()) {
-			return null;
-		} else {
-			List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(14.0D, 4.0D, 14.0D));
-			Collections.sort(var5, this.TargetSorter);
-			Iterator var2 = var5.iterator();
-			Entity var3 = null;
-			EntityLivingBase var4 = null;
-			EntityLivingBase e = this.getAttackTarget();
-			if (e != null && e.isEntityAlive()) {
-				return e;
-			} else {
-				this.setAttackTarget((EntityLivingBase)null);
+	private EntityLivingBase findSomethingToAttack()
+	{
+		if (OreSpawnMain.PlayNicely != 0) return null;
+		if (this.isChild()) return null;
+		List var5 = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(14.0D, 4.0D, 14.0D));
+		Collections.sort(var5, this.TargetSorter);
+		Iterator var2 = var5.iterator();
+		EntityLivingBase e;
+		Entity var3 = null;
+		EntityLivingBase var4 = null;
+		
+		e = this.getAttackTarget();
+		if (e != null && e.isEntityAlive()) {
+			return e;
+		}
+		this.setAttackTarget(null);
 
-				while (var2.hasNext()) {
-					var3 = (Entity)var2.next();
-					var4 = (EntityLivingBase)var3;
-					if (this.isSuitableTarget(var4, false)) {
-						return var4;
-					}
-				}
-
-				return null;
+		
+		while (var2.hasNext())
+		{
+			var3 = (Entity)var2.next();
+			var4 = (EntityLivingBase)var3;
+			
+			if (this.isSuitableTarget(var4, false))
+			{
+				return var4;
 			}
 		}
+		return null;
 	}
 
-	public int getAttacking() {
+
+
+
+
+
+
+	public int getAttacking()
+	{
 		return this.dataWatcher.getWatchableObjectByte(20);
 	}
 
-	public void setAttacking(int par1) {
+	public void setAttacking(int par1)
+	{
 		this.dataWatcher.updateObject(20, (byte)par1);
 	}
 
-	public boolean getCanSpawnHere() {
-		for (int k = -3; k < 3; k++) {
-			for (int j = -3; j < 3; j++) {
-				for (int i = 0; i < 5; i++) {
-					Block bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
+
+
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
+		Block bid;
+		int i, j, k;
+		
+		for (k = -3; k < 3; k++)
+		{
+			for (j = -3; j < 3; j++)
+			{
+				for (i = 0; i < 5; i++)
+				{
+					bid = this.worldObj.getBlock((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 					if (bid == Blocks.mob_spawner) {
 						TileEntityMobSpawner tileentitymobspawner = null;
 						tileentitymobspawner = (TileEntityMobSpawner)this.worldObj.getTileEntity((int)this.posX + j, (int)this.posY + i, (int)this.posZ + k);
 						String s = tileentitymobspawner.func_145881_a().getEntityNameToSpawn();
-						if (s != null && s.equals("Water Dragon")) {
-							return true;
+						if (s != null) {
+							if (s.equals("Water Dragon")) return true;
 						}
 					}
 				}
@@ -797,43 +889,53 @@ public class WaterDragon extends EntityTameable {
 		}
 
 		WaterDragon target = null;
-		if (this.posY < 50.0D) {
+		if (this.posY < 50.0D) return false;
+		
+		if (!this.worldObj.isDaytime()) return false;
+		
+		target = (WaterDragon)this.worldObj.findNearestEntityWithinAABB(WaterDragon.class, this.boundingBox.expand(16.0D, 5.0D, 16.0D), this);
+		if (target != null)
+		{
 			return false;
-		} else if (!this.worldObj.isDaytime()) {
-			return false;
-		} else {
-			target = (WaterDragon)this.worldObj.findNearestEntityWithinAABB(WaterDragon.class, this.boundingBox.expand(16.0D, 5.0D, 16.0D), this);
-			if (target != null) {
-				return false;
-			} else {
-				return true;
-			}
 		}
+		return true;
 	}
 
 	public EntityAgeable createChild(EntityAgeable entityageable) {
 		return this.spawnBabyAnimal(entityageable);
 	}
 
-	public WaterDragon spawnBabyAnimal(EntityAgeable par1EntityAgeable) {
+
+	public WaterDragon spawnBabyAnimal(EntityAgeable par1EntityAgeable)
+	{
 		WaterDragon w = new WaterDragon(this.worldObj);
 		if (this.isTamed()) {
 			this.func_152115_b(this.func_152113_b());
 			w.setTamed(true);
 		}
-
 		return w;
 	}
 
-	public boolean isWheat(ItemStack par1ItemStack) {
+
+
+
+	public boolean isWheat(ItemStack par1ItemStack)
+	{
 		return par1ItemStack != null && par1ItemStack.getItem() == Items.fish;
 	}
 
-	public boolean isBreedingItem(ItemStack par1ItemStack) {
+	/**
+	 * Checks if the parameter is an item which this animal can be fed to breed it (wheat, carrots or seeds depending on
+	 * the animal type)
+	 */
+	public boolean isBreedingItem(ItemStack par1ItemStack)
+	{
 		return par1ItemStack.getItem() == OreSpawnMain.MyCrystalApple;
 	}
 
-	public boolean canBreatheUnderwater() {
+
+	public boolean canBreatheUnderwater()
+	{
 		return true;
 	}
 }
