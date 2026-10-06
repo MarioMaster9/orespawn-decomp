@@ -24,8 +24,8 @@ import net.minecraft.world.World;
 
 
 
-
-public class EntityAnt extends EntityAnimal {
+public class EntityAnt extends EntityAnimal
+{
 	public double moveSpeed = (double)0.15F;
 	private static final ResourceLocation texture1 = new ResourceLocation("orespawn", "ant.png");
 	private static final ResourceLocation texture2 = new ResourceLocation("orespawn", "red_ant.png");
@@ -33,8 +33,8 @@ public class EntityAnt extends EntityAnimal {
 	private static final ResourceLocation texture4 = new ResourceLocation("orespawn", "unstableant.png");
 	private static final ResourceLocation texture5 = new ResourceLocation("orespawn", "termite.png");
 
-
-	public EntityAnt(World par1World) {
+	public EntityAnt(World par1World)
+	{
 		super(par1World);
 		this.setSize(0.1F, 0.1F);
 		this.experienceValue = 0;
@@ -43,8 +43,8 @@ public class EntityAnt extends EntityAnimal {
 		this.tasks.addTask(1, new MyEntityAIWanderALot(this, 9, 1.0D));
 	}
 
-
-	protected void applyEntityAttributes() {
+	protected void applyEntityAttributes()
+	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double)this.mygetMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(this.moveSpeed);
@@ -65,21 +65,21 @@ public class EntityAnt extends EntityAnimal {
 		return true;
 	}
 
-
-
-
-
-	public void onUpdate() {
+	/**
+	 * Called to update the entity's position/logic.
+	 */
+	public void onUpdate()
+	{
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(this.moveSpeed);
 		super.onUpdate();
 	}
 
 
-
-
-
-
-	public boolean interact(EntityPlayer par1EntityPlayer) {
+	/**
+	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+	 */
+	public boolean interact(EntityPlayer par1EntityPlayer)
+	{
 		if (par1EntityPlayer == null) return false;
 
 
@@ -113,70 +113,67 @@ public class EntityAnt extends EntityAnimal {
 	}
 
 
-
-
-
-
-	public boolean isAIEnabled() {
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	public boolean isAIEnabled()
+	{
 		return true;
 	}
 
 
-
-	public int mygetMaxHealth() {
+	public int mygetMaxHealth()
+	{
 		return 1;
 	}
 
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
+		return null;
+	}
 
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
+		return null;
+	}
 
-
-
-	protected String getLivingSound() {
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
 		return null;
 	}
 
 
-
-
-
-	protected String getHurtSound() {
-		return null;
-	}
-
-
-
-
-
-	protected String getDeathSound() {
-		return null;
-	}
-
-
-
-
-
-
-	protected float getSoundVolume() {
+	/**
+	 * Returns the volume for the sounds this mob makes.
+	 */
+	protected float getSoundVolume()
+	{
 		return 0.0F;
 	}
 
 
 
-
-
-	protected void playStepSound(int par1, int par2, int par3, int par4) {
-	}
-
-
-
+	/**
+	 * Plays step sound at given x, y, z for the entity
+	 */
+	protected void playStepSound(int par1, int par2, int par3, int par4) {}
 
 
 
-	protected void dropFewItems(boolean par1, int par2) {
-	}
-
-
-
+	/**
+	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity has recently been hit by a player. @param
+     * par2 - Level of Looting used to kill this mob.
+     */
+	protected void dropFewItems(boolean par1, int par2) {}
 
 
 
@@ -184,9 +181,12 @@ public class EntityAnt extends EntityAnimal {
 
 
 
-
-
-	protected boolean canTriggerWalking() {
+	/**
+	 * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+	 * prevent them from trampling crops
+	 */
+	protected boolean canTriggerWalking()
+	{
 		return true;
 	}
 
@@ -197,24 +197,24 @@ public class EntityAnt extends EntityAnimal {
 		return null;
 	}
 
-
-
-
-
-	public boolean getCanSpawnHere() {
+	/**
+	 * Checks if the entity's current position is a valid location to spawn this entity.
+	 */
+	public boolean getCanSpawnHere()
+	{
 		if (this.posY < 50.0D) return false;
 		if (this.findBuddies() > 4) return false;
 		return true;
 	}
 
-
-	private int findBuddies() {
+	private int findBuddies()
+	{
 		List var5 = this.worldObj.getEntitiesWithinAABB(EntityAnt.class, this.boundingBox.expand(20.0D, 10.0D, 20.0D));
 		return var5.size();
 	}
 
-
-	public void updateAITick() {
+	public void updateAITick()
+	{
 		if (this.worldObj.rand.nextInt(200) == 1) this.setRevengeTarget(null);
 		super.updateAITick();
 	}
