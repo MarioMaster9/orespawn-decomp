@@ -1275,7 +1275,7 @@ public class ThePrinceAdult extends EntityTameable
 							deltav = 0.035;
 							if (max_speed > 1.0D) deltav += 0.07;
 							if (this.deltasmooth < 0.0F) this.deltasmooth = 0.0F;
-							this.deltasmooth += deltav / 10.0D;//this.deltasmooth = (float)((double)this.deltasmooth + deltav / 10.0D);
+							this.deltasmooth += deltav / 10.0D;
 							if ((double)this.deltasmooth > deltav) this.deltasmooth = (float)deltav;
 							
 						} else {
@@ -1283,7 +1283,7 @@ public class ThePrinceAdult extends EntityTameable
 							
 							deltav = -0.02;
 							if (this.deltasmooth > 0.0F) this.deltasmooth = 0.0F;
-							this.deltasmooth += deltav / 10.0D;//this.deltasmooth = (float)((double)this.deltasmooth + deltav / 10.0D);
+							this.deltasmooth += deltav / 10.0D;
 							if ((double)this.deltasmooth < deltav) this.deltasmooth = (float)deltav;
 						}
 

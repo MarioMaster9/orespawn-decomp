@@ -246,7 +246,7 @@ public class ModelCaterKiller extends ModelBase
 		float headoff = 0.0F;
 		float zpi = 0.0F;
 		float zdist = 0.0F;
-		int i; // unknown where this is actually placed, putting it here matches
+		int i;
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		

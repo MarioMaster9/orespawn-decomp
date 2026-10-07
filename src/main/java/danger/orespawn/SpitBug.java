@@ -383,7 +383,7 @@ public class SpitBug extends EntityMob
 							if (this.worldObj.rand.nextInt(3) == 1) {
 								
 							} else {
-								this.worldObj.playSoundAtEntity(e, "orespawn:clatter", 1.0F, 1.0F); // line 386
+								this.worldObj.playSoundAtEntity(e, "orespawn:clatter", 1.0F, 1.0F);
 							}
 						}
 					}

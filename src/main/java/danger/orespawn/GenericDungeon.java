@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 
 
 
-//TODO: see what happens if Block casts are removed
+
 
 public class GenericDungeon
 {
@@ -3194,7 +3194,7 @@ public class GenericDungeon
 			for (k = -1; k < 6; k++) {
 				blk = Blocks.sand;
 				if (i == -1 || k == -1 || i == 5 || k == 5) blk = Blocks.glass;
-				this.FastSetBlock(world, cposx + i, cposy + j, cposz + k, (Block)blk);
+				this.FastSetBlock(world, cposx + i, cposy + j, cposz + k, blk);
 			}
 		}
 		j = 3;
@@ -4022,7 +4022,7 @@ public class GenericDungeon
 							if ((i + k & 1) != 0) bid = OreSpawnMain.MyEyeOfEnderBlock;
 						}
 					}
-					OreSpawnMain.setBlockFast(world, cposx + i, cposy + j, cposz + k, (Block)bid, 0, 2);
+					OreSpawnMain.setBlockFast(world, cposx + i, cposy + j, cposz + k, bid, 0, 2);
 				}
 			}
 		}
@@ -5689,7 +5689,7 @@ public class GenericDungeon
 						if (which == 4) bid = Blocks.cobblestone;
 						if (which == 5) bid = Blocks.mossy_cobblestone;
 					}
-					OreSpawnMain.setBlockFast(world, cposx + i, cposy - j, cposz + k, (Block)bid, 0, 2);
+					OreSpawnMain.setBlockFast(world, cposx + i, cposy - j, cposz + k, bid, 0, 2);
 				}
 			}
 		}
@@ -6400,7 +6400,7 @@ public class GenericDungeon
 			for (k = 0; k < 11; k++) {
 				bid = Blocks.water;
 				if (i == 0 || k == 0 || i == 11 || k == 10) bid = Blocks.sand;
-				this.FastSetBlock(world, cposx + i - 5, cposy, cposz + k - 5, /*(Block)*/bid);
+				this.FastSetBlock(world, cposx + i - 5, cposy, cposz + k - 5, bid);
 				bid = Blocks.air;
 				this.FastSetBlock(world, cposx + i - 5, cposy + 1, cposz + k - 5, bid);
 				this.FastSetBlock(world, cposx + i - 5, cposy + 2, cposz + k - 5, bid);

@@ -527,8 +527,8 @@ public class ModelGodzilla extends ModelBase
 		float newangle = 0.0F;
 		float newangle2 = 0.0F;
 		float pscale = 1.0F;
-		float newrf1; // unknown placement
-		float t1, t2; // ditto
+		float newrf1;
+		float t1, t2;
 		float pi4 = ((float)Math.PI / 4F);
 		float clawZ = 6.0F;
 		float clawY = 16.0F;

@@ -478,15 +478,15 @@ public class CaterKiller extends EntityMob {
 		return false;
 	}
 
-	
-	
-	
 	protected void updateAITasks()
 	{
+		int i, j, k;
+		double dx, dz;
+		
 		if (this.isDead) return;
 		super.updateAITasks();
 		this.dataWatcher.updateObject(21, OreSpawnMain.PlayNicely);
-		int i; int j; int k; double dx; double dz; // scuffed match
+		
 		if (this.getHealth() + 1.0F < this.getMaxHealth()) {
 			++this.ticker;
 			if (this.ticker > 2400) {

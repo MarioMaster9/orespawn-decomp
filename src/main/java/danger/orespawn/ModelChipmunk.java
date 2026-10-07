@@ -204,7 +204,7 @@ public class ModelChipmunk extends ModelBase
 		this.BodyTail.render(f5);
 		this.Tail1.render(f5);
 		if (c instanceof EntityCannonFodder) {
-			if (c.get_is_activated() != 0) { // should this be in the above if statement?
+			if (c.get_is_activated() != 0) {
 				this.Hat1.render(f5);
 				if (c.get_is_activated() > 1) {
 					this.Hat2.render(f5);

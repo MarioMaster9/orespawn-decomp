@@ -216,8 +216,8 @@ public class ModelAntRobot extends ModelBase
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		float newangle;
-		int i; // placement unknown
-		Entity ee; // placement unknown
+		int i;
+		Entity ee;
 		
 		r = e.getRenderSpiderRobotInfo();
 

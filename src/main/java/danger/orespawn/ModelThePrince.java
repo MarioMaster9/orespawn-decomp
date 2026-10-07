@@ -378,7 +378,7 @@ public class ModelThePrince extends ModelBase
 		this.Rjaw.rotationPointX = this.Rsnout.rotationPointX - (float)Math.sin((double)this.Rsnout.rotateAngleY);
 		this.Rneck.rotateAngleY = (float)Math.toRadians((double)h3) / 2.0F;
 		
-		Ljx = jx = Rjx = 0.0F;// float Rjx = 0.0F, jx = Rjx, Ljx = jx;
+		Ljx = jx = Rjx = 0.0F;
 		if (c.getAttacking() != 0) {
 			newangle = MathHelper.cos(f2 * 1.9F * this.wingspeed) * (float)Math.PI * 0.2F;
 			Ljx = 0.2F + newangle;
